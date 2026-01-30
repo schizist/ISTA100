@@ -19,7 +19,6 @@
             overflow-x: hidden;
         }
 
-        /* Animated background */
         #particles-canvas {
             position: fixed;
             top: 0;
@@ -27,21 +26,19 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #2a163d 100%);
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.3);
+            background: transparent;
         }
 
         header {
-            background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 0%, rgba(42, 82, 152, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.1) 100%);
             color: white;
-            padding: 80px 40px;
+            padding: 40px 40px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -55,7 +52,7 @@
             right: 0;
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat bottom;
-            opacity: 0.1;
+            opacity: 0.91;
         }
 
         h1 {
@@ -73,14 +70,16 @@
             z-index: 1;
         }
 
-        section {
-            padding: 60px 40px;
-            border-bottom: 1px solid #e0e0e0;
+        .content-box {
             background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            margin: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        section:nth-child(even) {
-            background: rgba(248, 249, 250, 0.95);
+        section {
+            padding: 60px 0;
         }
 
         h2 {
@@ -114,15 +113,18 @@
         }
 
         .quote-box {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+            background: rgba(102, 126, 234, 0.05);
+            backdrop-filter: blur(2px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
             color: white;
             padding: 40px;
-            margin: 40px 0;
+            margin: 40px;
             border-radius: 8px;
             font-style: italic;
             font-size: 1.3em;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.7);
         }
 
         .quote-box::before {
@@ -151,8 +153,11 @@
         }
 
         .works-cited {
-            background: rgba(248, 249, 250, 0.95);
-            padding: 60px 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            margin: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .works-cited h2 {
@@ -170,7 +175,7 @@
         }
 
         footer {
-            background: rgba(30, 60, 114, 0.95);
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.1) 100%);
             color: white;
             text-align: center;
             padding: 30px;
@@ -185,8 +190,13 @@
                 font-size: 1.8em;
             }
 
-            section {
-                padding: 40px 20px;
+            .content-box {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+
+            .quote-box {
+                margin: 20px;
             }
         }
     </style>
@@ -197,49 +207,57 @@
     <div class="container">
         <header>
             <h1>The Information Age</h1>
-            <p class="subtitle">How Bell Labs Sparked the Greatest Era of American Innovation</p>
         </header>
 
-        <section>
-            <h2>The Information Age</h2>
-            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=400&fit=crop" alt="Digital technology network" class="hero-image">
-            <p>The information age is marked by the transition from analog to digital technologies, enabling unprecedented access to and sharing of information. This new age was heralded forth in the 1940s with the invention of the transistor at Bell Labs which in turn enabled the development of modern computers, smartphones, and the internet, ultimately ushering in the Information Age.</p>
+            <div class="content-box">
+                <h2>The Information Age</h2>
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=400&fit=crop" alt="Digital technology network" class="hero-image">
+                <p>The information age is marked by the transition from analog to digital technologies, enabling unprecedented access to and sharing of information. This new age was heralded forth in the 1940s with the invention of the transistor at Bell Labs which in turn enabled the development of modern computers, smartphones, and the internet, ultimately ushering in the Information Age.</p>
+            </div>
 
             <div class="quote-box">
                 Modern industrial research is meant to apply science to the 'common affairs' of everyday life. It is an instrument capable of avoiding many of the mistakes of a blind cut-and-try experimentation. It is likewise an instrument which can bring to bear an aggregate of creative force on any particular problem which is infinitely greater than any force which can be conceived of as residing in the intellectual capacity of an individual.
                 <div style="text-align: right; margin-top: 20px; font-size: 0.8em;">— Frank Jewett, President of Bell Labs</div>
             </div>
-        </section>
 
-        <section>
-            <h2>The Foundation: Early 20th Century Innovation</h2>
-            
-            <p>I believe the pioneering and collaborative spirit of Bell Labs can be recognized in many organizations across the globe today, and one of my favorite examples is Pixar Studios. Pixar's early years are studded with innovations in computer animation, such as rendering light refractions through water or hair's movement in wind, that exist due to the collaborative and experimental culture they fostered. They had to invent solutions to the challenges they faced.</p>
+            <div class="content-box">
+                <h2>A Contemporary Driver of Innovation: Pixar Studios</h2>
+                
+                <p>I believe the pioneering and collaborative spirit of Bell Labs can be recognized in many organizations across the globe today, and one of my favorite examples is Pixar Studios. Pixar's early years are studded with innovations in computer animation, such as rendering light refractions through water or hair's movement in wind, that exist due to the collaborative and experimental culture they fostered. They had to invent solutions to the challenges they faced.</p>
 
-            <div class="stat-box">
-                <span class="stat-number">2 million</span>
-                AT&T subscribers by 1910, mostly in the Northeast
+                <div class="stat-box">
+                    <span class="stat-number">6+ Academy Awards for Pixar's RenderMan render engine</span>
+                    Film-Specific Breakthroughs:<br>
+                    Toy Story (1995) - First fully computer-animated feature film<br>
+                    A Bug's Life (1998) - Subdivision surfaces creates smooth organic surfaces from polygons<br>
+                    Toy Story 2 (1999) - Procedural cutting/slicing tools<br>
+                    Finding Nemo (2003) - Water simulation and caustics and subsurface scattering<br>
+                    The Incredibles (2004) - Cloth and fabric simulation<br>
+                    Cars (2006) - Advanced texture and paint systems for realistic metal surfaces and reflections<br>
+                    Brave (2012) - Hair simulation breakthrough, Merida's curly hair required entirely new simulation systems
+                </div>
             </div>
-        </section>
+  
 
         <section>
-            <h2>Bell Labs: The Idea Factory</h2>
-            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&h=400&fit=crop" alt="Scientific laboratory" class="hero-image">
+            <div class="content-box">
+                <h2>What Will Propel Innovation in the Future? Thrust!</h2>
+                <img src="the-world-of-the-jetsons.jpeg" alt="Utopia of The Jetsons" class="hero-image">
 
-            <h3>The Vision of Theodore Vail</h3>
-            <p>Theodore Vail, who became AT&T's president in 1907, transformed the struggling phone company with a revolutionary philosophy: "One policy, one system, universal service." He argued that telephone service had become "necessary to existence" and that the public would be best served by a technologically unified and compatible system.</p>
-
-            <p>Vail understood that government regulation was necessary for monopoly protection, but in return, AT&T deserved reasonable profits and industry dominance. Most importantly, he defined AT&T as a technological leader with legions of engineers working unceasingly to improve the system. This strategy measured the company's progress "in decades instead of years."</p>
-
-            <h3>The Transcontinental Challenge</h3>
-            <p>In 1909, Frank Jewett and John J. Carty traveled to San Francisco to determine how to provide transcontinental phone service—New York to San Francisco—in time for the Panama-Pacific International Exposition. The crux of the problem was a satisfactory telephone repeater or amplifier. As Jewett later recalled their late-night debates:</p>
+                <h3>A Destiny Told and Retold (...Again and Again)</h3>
+                <p>Humans have long speculated that mankind's destiny lays in the stars, but time and time again we are humbled by the reality that we have a whole lot more to figure out first. The Information Age, having spurred so much innovation, could finally take us to that long promised utopia depicted in Hanna-Barbera's The Jetsons if the right innovators come along.</p>
+                <p> Picture a world where reaching space is as simple as boarding an elevator. Cheap and easy access to space will be paramount for future generations as the scope and complexity of orbital and space infrastructure grow ever more complex. We will need to haul enormous quantities of materials and equipment into space to support orbital construction and circumvent classic problems with getting to space like the famous "rocket equation" that limits how much mass can be launched into orbit. A space elevator, or inertial launcher could make such access routine and affordable and finally usher in the true Space Age we have been promised for so long.</p>
+            </div>
 
             <div class="quote-box">
-                Did we know how to develop such a repeater? No. Why not? Science hadn't yet shown us the way. Did we have any reason to think that she would? Yes. In time? Possibly.
-                <div style="text-align: right; margin-top: 20px; font-size: 0.8em;">— Frank Jewett, reflecting on the transcontinental telephone challenge</div>
+                The best way to predict the future is to invent it.
+                <div style="text-align: right; margin-top: 20px; font-size: 0.8em;">— Alan Kay, computer scientist and Turing Award winner</div>
             </div>
 
-            <p>This challenge led to a new approach: rather than relying solely on engineers, they turned to scientists. Harold Arnold, a physicist from Millikan's lab, improved Lee De Forest's audion tube (soon to be known as the vacuum tube), which would revolutionize twentieth-century communications. The transcontinental line, completed in 1915, consisted of four copper wires strung coast-to-coast over 130,000 wooden poles.</p>
+            <div class="content-box">
+                <h2>Conclusion</h2>
+                <p>Just as the Bell Labs scientists didn't know how to build a transcontinental phone repeater until they figured it out, today's challenges in space access, computing, and communications seem impossible, until they aren't. The spirit of collaborative innovation that defined Bell Labs and continues at places like Pixar Studios shows us that the next great breakthrough is always just around the corner, waiting for the right team to happen upon it.</p>
+            </div>
         </section>
 
         <section class="works-cited">
@@ -249,13 +267,11 @@
                 
                 <li>Gertner, Jon. <em>The Idea Factory: Bell Labs and the Great Age of American Innovation</em>. Penguin Books, 2012.</li>
                 
-                <li>Gertner, Jon. "Chapter 1: Oil Drops." <em>The Idea Factory: Bell Labs and the Great Age of American Innovation</em>, Penguin Books, 2012.</li>
-                
-                <li>Gertner, Jon. "Chapter 2: West to East." <em>The Idea Factory: Bell Labs and the Great Age of American Innovation</em>, Penguin Books, 2012.</li>
-                
                 <li>"Information Age." <em>Wikipedia</em>, Wikimedia Foundation, en.wikipedia.org/wiki/Information_Age. Accessed 30 Jan. 2026.</li>
                 
                 <li>Riordan, Michael, and Lillian Hoddeson. <em>Crystal Fire: The Birth of the Information Age</em>. W.W. Norton & Company, 1997.</li>
+                
+                <li>"Technology at Pixar." <em>Pixar Animation Studios</em>, www.pixar.com/technology-at-pixar. Accessed 30 Jan. 2026.</li>
             </ol>
         </section>
 
@@ -265,7 +281,6 @@
     </div>
 
     <script>
-        // Animated particle background
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
         
@@ -316,7 +331,6 @@
                 particles[i].update();
                 particles[i].draw();
                 
-                // Draw connections between nearby particles
                 for (let j = i; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
