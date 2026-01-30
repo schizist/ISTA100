@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Information Age: Bell Labs and the Great Age of American Innovation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 0%, rgba(42, 82, 152, 0.95) 100%);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat bottom;
+            opacity: 0.1;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            padding: 60px 40px;
+            border-bottom: 1px solid #e0e0e0;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        section:nth-child(even) {
+            background: rgba(248, 249, 250, 0.95);
+        }
+
+        h2 {
+            color: #2a5298;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+
+        h3 {
+            color: #1e3c72;
+            font-size: 1.6em;
+            margin: 30px 0 15px 0;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            text-align: justify;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            margin: 30px 0;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .quote-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+            color: white;
+            padding: 40px;
+            margin: 40px 0;
+            border-radius: 8px;
+            font-style: italic;
+            font-size: 1.3em;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 6em;
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            opacity: 0.3;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 0%, rgba(42, 82, 152, 0.95) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .works-cited {
+            background: rgba(248, 249, 250, 0.95);
+            padding: 60px 40px;
+        }
+
+        .works-cited h2 {
+            margin-bottom: 30px;
+        }
+
+        .works-cited ol {
+            margin-left: 40px;
+        }
+
+        .works-cited li {
+            margin-bottom: 15px;
+            font-size: 1em;
+            line-height: 1.8;
+        }
+
+        footer {
+            background: rgba(30, 60, 114, 0.95);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            section {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+    
+    <div class="container">
+        <header>
+            <h1>The Information Age</h1>
+            <p class="subtitle">How Bell Labs Sparked the Greatest Era of American Innovation</p>
+        </header>
+
+        <section>
+            <h2>The Information Age</h2>
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=400&fit=crop" alt="Digital technology network" class="hero-image">
+            <p>The information age is marked by the transition from analog to digital technologies, enabling unprecedented access to and sharing of information. This new age was heralded forth in the 1940s with the invention of the transistor at Bell Labs which in turn enabled the development of modern computers, smartphones, and the internet, ultimately ushering in the Information Age.</p>
+
+            <div class="quote-box">
+                Modern industrial research is meant to apply science to the 'common affairs' of everyday life. It is an instrument capable of avoiding many of the mistakes of a blind cut-and-try experimentation. It is likewise an instrument which can bring to bear an aggregate of creative force on any particular problem which is infinitely greater than any force which can be conceived of as residing in the intellectual capacity of an individual.
+                <div style="text-align: right; margin-top: 20px; font-size: 0.8em;">— Frank Jewett, President of Bell Labs</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>The Foundation: Early 20th Century Innovation</h2>
+            
+            <p>I believe the pioneering and collaborative spirit of Bell Labs can be recognized in many organizations across the globe today, and one of my favorite examples is Pixar Studios. Pixar's early years are studded with innovations in computer animation, such as rendering light refractions through water or hair's movement in wind, that exist due to the collaborative and experimental culture they fostered. They had to invent solutions to the challenges they faced.</p>
+
+            <div class="stat-box">
+                <span class="stat-number">2 million</span>
+                AT&T subscribers by 1910, mostly in the Northeast
+            </div>
+        </section>
+
+        <section>
+            <h2>Bell Labs: The Idea Factory</h2>
+            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&h=400&fit=crop" alt="Scientific laboratory" class="hero-image">
+
+            <h3>The Vision of Theodore Vail</h3>
+            <p>Theodore Vail, who became AT&T's president in 1907, transformed the struggling phone company with a revolutionary philosophy: "One policy, one system, universal service." He argued that telephone service had become "necessary to existence" and that the public would be best served by a technologically unified and compatible system.</p>
+
+            <p>Vail understood that government regulation was necessary for monopoly protection, but in return, AT&T deserved reasonable profits and industry dominance. Most importantly, he defined AT&T as a technological leader with legions of engineers working unceasingly to improve the system. This strategy measured the company's progress "in decades instead of years."</p>
+
+            <h3>The Transcontinental Challenge</h3>
+            <p>In 1909, Frank Jewett and John J. Carty traveled to San Francisco to determine how to provide transcontinental phone service—New York to San Francisco—in time for the Panama-Pacific International Exposition. The crux of the problem was a satisfactory telephone repeater or amplifier. As Jewett later recalled their late-night debates:</p>
+
+            <div class="quote-box">
+                Did we know how to develop such a repeater? No. Why not? Science hadn't yet shown us the way. Did we have any reason to think that she would? Yes. In time? Possibly.
+                <div style="text-align: right; margin-top: 20px; font-size: 0.8em;">— Frank Jewett, reflecting on the transcontinental telephone challenge</div>
+            </div>
+
+            <p>This challenge led to a new approach: rather than relying solely on engineers, they turned to scientists. Harold Arnold, a physicist from Millikan's lab, improved Lee De Forest's audion tube (soon to be known as the vacuum tube), which would revolutionize twentieth-century communications. The transcontinental line, completed in 1915, consisted of four copper wires strung coast-to-coast over 130,000 wooden poles.</p>
+        </section>
+
+        <section class="works-cited">
+            <h2>Works Cited</h2>
+            <ol>
+                <li>Dye, Lee. "50 Years Ago, Information Age Began in Bell Labs." <em>Los Angeles Times</em>, 22 Dec. 1997, articles.latimes.com/1997/dec/22/business/fi-1177.</li>
+                
+                <li>Gertner, Jon. <em>The Idea Factory: Bell Labs and the Great Age of American Innovation</em>. Penguin Books, 2012.</li>
+                
+                <li>Gertner, Jon. "Chapter 1: Oil Drops." <em>The Idea Factory: Bell Labs and the Great Age of American Innovation</em>, Penguin Books, 2012.</li>
+                
+                <li>Gertner, Jon. "Chapter 2: West to East." <em>The Idea Factory: Bell Labs and the Great Age of American Innovation</em>, Penguin Books, 2012.</li>
+                
+                <li>"Information Age." <em>Wikipedia</em>, Wikimedia Foundation, en.wikipedia.org/wiki/Information_Age. Accessed 30 Jan. 2026.</li>
+                
+                <li>Riordan, Michael, and Lillian Hoddeson. <em>Crystal Fire: The Birth of the Information Age</em>. W.W. Norton & Company, 1997.</li>
+            </ol>
+        </section>
+
+        <footer>
+            <p>Daniel Corron | ISTA 100 | Assignment 1 | January 30, 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        // Animated particle background
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const particles = [];
+        const particleCount = 100;
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.opacity = Math.random() * 0.5 + 0.3;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function init() {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                // Draw connections between nearby particles
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 120) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - distance / 120)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        init();
+        animate();
+    </script>
+</body>
+</html>
