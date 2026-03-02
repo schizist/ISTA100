@@ -44,6 +44,16 @@
     z-index: 0;
   }
 
+  #ocean-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.55;
+  }
+
   .page {
     position: relative;
     z-index: 1;
@@ -174,55 +184,13 @@
     margin-bottom: 56px;
   }
 
-  .cable-diagram {
-    display: flex;
-    align-items: center;
-    gap: 40px;
+  .cable-diagram-wrap {
     background: linear-gradient(145deg, rgba(14,52,96,0.4), rgba(5,13,26,0.6));
     border: 1px solid rgba(0,194,212,0.12);
     border-radius: 16px;
-    padding: 36px;
+    padding: 24px 16px;
+    overflow-x: auto;
   }
-
-  .cable-visual {
-    flex-shrink: 0;
-    width: 160px;
-    height: 160px;
-    position: relative;
-  }
-
-  .cable-visual svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  .cable-layers {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .layer-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 8px;
-    border-left: 3px solid var(--color, var(--teal));
-  }
-
-  .layer-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--color, var(--teal));
-    flex-shrink: 0;
-  }
-
-  .layer-text { font-size: 12px; color: var(--white); line-height: 1.3; }
-  .layer-text span { display: block; font-size: 10px; color: var(--dim); margin-top: 2px; }
 
   /* OCEAN ROUTE */
   .route-section {
@@ -647,6 +615,7 @@
 </style>
 </head>
 <body>
+<canvas id="ocean-canvas"></canvas>
 <div class="page">
 
   <!-- HEADER -->
@@ -684,72 +653,127 @@
   <!-- CABLE CROSS SECTION -->
   <div class="cable-section">
     <p class="section-label">Cable Architecture · 10 Layers · 1.5" Diameter</p>
-    <div class="cable-diagram">
-      <div class="cable-visual">
-        <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id="g1" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#ffe066"/>
-              <stop offset="100%" stop-color="#e8b84b"/>
-            </radialGradient>
-          </defs>
-          <!-- Outer jute — warm brown -->
-          <circle cx="80" cy="80" r="75" fill="#6b3f1a" stroke="#8b5a2b" stroke-width="1.5"/>
-          <!-- Steel armor — blue-grey, distinct -->
-          <circle cx="80" cy="80" r="62" fill="#4a5568" stroke="#718096" stroke-width="1.5"/>
-          <!-- Inner jute — lighter tan, contrast with steel -->
-          <circle cx="80" cy="80" r="50" fill="#a0693a" stroke="#c4845a" stroke-width="1"/>
-          <!-- Cotton — cream/ivory, very light -->
-          <circle cx="80" cy="80" r="40" fill="#e8dcc8" stroke="#f0e8d8" stroke-width="0.5"/>
-          <!-- Copper anti-worm — vivid orange-copper -->
-          <circle cx="80" cy="80" r="32" fill="#c87820" stroke="#f0a040" stroke-width="1.5"/>
-          <!-- PE insulation — bright white -->
-          <circle cx="80" cy="80" r="24" fill="#ffffff" stroke="#e0e0e0" stroke-width="0.5"/>
-          <!-- Conducting tape — deep teal, high contrast against white -->
-          <circle cx="80" cy="80" r="17" fill="#0b7a8a" stroke="#00c2d4" stroke-width="1"/>
-          <!-- PE inner — light grey -->
-          <circle cx="80" cy="80" r="11" fill="#d8e8ec"/>
-          <!-- Core copper — bright gold -->
-          <circle cx="80" cy="80" r="6" fill="url(#g1)"/>
-          <!-- Center dot -->
-          <circle cx="80" cy="80" r="2" fill="#fff"/>
-          <text x="80" y="3" fill="rgba(0,194,212,0.6)" font-size="5" text-anchor="middle" font-family="monospace">CROSS SECTION</text>
-        </svg>
-      </div>
-      <div class="cable-layers">
-        <div class="layer-item" style="--color: #6b3f1a;">
-          <div class="layer-dot" style="background:#8b5a2b;"></div>
-          <div class="layer-text">Outer Jute <span>Weather & abrasion protection</span></div>
-        </div>
-        <div class="layer-item" style="--color: #4a5568;">
-          <div class="layer-dot" style="background:#718096;"></div>
-          <div class="layer-text">Steel Armor Wire <span>Tensile strength for laying</span></div>
-        </div>
-        <div class="layer-item" style="--color: #a0693a;">
-          <div class="layer-dot" style="background:#c4845a;"></div>
-          <div class="layer-text">Inner Jute <span>Cushioning between layers</span></div>
-        </div>
-        <div class="layer-item" style="--color: #e8dcc8;">
-          <div class="layer-dot" style="background:#e8dcc8; border: 1px solid #aaa;"></div>
-          <div class="layer-text">Cotton Tape <span>Insulating wrap</span></div>
-        </div>
-        <div class="layer-item" style="--color: #c87820;">
-          <div class="layer-dot" style="background:#f0a040;"></div>
-          <div class="layer-text">Copper (anti-worm) <span>Repels teredo worms</span></div>
-        </div>
-        <div class="layer-item" style="--color: #ffffff;">
-          <div class="layer-dot" style="background:#ffffff; border: 1px solid #aaa;"></div>
-          <div class="layer-text">Polyethylene <span>Signal insulation</span></div>
-        </div>
-        <div class="layer-item" style="--color: #0b7a8a;">
-          <div class="layer-dot" style="background:#00c2d4;"></div>
-          <div class="layer-text">Conducting Tape <span>Coaxial return path</span></div>
-        </div>
-        <div class="layer-item" style="--color:#e8b84b;">
-          <div class="layer-dot" style="background:#ffe066;"></div>
-          <div class="layer-text">Copper Core <span>Primary signal wire</span></div>
-        </div>
-      </div>
+    <div class="cable-diagram-wrap">
+      <svg viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;display:block;margin:0 auto;">
+        <defs>
+          <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffe066"/>
+            <stop offset="100%" stop-color="#e8b84b"/>
+          </radialGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!--
+          Layout: viewBox 900x360
+          Circle centered at cx=450, cy=180
+
+        <!-- ── RING COLORS: full ocean theme ── -->
+        <!-- 1. Outer Jute      → dark navy-slate -->
+        <circle cx="450" cy="180" r="158" fill="#0d2240" stroke="#1a3a5c" stroke-width="2"/>
+        <!-- 2. Steel Armor     → mid steel-blue -->
+        <circle cx="450" cy="180" r="130" fill="#1e3a5f" stroke="#2d5a8a" stroke-width="2"/>
+        <!-- 3. Inner Jute      → slightly lighter navy -->
+        <circle cx="450" cy="180" r="106" fill="#0a2a4a" stroke="#0e3d68" stroke-width="1.5"/>
+        <!-- 4. Cotton Tape     → pale ice blue -->
+        <circle cx="450" cy="180" r="84"  fill="#a8d8e8" stroke="#c0e8f4" stroke-width="1"/>
+        <!-- 5. Copper anti-worm → warm gold-amber accent -->
+        <circle cx="450" cy="180" r="66"  fill="#c87820" stroke="#e8a030" stroke-width="2"/>
+        <!-- 6. Polyethylene    → deep teal -->
+        <circle cx="450" cy="180" r="50"  fill="#0b5a6a" stroke="#0e7a8a" stroke-width="1.5"/>
+        <!-- 7. Conducting tape → bright cyan glow -->
+        <circle cx="450" cy="180" r="36"  fill="#0b7a8a" stroke="#00c2d4" stroke-width="2" filter="url(#glow)"/>
+        <!-- 8. PE inner        → dark abyss -->
+        <circle cx="450" cy="180" r="23"  fill="#050d1a" stroke="#0a1628" stroke-width="1"/>
+        <!-- 9. Copper core     → gold -->
+        <circle cx="450" cy="180" r="13"  fill="url(#g1)"/>
+
+        <!--
+          CONNECTOR SCHEME
+          Left labels (anchor right, x=195): layers 1,3,5,7,9
+          Right labels (anchor left, x=655): layers 2,4,6,8
+
+          Each connector: circle on ring edge → diagonal line → horizontal line → label pill
+          Y positions spread evenly: 36, 86, 136, 180, 224, 274 …
+        -->
+
+        <!-- ══ CONNECTORS & LABELS no-crossing guaranteed: dot Y increases as r decreases ══ -->
+
+        <!-- L1: Outer Jute r=158, 225° → dot=(338,68) top label y=42 -->
+        <circle cx="338" cy="68"  r="3.5" fill="#4a7aaa"/>
+        <line x1="338" y1="68"  x2="210" y2="42"  stroke="#4a7aaa" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
+        <line x1="210" y1="42"  x2="200" y2="42"  stroke="#4a7aaa" stroke-width="1" opacity="0.85"/>
+        <rect x="2"   y="28"  width="196" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(74,122,170,0.4)" stroke-width="1"/>
+        <text x="10"  y="44"  fill="#7ab0d8" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Outer Jute</text>
+        <text x="10"  y="55"  fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Weather &amp; abrasion protection</text>
+
+        <!-- L3: Inner Jute r=106, 215° → dot=(363,119) label y=98 -->
+        <circle cx="363" cy="119" r="3.5" fill="#2d6a9a"/>
+        <line x1="363" y1="119" x2="210" y2="98"  stroke="#2d6a9a" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
+        <line x1="210" y1="98"  x2="200" y2="98"  stroke="#2d6a9a" stroke-width="1" opacity="0.85"/>
+        <rect x="2"   y="84"  width="196" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(45,106,154,0.4)" stroke-width="1"/>
+        <text x="10"  y="100" fill="#5a9ac8" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Inner Jute</text>
+        <text x="10"  y="111" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Cushioning between layers</text>
+
+        <!-- L5: Copper r=66, 225° → dot=(403,133) label y=154 -->
+        <circle cx="403" cy="133" r="3.5" fill="#e8a030"/>
+        <line x1="403" y1="133" x2="210" y2="154" stroke="#e8a030" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
+        <line x1="210" y1="154" x2="200" y2="154" stroke="#e8a030" stroke-width="1" opacity="0.85"/>
+        <rect x="2"   y="140" width="196" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(232,160,48,0.4)" stroke-width="1"/>
+        <text x="10"  y="156" fill="#e8a030" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Copper (anti-worm)</text>
+        <text x="10"  y="167" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Repels teredo worms</text>
+
+        <!-- L7: Conducting Tape r=36, 240° → dot=(432,149) label y=210 -->
+        <circle cx="432" cy="149" r="3.5" fill="#00c2d4" filter="url(#glow)"/>
+        <line x1="432" y1="149" x2="210" y2="210" stroke="#00c2d4" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
+        <line x1="210" y1="210" x2="200" y2="210" stroke="#00c2d4" stroke-width="1" opacity="0.85"/>
+        <rect x="2"   y="196" width="196" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(0,194,212,0.45)" stroke-width="1"/>
+        <text x="10"  y="212" fill="#00c2d4" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Conducting Tape</text>
+        <text x="10"  y="223" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Coaxial return path</text>
+
+        <!-- L9: Copper Core r=13, 258° → dot=(447,167) label y=266 -->
+        <circle cx="447" cy="167" r="3.5" fill="#ffe066"/>
+        <line x1="447" y1="167" x2="210" y2="266" stroke="#ffe066" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
+        <line x1="210" y1="266" x2="200" y2="266" stroke="#ffe066" stroke-width="1" opacity="0.85"/>
+        <rect x="2"   y="252" width="196" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(255,224,102,0.45)" stroke-width="1"/>
+        <text x="10"  y="268" fill="#ffe066" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Copper Core</text>
+        <text x="10"  y="279" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Primary signal wire</text>
+
+        <!-- R2: Steel Armor r=130, 335° → dot=(568,125) label y=42 -->
+        <circle cx="568" cy="125" r="3.5" fill="#4a8ab8"/>
+        <line x1="568" y1="125" x2="690" y2="42"  stroke="#4a8ab8" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
+        <line x1="690" y1="42"  x2="700" y2="42"  stroke="#4a8ab8" stroke-width="1" opacity="0.85"/>
+        <rect x="702"  y="28"  width="192" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(74,138,184,0.4)" stroke-width="1"/>
+        <text x="712"  y="44"  fill="#7ab0d8" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Steel Armor Wire</text>
+        <text x="712"  y="55"  fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Tensile strength for laying</text>
+
+        <!-- R4: Cotton Tape r=84, 345° → dot=(531,158) label y=98 -->
+        <circle cx="531" cy="158" r="3.5" fill="#a8d8e8"/>
+        <line x1="531" y1="158" x2="690" y2="98"  stroke="#a8d8e8" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
+        <line x1="690" y1="98"  x2="700" y2="98"  stroke="#a8d8e8" stroke-width="1" opacity="0.85"/>
+        <rect x="702"  y="84"  width="192" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(168,216,232,0.4)" stroke-width="1"/>
+        <text x="712"  y="100" fill="#a8d8e8" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Cotton Tape</text>
+        <text x="712"  y="111" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Insulating wrap</text>
+
+        <!-- R6: Polyethylene r=50, 355° → dot=(500,176) label y=154 -->
+        <circle cx="500" cy="176" r="3.5" fill="#40c0d0"/>
+        <line x1="500" y1="176" x2="690" y2="154" stroke="#40c0d0" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
+        <line x1="690" y1="154" x2="700" y2="154" stroke="#40c0d0" stroke-width="1" opacity="0.85"/>
+        <rect x="702"  y="140" width="192" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(64,192,208,0.4)" stroke-width="1"/>
+        <text x="712"  y="156" fill="#40c0d0" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Polyethylene</text>
+        <text x="712"  y="167" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Signal insulation</text>
+
+        <!-- R8: PE inner r=23, 10° → dot=(473,184) label y=210 -->
+        <circle cx="473" cy="184" r="3.5" fill="#6ab8c8"/>
+        <line x1="473" y1="184" x2="690" y2="210" stroke="#6ab8c8" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
+        <line x1="690" y1="210" x2="700" y2="210" stroke="#6ab8c8" stroke-width="1" opacity="0.85"/>
+        <rect x="702"  y="196" width="192" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(106,184,200,0.4)" stroke-width="1"/>
+        <text x="712"  y="212" fill="#6ab8c8" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Polyethylene (inner)</text>
+        <text x="712"  y="223" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Dielectric spacer</text>
+
+      </svg>
     </div>
   </div>
 
@@ -780,7 +804,7 @@
         </div>
       </div>
       <div style="text-align:center; margin-bottom: 20px;">
-        <span style="font-family:'Space Mono',monospace; font-size:9px; color:var(--gold); letter-spacing:2px;">▲ GOLD MARKS = REPEATER LOCATIONS (52 total, every ~40 miles)</span>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:var(--gold); letter-spacing:2px;">▲ GOLD MARKS = REPEATER LOCATIONS (52 total: every ~40 miles)</span>
       </div>
       <div class="route-facts">
         <div class="route-fact">
@@ -806,7 +830,7 @@
       <div class="challenge-card" style="--card-accent: #00c2d4;">
         <span class="challenge-icon">🌊</span>
         <div class="challenge-title">Deep Ocean Pressure</div>
-        <div class="challenge-desc">Repeaters had to withstand crushing pressure miles underwater while remaining fully operational — with zero access for repairs once deployed.</div>
+        <div class="challenge-desc">Repeaters had to withstand crushing pressure miles underwater while remaining fully operational, with zero access for repairs once deployed.</div>
       </div>
       <div class="challenge-card" style="--card-accent: #e8b84b;">
         <span class="challenge-icon">⚡</span>
@@ -826,7 +850,7 @@
       <div class="challenge-card" style="--card-accent: #e8b84b;">
         <span class="challenge-icon">🔧</span>
         <div class="challenge-title">Repeater Reliability</div>
-        <div class="challenge-desc">Kelly insisted the cable had to last 20 years without a single failure to be economically viable. Only vacuum tube designs from the 1930s — with 16 years of test data — were trusted.</div>
+        <div class="challenge-desc">Kelly insisted the cable had to last 20 years without a single failure to be economically viable. Only vacuum tube designs from the 1930s, with 16 years of test data, were trusted.</div>
       </div>
       <div class="challenge-card" style="--card-accent: #b87333;">
         <span class="challenge-icon">🚢</span>
@@ -843,12 +867,12 @@
       <div class="timeline-item">
         <div class="timeline-year">1850s</div>
         <div class="timeline-title">Early Telegraph Failures</div>
-        <div class="timeline-desc">Multiple attempts to lay transatlantic telegraph cables end in catastrophe — snapped lines, leaks, and transmissions that died within weeks. The British royal astronomer calls it "a mathematical impossibility."</div>
+        <div class="timeline-desc">Multiple attempts to lay transatlantic telegraph cables end in catastrophe, snapped lines, leaks, and transmissions that died within weeks. The British royal astronomer calls it "a mathematical impossibility."</div>
       </div>
       <div class="timeline-item">
         <div class="timeline-year">1866</div>
         <div class="timeline-title">First Successful Telegraph Cable</div>
-        <div class="timeline-desc">A better-constructed cable finally carries dots and dashes between Canada and Ireland, proving the Atlantic can be crossed — at least for telegraph signals.</div>
+        <div class="timeline-desc">A better-constructed cable finally carries dots and dashes between Canada and Ireland, proving the Atlantic can be crossed, at least for telegraph signals.</div>
       </div>
       <div class="timeline-item">
         <div class="timeline-year">Late 1920s</div>
@@ -868,7 +892,7 @@
       <div class="timeline-item">
         <div class="timeline-year">Sept 25, 1956</div>
         <div class="timeline-title">Opening Day</div>
-        <div class="timeline-desc">AT&T chairman Cleo Craig calls Britain's postmaster general. The signal travels from New York through 52 repeaters across the ocean floor to Scotland — and back — in under a tenth of a second.</div>
+        <div class="timeline-desc">AT&T chairman Cleo Craig calls Britain's postmaster general. The signal travels from New York through 52 repeaters across the ocean floor to Scotland and back, in under a tenth of a second.</div>
       </div>
     </div>
   </div>
@@ -878,9 +902,9 @@
     <div class="tasi-inner">
       <div class="tasi-text">
         <h3>TASI: Doubling the Cable's Capacity</h3>
-        <p>Bell Labs engineers discovered that a telephone talker only actually sends signal about 35% of the time — the rest is pauses, listening, and silence.</p>
-        <p>TASI (Time Assignment Speech Interpolation) inspected voice channels 2,000 times per second and instantly reassigned idle channels to other conversations. This effectively doubled capacity from 36 to 72 simultaneous calls — with no new cable required.</p>
-        <div style="font-family:'Space Mono',monospace; font-size:10px; color:var(--gold); letter-spacing:1px; margin-top:8px;">→ "Better and cheaper" — Kelly's standard</div>
+        <p>Bell Labs engineers discovered that a telephone talker only actually sends signal about 35% of the time, the rest is pauses, listening, and silence.</p>
+        <p>TASI (Time Assignment Speech Interpolation) inspected voice channels 2,000 times per second and instantly reassigned idle channels to other conversations. This effectively doubled capacity from 36 to 72 simultaneous calls, with no new cable required.</p>
+        <div style="font-family:'Space Mono',monospace; font-size:10px; color:var(--gold); letter-spacing:1px; margin-top:8px;">→ "Better and cheaper" - Kelly's standard</div>
       </div>
       <div class="tasi-visual">
         <div style="font-family:'Space Mono',monospace; font-size:10px; color:var(--dim); margin-bottom:12px; letter-spacing:1px;">TYPICAL CALL: SIGNAL VS SILENCE</div>
@@ -903,7 +927,7 @@
         <div style="font-family:'Space Mono',monospace; font-size:9px; color:var(--dim); margin-top:16px; line-height:1.6;">
           TASI reclaims that 65% silence<br>
           and assigns it to other callers<br>
-          in real time — 2,000×/sec
+          in real time - 2,000×/sec
         </div>
       </div>
     </div>
@@ -920,7 +944,7 @@
   <div class="legacy-grid">
     <div class="legacy-card">
       <h4>The Engineering Philosophy</h4>
-      <p>Kelly insisted on using only proven, conservative components — vacuum tubes with 16 years of test data rather than the newer transistor. In systems that must not fail, innovation means knowing when NOT to use the newest thing.</p>
+      <p>Kelly insisted on using only proven, conservative components: vacuum tubes with 16 years of test data rather than the newer transistor. In systems that must not fail, innovation means knowing when NOT to use the newest thing.</p>
     </div>
     <div class="legacy-card">
       <h4>Seeds of the Internet</h4>
@@ -928,7 +952,7 @@
     </div>
     <div class="legacy-card">
       <h4>The Monopoly Paradox</h4>
-      <p>As scientist Max Mathews noted, Shannon's information theory — born at Bell Labs — was also the "mathematical basis for breaking up the Bell System." The Labs' greatest achievements contained the seeds of its own disruption.</p>
+      <p>As scientist Max Mathews noted, Shannon's information theory, born at Bell Labs, was also the "mathematical basis for breaking up the Bell System." The Labs' greatest achievements contained the seeds of its own disruption.</p>
     </div>
     <div class="legacy-card">
       <h4>22 Years, Zero Failures</h4>
@@ -936,12 +960,181 @@
     </div>
   </div>
 
-  <!-- CITATION -->
   <div class="citation">
-    <strong>Source:</strong><br>
-    Gertner, J. (2012). <em>The idea factory: Bell Labs and the great age of American innovation.</em> Penguin Press. (Chapter 11: "Empire," pp. 161–184)
+    <strong>Sources:</strong><br>
+    Gertner, J. (2012). <em>The idea factory: Bell Labs and the great age of American innovation.</em> Penguin Press.<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;— Chapter 3: "System," pp. 41–56 (Bell Labs research culture &amp; engineering philosophy)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;— Chapter 9: "Formula," pp. 148–168 (Kelly's innovation framework &amp; proximity principles)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;— Chapter 11: "Empire," pp. 161–184 (TAT-1 cable, TASI, legacy of Bell Labs)<br><br>
+    Kelly, M. (as cited in Gertner, 2012, p. 162). Quote on economic viability of the transatlantic cable.
   </div>
 
+  <!-- FOOTER -->
+  <div style="
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 40px;
+    padding-top: 20px;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(138,160,184,0.45);
+  ">
+    DANIEL CORRON &nbsp;·&nbsp; ISTA 100 &nbsp;·&nbsp; ASSIGNMENT 2 &nbsp;·&nbsp; FEBRUARY 28, 2026
+  </div>
 </div>
+<script>
+(function() {
+  const canvas = document.getElementById('ocean-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // --- BUBBLES ---
+  const bubbles = [];
+  for (let i = 0; i < 55; i++) {
+    bubbles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: Math.random() * 3.5 + 0.5,
+      speed: Math.random() * 0.4 + 0.1,
+      drift: (Math.random() - 0.5) * 0.3,
+      alpha: Math.random() * 0.35 + 0.08,
+      wobble: Math.random() * Math.PI * 2,
+      wobbleSpeed: Math.random() * 0.015 + 0.005,
+    });
+  }
+
+  // --- PLANKTON ---
+  // Two types: drifters (ellipse blobs) and sparklers (tiny glowing dots)
+  const plankton = [];
+  for (let i = 0; i < 38; i++) {
+    plankton.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      rx: Math.random() * 3 + 1.5,   // ellipse x radius
+      ry: Math.random() * 1.5 + 0.8, // ellipse y radius
+      angle: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.012,
+      vx: (Math.random() - 0.5) * 0.18,
+      vy: (Math.random() - 0.5) * 0.12,
+      alpha: Math.random() * 0.25 + 0.06,
+      pulsePhase: Math.random() * Math.PI * 2,
+      pulseSpeed: Math.random() * 0.02 + 0.008,
+      hue: Math.random() > 0.5 ? '0,194,212' : '168,230,239', // cyan or ice
+    });
+  }
+
+  // sparkle dots bioluminescent
+  const sparks = [];
+  for (let i = 0; i < 28; i++) {
+    sparks.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: Math.random() * 1.2 + 0.3,
+      vx: (Math.random() - 0.5) * 0.22,
+      vy: (Math.random() - 0.5) * 0.15,
+      alpha: Math.random() * 0.5 + 0.1,
+      phase: Math.random() * Math.PI * 2,
+      phaseSpeed: Math.random() * 0.025 + 0.008,
+    });
+  }
+
+  function wrap(val, max) {
+    if (val < -20) return max + 20;
+    if (val > max + 20) return -20;
+    return val;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const W = canvas.width, H = canvas.height;
+
+    // --- Draw bubbles ---
+    bubbles.forEach(b => {
+      b.wobble += b.wobbleSpeed;
+      b.x += b.drift + Math.sin(b.wobble) * 0.25;
+      b.y -= b.speed;
+
+      if (b.y < -10) {
+        b.y = H + 10;
+        b.x = Math.random() * W;
+      }
+      b.x = wrap(b.x, W);
+
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(0,194,212,${b.alpha})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      // tiny highlight inside bubble
+      ctx.beginPath();
+      ctx.arc(b.x - b.r * 0.28, b.y - b.r * 0.28, b.r * 0.32, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(168,230,239,${b.alpha * 0.9})`;
+      ctx.fill();
+    });
+
+    // --- Draw plankton blobs ---
+    plankton.forEach(p => {
+      p.pulsePhase += p.pulseSpeed;
+      p.angle += p.rotSpeed;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.x = wrap(p.x, W);
+      p.y = wrap(p.y, H);
+
+      const pulse = 0.7 + 0.3 * Math.sin(p.pulsePhase);
+      const a = p.alpha * pulse;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.scale(1, p.ry / p.rx);
+      ctx.beginPath();
+      ctx.arc(0, 0, p.rx * pulse, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.hue},${a})`;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // --- Draw sparkles ---
+    sparks.forEach(s => {
+      s.phase += s.phaseSpeed;
+      s.x += s.vx;
+      s.y += s.vy;
+      s.x = wrap(s.x, W);
+      s.y = wrap(s.y, H);
+
+      const glow = 0.4 + 0.6 * Math.abs(Math.sin(s.phase));
+      const a = s.alpha * glow;
+
+      // glow halo
+      const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 3.5);
+      grad.addColorStop(0, `rgba(0,194,212,${a})`);
+      grad.addColorStop(1, `rgba(0,194,212,0)`);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r * 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // core dot
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(168,230,239,${a * 1.2})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+</script>
 </body>
 </html>
