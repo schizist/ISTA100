@@ -22,7 +22,7 @@
       --radius-lg: 12px;
       --radius-xl: 16px;
     }
-
+ 
     @media (prefers-color-scheme: dark) {
       :root {
         --bg: #1a1a18;
@@ -36,9 +36,9 @@
         --border3: rgba(240,239,232,0.35);
       }
     }
-
+ 
     html { scroll-behavior: smooth; }
-
+ 
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
@@ -46,14 +46,14 @@
       line-height: 1.6;
       min-height: 100vh;
     }
-
+ 
     /* ── Layout ── */
     .page {
       max-width: 780px;
       margin: 0 auto;
       padding: 3rem 2rem 5rem;
     }
-
+ 
     /* ── Hero ── */
     .hero {
       border: 0.5px solid var(--border3);
@@ -63,7 +63,7 @@
       position: relative;
       overflow: hidden;
     }
-
+ 
     .hero-grid {
       position: absolute;
       inset: 0;
@@ -71,9 +71,9 @@
         repeating-linear-gradient(90deg, transparent, transparent 39px, var(--border) 39px, var(--border) 40px),
         repeating-linear-gradient(0deg,  transparent, transparent 39px, var(--border) 39px, var(--border) 40px);
     }
-
+ 
     .hero-content { position: relative; z-index: 1; }
-
+ 
     .eyebrow {
       font-family: 'Space Mono', monospace;
       font-size: 10px;
@@ -82,7 +82,7 @@
       color: var(--text3);
       margin-bottom: 0.6rem;
     }
-
+ 
     .hero h1 {
       font-family: 'Space Mono', monospace;
       font-size: clamp(26px, 5vw, 38px);
@@ -91,7 +91,7 @@
       margin-bottom: 1rem;
       color: var(--text);
     }
-
+ 
     .hero h1 .inv {
       display: inline-block;
       background: var(--text);
@@ -99,14 +99,14 @@
       padding: 0 8px 2px;
       border-radius: 4px;
     }
-
+ 
     .hero-sub {
       font-size: 15px;
       color: var(--text2);
       max-width: 520px;
       line-height: 1.7;
     }
-
+ 
     /* ── Section label ── */
     .section-label {
       font-family: 'Space Mono', monospace;
@@ -118,7 +118,7 @@
       padding-bottom: 0.5rem;
       border-bottom: 0.5px solid var(--border);
     }
-
+ 
     /* ── Signal chain ── */
     .signal-chain {
       display: flex;
@@ -128,7 +128,7 @@
       overflow: hidden;
       margin-bottom: 2.5rem;
     }
-
+ 
     .chain-node {
       flex: 1;
       min-width: 80px;
@@ -136,9 +136,9 @@
       text-align: center;
       border-right: 0.5px solid var(--border);
     }
-
+ 
     .chain-node:last-child { border-right: none; }
-
+ 
     .chain-node.noise {
       flex: 0 0 90px;
       background: var(--bg2);
@@ -149,7 +149,7 @@
       align-items: center;
       justify-content: center;
     }
-
+ 
     .node-code {
       font-family: 'Space Mono', monospace;
       font-size: 16px;
@@ -157,20 +157,20 @@
       color: var(--text);
       margin-bottom: 5px;
     }
-
+ 
     .node-name {
       font-size: 12px;
       font-weight: 500;
       color: var(--text);
       margin-bottom: 3px;
     }
-
+ 
     .node-desc {
       font-size: 10px;
       color: var(--text2);
       line-height: 1.4;
     }
-
+ 
     /* ── Concept cards grid ── */
     .concepts {
       display: grid;
@@ -178,7 +178,7 @@
       gap: 1rem;
       margin-bottom: 2.5rem;
     }
-
+ 
     .card {
       border: 0.5px solid var(--border);
       border-radius: var(--radius-lg);
@@ -186,11 +186,11 @@
       background: var(--bg);
       transition: border-color 0.2s;
     }
-
+ 
     .card:hover { border-color: var(--border3); }
-
+ 
     .card.wide { grid-column: 1 / -1; }
-
+ 
     .card-num {
       font-family: 'Space Mono', monospace;
       font-size: 10px;
@@ -198,7 +198,7 @@
       margin-bottom: 0.35rem;
       letter-spacing: 0.06em;
     }
-
+ 
     .card-title {
       font-size: 14px;
       font-weight: 500;
@@ -206,13 +206,13 @@
       margin-bottom: 0.5rem;
       line-height: 1.3;
     }
-
+ 
     .card-body {
       font-size: 13px;
       color: var(--text2);
       line-height: 1.65;
     }
-
+ 
     /* ── Bit row ── */
     .bit-row {
       display: flex;
@@ -220,7 +220,7 @@
       flex-wrap: wrap;
       margin: 0.7rem 0 0.5rem;
     }
-
+ 
     .bit {
       font-family: 'Space Mono', monospace;
       font-size: 12px;
@@ -234,13 +234,13 @@
       border: 0.5px solid var(--border2);
       color: var(--text);
     }
-
+ 
     .bit.on {
       background: var(--text);
       color: var(--bg);
       border-color: var(--text);
     }
-
+ 
     /* ── Entropy bars ── */
     .entropy-row {
       display: flex;
@@ -248,7 +248,7 @@
       gap: 8px;
       margin: 0.4rem 0;
     }
-
+ 
     .entropy-key {
       font-family: 'Space Mono', monospace;
       font-size: 9px;
@@ -256,7 +256,7 @@
       white-space: nowrap;
       width: 72px;
     }
-
+ 
     .entropy-track {
       flex: 1;
       height: 6px;
@@ -264,13 +264,13 @@
       border-radius: 3px;
       overflow: hidden;
     }
-
+ 
     .entropy-fill {
       height: 100%;
       border-radius: 3px;
       background: var(--text);
     }
-
+ 
     /* ── Redundancy demo ── */
     .redund {
       font-family: 'Space Mono', monospace;
@@ -279,10 +279,10 @@
       margin: 0.6rem 0 0.4rem;
       letter-spacing: 0.04em;
     }
-
+ 
     .redund .s { text-decoration: line-through; color: var(--text3); }
     .redund .k { color: var(--text); font-weight: 700; }
-
+ 
     /* ── Channel capacity ── */
     .cap-row {
       display: flex;
@@ -290,14 +290,14 @@
       gap: 8px;
       margin: 0.4rem 0;
     }
-
+ 
     .cap-key {
       font-family: 'Space Mono', monospace;
       font-size: 9px;
       color: var(--text3);
       width: 80px;
     }
-
+ 
     .cap-track {
       flex: 1;
       height: 14px;
@@ -306,10 +306,54 @@
       overflow: hidden;
       display: flex;
     }
-
+ 
     .cap-used { background: var(--text); }
-    .cap-over { background: var(--bg3); }
-
+    .cap-over {
+      background-image: repeating-linear-gradient(
+        45deg,
+        var(--text3) 0px,
+        var(--text3) 2px,
+        transparent 2px,
+        transparent 7px
+      );
+      opacity: 0.7;
+    }
+ 
+    .cap-legend {
+      display: flex;
+      gap: 14px;
+      margin-top: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+ 
+    .cap-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--text3);
+    }
+ 
+    .cap-legend-swatch {
+      width: 14px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+ 
+    .cap-legend-swatch.used { background: var(--text); }
+    .cap-legend-swatch.over {
+      background-image: repeating-linear-gradient(
+        45deg,
+        var(--text3) 0px,
+        var(--text3) 2px,
+        transparent 2px,
+        transparent 7px
+      );
+      border: 0.5px solid var(--border2);
+    }
+ 
     /* ── Error code demo ── */
     .ecc-row {
       display: flex;
@@ -318,7 +362,7 @@
       flex-wrap: wrap;
       margin: 0.7rem 0 0.5rem;
     }
-
+ 
     .ecc-pill {
       font-family: 'Space Mono', monospace;
       font-size: 10px;
@@ -326,13 +370,13 @@
       border-radius: 4px;
       white-space: nowrap;
     }
-
+ 
     .ecc-pill.solid { border: 0.5px solid var(--border2); color: var(--text); }
     .ecc-pill.dashed { border: 0.5px dashed var(--border2); color: var(--text2); }
     .ecc-pill.result { border: 0.5px solid var(--border3); color: var(--text); }
-
+ 
     .ecc-op { font-size: 12px; color: var(--text3); }
-
+ 
     /* ── Modern impact grid ── */
     .impact-grid {
       display: grid;
@@ -340,7 +384,7 @@
       gap: 0.8rem;
       margin-bottom: 2.5rem;
     }
-
+ 
     .impact-card {
       border: 0.5px solid var(--border);
       border-radius: var(--radius-md);
@@ -348,9 +392,9 @@
       text-align: center;
       transition: border-color 0.2s;
     }
-
+ 
     .impact-card:hover { border-color: var(--border3); }
-
+ 
     .impact-name {
       font-family: 'Space Mono', monospace;
       font-size: 20px;
@@ -358,13 +402,13 @@
       color: var(--text);
       margin-bottom: 6px;
     }
-
+ 
     .impact-desc {
       font-size: 11px;
       color: var(--text2);
       line-height: 1.55;
     }
-
+ 
     /* ── Citation ── */
     .citation {
       font-size: 12px;
@@ -375,7 +419,42 @@
       font-style: italic;
       line-height: 1.7;
     }
-
+ 
+    /* ── Channel capacity legend ── */
+    .cap-legend {
+      display: flex;
+      gap: 14px;
+      margin: 0.5rem 0 0.4rem;
+    }
+ 
+    .cap-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--text3);
+    }
+ 
+    .cap-legend-swatch {
+      width: 14px;
+      height: 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+ 
+    .cap-legend-swatch.used { background: var(--text); }
+    .cap-legend-swatch.over {
+      background-image: repeating-linear-gradient(
+        45deg,
+        var(--text3) 0px,
+        var(--text3) 2px,
+        transparent 2px,
+        transparent 7px
+      );
+      border: 0.5px solid var(--border2);
+    }
+ 
     /* ── Responsive ── */
     @media (max-width: 540px) {
       .page { padding: 2rem 1.2rem 4rem; }
@@ -481,22 +560,32 @@
 
     <!-- 04 Channel capacity -->
     <div class="card">
-      <div class="card-num">04 &mdash; Channel capacity</div>
+      <div class="card-num">04 -- Channel capacity</div>
       <div class="card-title">Every channel has a maximum</div>
       <div class="cap-row" style="margin-top:0.7rem;">
         <span class="cap-key">within limit</span>
         <div class="cap-track">
-          <div class="cap-used" style="width:60%"></div>
+          <div class="cap-used" style="width:58%"></div>
         </div>
       </div>
       <div class="cap-row">
         <span class="cap-key">over capacity</span>
         <div class="cap-track">
-          <div class="cap-used" style="width:60%"></div>
-          <div class="cap-over" style="width:40%"></div>
+          <div class="cap-used" style="width:58%"></div>
+          <div class="cap-over" style="width:42%"></div>
         </div>
       </div>
-      <p class="card-body" style="margin-top:0.5rem;">A channel carries only so many bits per second, like a pipe with a fixed diameter. Shannon gave engineers the math to measure this exactly.</p>
+      <div class="cap-legend">
+        <div class="cap-legend-item">
+          <div class="cap-legend-swatch used"></div>
+          data fits
+        </div>
+        <div class="cap-legend-item">
+          <div class="cap-legend-swatch over"></div>
+          overflow = degraded signal
+        </div>
+      </div>
+      <p class="card-body">A channel carries only so many bits per second, like a pipe with a fixed diameter. Shannon gave engineers the math to measure this exactly.</p>
     </div>
 
     <!-- 05 Error-correcting codes (wide) -->
@@ -544,12 +633,27 @@
     </div>
   </div>
 
-  <!-- Citation -->
-  <p class="citation">
-    Gertner, J. (2012). <em>The idea factory: Bell Labs and the great age of American innovation.</em> Penguin Press.
-    &mdash; Infographic by Daniel, ISTA 100 Module 4
-  </p>
-  <!-- Add footer here -->
+  <!-- Works Cited -->
+  <div class="section-label" style="margin-top:2.5rem;">Works cited</div>
+  <div style="border:0.5px solid var(--border); border-radius:var(--radius-lg); padding:1.2rem 1.4rem; margin-bottom:2.5rem;">
+    <p style="font-size:13px; color:var(--text2); line-height:1.9; font-family:'DM Sans',sans-serif;">
+      Gertner, J. (2012). <em>The idea factory: Bell Labs and the great age of American innovation.</em> Penguin Press.
+    </p>
+  </div>
+  
+  <!-- Footer -->
+  <div style="
+    border-top: 0.5px solid var(--border);
+    margin-top: 1rem;
+    padding-top: 1.4rem;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--text3);
+  ">
+    DANIEL CORRON &nbsp;&middot;&nbsp; ISTA 100 &nbsp;&middot;&nbsp; ASSIGNMENT 4 &nbsp;&middot;&nbsp; MARCH 2026
+  </div>
 </div>
 </body>
 </html>
