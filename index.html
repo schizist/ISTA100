@@ -1,1140 +1,552 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAT-1: The Cable That Connected the World</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --deep: #050d1a;
-    --abyss: #080f1f;
-    --navy: #0a1628;
-    --ocean: #0d2240;
-    --mid: #0e3460;
-    --teal: #0b7a8a;
-    --cyan: #00c2d4;
-    --ice: #a8e6ef;
-    --gold: #e8b84b;
-    --copper: #b87333;
-    --white: #f0f4f8;
-    --dim: #8aa0b8;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--deep);
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* Animated ocean background */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: 
-      radial-gradient(ellipse 80% 50% at 20% 80%, rgba(11,122,138,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(0,194,212,0.07) 0%, transparent 50%),
-      radial-gradient(ellipse 100% 60% at 50% 100%, rgba(14,52,96,0.4) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  #ocean-canvas {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.55;
-  }
-
-  .page {
-    position: relative;
-    z-index: 1;
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 48px 32px 80px;
-  }
-
-  /* HEADER */
-  .header {
-    text-align: center;
-    margin-bottom: 64px;
-    position: relative;
-  }
-
-  .header-eyebrow {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--cyan);
-    margin-bottom: 16px;
-    opacity: 0.8;
-  }
-
-  .header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(42px, 7vw, 78px);
-    font-weight: 900;
-    line-height: 0.95;
-    letter-spacing: -2px;
-    background: linear-gradient(135deg, var(--white) 0%, var(--ice) 40%, var(--cyan) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 12px;
-  }
-
-  .header-sub {
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    color: var(--dim);
-    letter-spacing: 2px;
-  }
-
-  .header-line {
-    width: 60px;
-    height: 2px;
-    background: linear-gradient(90deg, var(--teal), var(--cyan));
-    margin: 20px auto 0;
-  }
-
-  /* STATS ROW */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 56px;
-  }
-
-  .stat-card {
-    background: linear-gradient(145deg, rgba(14,52,96,0.6), rgba(8,15,31,0.8));
-    border: 1px solid rgba(0,194,212,0.15);
-    border-radius: 12px;
-    padding: 20px 16px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s;
-  }
-
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    opacity: 0.6;
-  }
-
-  .stat-card:hover { border-color: rgba(0,194,212,0.4); }
-
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--cyan);
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .stat-unit {
-    font-size: 11px;
-    color: var(--gold);
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-  }
-
-  .stat-label {
-    font-size: 11px;
-    color: var(--dim);
-    line-height: 1.4;
-  }
-
-  /* SECTION TITLES */
-  .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--cyan);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(0,194,212,0.3), transparent);
-  }
-
-  /* CABLE CROSS-SECTION */
-  .cable-section {
-    margin-bottom: 56px;
-  }
-
-  .cable-diagram-wrap {
-    background: linear-gradient(145deg, rgba(14,52,96,0.4), rgba(5,13,26,0.6));
-    border: 1px solid rgba(0,194,212,0.12);
-    border-radius: 16px;
-    padding: 24px 16px;
-    overflow-x: auto;
-  }
-
-  /* OCEAN ROUTE */
-  .route-section {
-    margin-bottom: 56px;
-  }
-
-  .route-map {
-    background: linear-gradient(180deg, rgba(14,52,96,0.3) 0%, rgba(5,13,26,0.7) 100%);
-    border: 1px solid rgba(0,194,212,0.12);
-    border-radius: 16px;
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .route-map::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg, transparent, transparent 39px,
-      rgba(0,194,212,0.03) 39px, rgba(0,194,212,0.03) 40px
-    ),
-    repeating-linear-gradient(
-      90deg, transparent, transparent 39px,
-      rgba(0,194,212,0.03) 39px, rgba(0,194,212,0.03) 40px
-    );
-    pointer-events: none;
-  }
-
-  .route-visual {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    margin-bottom: 32px;
-    padding: 20px 0;
-  }
-
-  .route-point {
-    text-align: center;
-    z-index: 2;
-  }
-
-  .route-dot {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--cyan);
-    margin: 0 auto 10px;
-    box-shadow: 0 0 20px rgba(0,194,212,0.6);
-    position: relative;
-  }
-
-  .route-dot::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 1px solid rgba(0,194,212,0.3);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.6; }
-    50% { transform: scale(1.4); opacity: 0; }
-  }
-
-  .route-name {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--white);
-    letter-spacing: 1px;
-  }
-
-  .route-country {
-    font-size: 10px;
-    color: var(--dim);
-    margin-top: 3px;
-  }
-
-  .route-line {
-    flex: 1;
-    height: 2px;
-    background: linear-gradient(90deg, var(--cyan), var(--teal), var(--cyan));
-    position: relative;
-    margin: 0 8px;
-    top: -10px;
-  }
-
-  .route-line::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    left: 0; right: 0;
-    height: 40px;
-    background: linear-gradient(180deg, transparent 0%, rgba(0,194,212,0.05) 50%, transparent 100%);
-  }
-
-  /* repeater markers on the line */
-  .repeater-marks {
-    position: absolute;
-    top: 50%;
-    left: 0; right: 0;
-    transform: translateY(-50%);
-    display: flex;
-    justify-content: space-around;
-    padding: 0 4px;
-  }
-
-  .rep-mark {
-    width: 2px;
-    height: 10px;
-    background: var(--gold);
-    border-radius: 1px;
-    opacity: 0.75;
-    flex-shrink: 0;
-  }
-
-  .route-facts {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-
-  .route-fact {
-    background: rgba(0,0,0,0.25);
-    border-radius: 10px;
-    padding: 16px;
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .route-fact-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--cyan);
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
-  .route-fact-value {
-    font-size: 13px;
-    color: var(--white);
-    line-height: 1.4;
-  }
-
-  /* CHALLENGE CARDS */
-  .challenges-section { margin-bottom: 56px; }
-
-  .challenges-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-
-  .challenge-card {
-    background: linear-gradient(145deg, rgba(14,52,96,0.5), rgba(5,13,26,0.7));
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 14px;
-    padding: 24px 20px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-
-  .challenge-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(0,194,212,0.2);
-  }
-
-  .challenge-icon {
-    font-size: 28px;
-    margin-bottom: 14px;
-    display: block;
-  }
-
-  .challenge-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 10px;
-  }
-
-  .challenge-desc {
-    font-size: 12px;
-    color: var(--dim);
-    line-height: 1.6;
-  }
-
-  .challenge-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--card-accent, var(--teal)), transparent);
-    opacity: 0.5;
-  }
-
-  /* TIMELINE */
-  .timeline-section { margin-bottom: 56px; }
-
-  .timeline {
-    position: relative;
-    padding-left: 32px;
-  }
-
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 8px; top: 0; bottom: 0;
-    width: 2px;
-    background: linear-gradient(180deg, var(--cyan), var(--teal), transparent);
-  }
-
-  .timeline-item {
-    position: relative;
-    margin-bottom: 28px;
-    padding: 20px 24px;
-    background: linear-gradient(145deg, rgba(14,52,96,0.4), rgba(5,13,26,0.6));
-    border: 1px solid rgba(0,194,212,0.1);
-    border-radius: 12px;
-  }
-
-  .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -28px;
-    top: 24px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--cyan);
-    box-shadow: 0 0 12px rgba(0,194,212,0.5);
-  }
-
-  .timeline-year {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 2px;
-    margin-bottom: 6px;
-  }
-
-  .timeline-title {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--white);
-    margin-bottom: 6px;
-  }
-
-  .timeline-desc {
-    font-size: 12px;
-    color: var(--dim);
-    line-height: 1.6;
-  }
-
-  /* TASI SECTION */
-  .tasi-section {
-    margin-bottom: 56px;
-    background: linear-gradient(145deg, rgba(14,52,96,0.4), rgba(5,13,26,0.7));
-    border: 1px solid rgba(232,184,75,0.2);
-    border-radius: 16px;
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .tasi-section::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
-
-  .tasi-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    align-items: center;
-  }
-
-  .tasi-text h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    color: var(--gold);
-    margin-bottom: 12px;
-  }
-
-  .tasi-text p {
-    font-size: 13px;
-    color: var(--dim);
-    line-height: 1.7;
-    margin-bottom: 12px;
-  }
-
-  .tasi-visual {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .speech-bar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .speech-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    color: var(--dim);
-    width: 60px;
-    text-align: right;
-    flex-shrink: 0;
-  }
-
-  .bar-track {
-    flex: 1;
-    height: 18px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 4px;
-    overflow: hidden;
-    display: flex;
-  }
-
-  .bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .bar-pct {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    color: rgba(0,0,0,0.7);
-    font-weight: 700;
-  }
-
-  /* QUOTE BLOCK */
-  .quote-block {
-    margin-bottom: 56px;
-    background: linear-gradient(135deg, rgba(11,122,138,0.15), rgba(14,52,96,0.3));
-    border-left: 4px solid var(--cyan);
-    border-radius: 0 12px 12px 0;
-    padding: 28px 32px;
-  }
-
-  .quote-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-style: italic;
-    color: var(--ice);
-    line-height: 1.5;
-    margin-bottom: 12px;
-  }
-
-  .quote-attr {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--dim);
-    letter-spacing: 1px;
-  }
-
-  /* LEGACY */
-  .legacy-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-bottom: 48px;
-  }
-
-  .legacy-card {
-    background: linear-gradient(145deg, rgba(14,52,96,0.4), rgba(5,13,26,0.6));
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 12px;
-    padding: 20px;
-  }
-
-  .legacy-card h4 {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--cyan);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  .legacy-card p {
-    font-size: 13px;
-    color: var(--dim);
-    line-height: 1.6;
-  }
-
-  /* CITATION */
-  .citation {
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding-top: 24px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    color: rgba(138,160,184,0.6);
-    line-height: 1.8;
-    letter-spacing: 0.5px;
-  }
-
-  .citation strong { color: var(--dim); }
-
-  /* RESPONSIVE */
-  @media (max-width: 640px) {
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .challenges-grid { grid-template-columns: 1fr; }
-    .cable-diagram { flex-direction: column; }
-    .cable-layers { grid-template-columns: 1fr; }
-    .tasi-inner { grid-template-columns: 1fr; }
-    .legacy-grid { grid-template-columns: 1fr; }
-    .route-facts { grid-template-columns: 1fr; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Information Theory — ISTA 100 Module 4</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg2: #f5f4f0;
+      --bg3: #eeede8;
+      --text: #1a1a18;
+      --text2: #5f5e5a;
+      --text3: #888780;
+      --border: rgba(26,26,24,0.12);
+      --border2: rgba(26,26,24,0.22);
+      --border3: rgba(26,26,24,0.35);
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1a18;
+        --bg2: #242422;
+        --bg3: #2e2e2b;
+        --text: #f0efe8;
+        --text2: #a0a097;
+        --text3: #686760;
+        --border: rgba(240,239,232,0.12);
+        --border2: rgba(240,239,232,0.22);
+        --border3: rgba(240,239,232,0.35);
+      }
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      border: 0.5px solid var(--border3);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem 2.5rem 2rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg, transparent, transparent 39px, var(--border) 39px, var(--border) 40px),
+        repeating-linear-gradient(0deg,  transparent, transparent 39px, var(--border) 39px, var(--border) 40px);
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 0.6rem;
+    }
+
+    .hero h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(26px, 5vw, 38px);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .hero h1 .inv {
+      display: inline-block;
+      background: var(--text);
+      color: var(--bg);
+      padding: 0 8px 2px;
+      border-radius: 4px;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--text2);
+      max-width: 520px;
+      line-height: 1.7;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    /* ── Signal chain ── */
+    .signal-chain {
+      display: flex;
+      align-items: stretch;
+      border: 0.5px solid var(--border3);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+    }
+
+    .chain-node {
+      flex: 1;
+      min-width: 80px;
+      padding: 1rem 0.8rem;
+      text-align: center;
+      border-right: 0.5px solid var(--border);
+    }
+
+    .chain-node:last-child { border-right: none; }
+
+    .chain-node.noise {
+      flex: 0 0 90px;
+      background: var(--bg2);
+      border-left: 0.5px dashed var(--border2);
+      border-right: 0.5px dashed var(--border2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .node-code {
+      font-family: 'Space Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .node-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .node-desc {
+      font-size: 10px;
+      color: var(--text2);
+      line-height: 1.4;
+    }
+
+    /* ── Concept cards grid ── */
+    .concepts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.1rem 1rem;
+      background: var(--bg);
+      transition: border-color 0.2s;
+    }
+
+    .card:hover { border-color: var(--border3); }
+
+    .card.wide { grid-column: 1 / -1; }
+
+    .card-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.06em;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .card-body {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.65;
+    }
+
+    /* ── Bit row ── */
+    .bit-row {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin: 0.7rem 0 0.5rem;
+    }
+
+    .bit {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3px;
+      border: 0.5px solid var(--border2);
+      color: var(--text);
+    }
+
+    .bit.on {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    /* ── Entropy bars ── */
+    .entropy-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0.4rem 0;
+    }
+
+    .entropy-key {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--text3);
+      white-space: nowrap;
+      width: 72px;
+    }
+
+    .entropy-track {
+      flex: 1;
+      height: 6px;
+      background: var(--bg3);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .entropy-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--text);
+    }
+
+    /* ── Redundancy demo ── */
+    .redund {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      line-height: 2;
+      margin: 0.6rem 0 0.4rem;
+      letter-spacing: 0.04em;
+    }
+
+    .redund .s { text-decoration: line-through; color: var(--text3); }
+    .redund .k { color: var(--text); font-weight: 700; }
+
+    /* ── Channel capacity ── */
+    .cap-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0.4rem 0;
+    }
+
+    .cap-key {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--text3);
+      width: 80px;
+    }
+
+    .cap-track {
+      flex: 1;
+      height: 14px;
+      border: 0.5px solid var(--border2);
+      border-radius: 3px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .cap-used { background: var(--text); }
+    .cap-over { background: var(--bg3); }
+
+    /* ── Error code demo ── */
+    .ecc-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0.7rem 0 0.5rem;
+    }
+
+    .ecc-pill {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .ecc-pill.solid { border: 0.5px solid var(--border2); color: var(--text); }
+    .ecc-pill.dashed { border: 0.5px dashed var(--border2); color: var(--text2); }
+    .ecc-pill.result { border: 0.5px solid var(--border3); color: var(--text); }
+
+    .ecc-op { font-size: 12px; color: var(--text3); }
+
+    /* ── Modern impact grid ── */
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .impact-card {
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.9rem;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .impact-card:hover { border-color: var(--border3); }
+
+    .impact-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .impact-desc {
+      font-size: 11px;
+      color: var(--text2);
+      line-height: 1.55;
+    }
+
+    /* ── Citation ── */
+    .citation {
+      font-size: 12px;
+      color: var(--text3);
+      border-top: 0.5px solid var(--border);
+      padding-top: 1.2rem;
+      margin-top: 0.5rem;
+      font-style: italic;
+      line-height: 1.7;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 540px) {
+      .page { padding: 2rem 1.2rem 4rem; }
+      .hero { padding: 1.5rem 1.5rem 1.2rem; }
+      .concepts { grid-template-columns: 1fr; }
+      .card.wide { grid-column: 1; }
+      .impact-grid { grid-template-columns: 1fr; }
+      .signal-chain { flex-wrap: wrap; }
+      .chain-node.noise { flex: 0 0 100%; border-left: none; border-right: none; border-top: 0.5px dashed var(--border2); border-bottom: 0.5px dashed var(--border2); }
+    }
+  </style>
 </head>
 <body>
-<canvas id="ocean-canvas"></canvas>
 <div class="page">
 
-  <!-- HEADER -->
-  <header class="header">
-    <p class="header-eyebrow">Bell Laboratories · AT&T · British Post Office</p>
-    <h1>TAT-1</h1>
-    <p class="header-sub">The Transatlantic Telephone Cable · 1956</p>
-    <div class="header-line"></div>
-  </header>
-
-  <!-- STATS -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-num">2,250</div>
-      <div class="stat-unit">miles</div>
-      <div class="stat-label">Total cable length, ocean floor</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">36</div>
-      <div class="stat-unit">channels</div>
-      <div class="stat-label">Simultaneous voice conversations</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">52</div>
-      <div class="stat-unit">repeaters</div>
-      <div class="stat-label">Spaced every ~40 miles along the route</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">22</div>
-      <div class="stat-unit">years</div>
-      <div class="stat-label">Operated without a single hardware failure</div>
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="eyebrow">ISTA 100 &mdash; Module 4 &mdash; Concept Exploration</div>
+      <h1>Information <span class="inv">Theory</span></h1>
+      <p class="hero-sub">Claude Shannon's framework for measuring, moving, and protecting messages — the mathematical foundation of every digital communication system in use today.</p>
     </div>
   </div>
 
-  <!-- CABLE CROSS SECTION -->
-  <div class="cable-section">
-    <p class="section-label">Cable Architecture · 10 Layers · 1.5" Diameter</p>
-    <div class="cable-diagram-wrap">
-      <svg viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;display:block;margin:0 auto;">
-        <defs>
-          <radialGradient id="g1" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#ffe066"/>
-            <stop offset="100%" stop-color="#e8b84b"/>
-          </radialGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="2" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-
-        <!--
-          Layout: viewBox 900x360
-          Circle centered at cx=450, cy=180
-
-        <!-- ── RING COLORS: full ocean theme ── -->
-        <!-- 1. Outer Jute      → dark navy-slate -->
-        <circle cx="450" cy="180" r="158" fill="#0d2240" stroke="#1a3a5c" stroke-width="2"/>
-        <!-- 2. Steel Armor     → mid steel-blue -->
-        <circle cx="450" cy="180" r="130" fill="#1e3a5f" stroke="#2d5a8a" stroke-width="2"/>
-        <!-- 3. Inner Jute      → slightly lighter navy -->
-        <circle cx="450" cy="180" r="106" fill="#0a2a4a" stroke="#0e3d68" stroke-width="1.5"/>
-        <!-- 4. Cotton Tape     → pale ice blue -->
-        <circle cx="450" cy="180" r="84"  fill="#a8d8e8" stroke="#c0e8f4" stroke-width="1"/>
-        <!-- 5. Copper anti-worm → warm gold-amber accent -->
-        <circle cx="450" cy="180" r="66"  fill="#c87820" stroke="#e8a030" stroke-width="2"/>
-        <!-- 6. Polyethylene    → deep teal -->
-        <circle cx="450" cy="180" r="50"  fill="#0b5a6a" stroke="#0e7a8a" stroke-width="1.5"/>
-        <!-- 7. Conducting tape → bright cyan glow -->
-        <circle cx="450" cy="180" r="36"  fill="#0b7a8a" stroke="#00c2d4" stroke-width="2" filter="url(#glow)"/>
-        <!-- 8. PE inner        → dark abyss -->
-        <circle cx="450" cy="180" r="23"  fill="#050d1a" stroke="#0a1628" stroke-width="1"/>
-        <!-- 9. Copper core     → gold -->
-        <circle cx="450" cy="180" r="13"  fill="url(#g1)"/>
-
-        <!--
-          CONNECTOR SCHEME
-          Left labels (anchor right, x=195): layers 1,3,5,7,9
-          Right labels (anchor left, x=655): layers 2,4,6,8
-
-          Each connector: circle on ring edge → diagonal line → horizontal line → label pill
-          Y positions spread evenly: 36, 86, 136, 180, 224, 274 …
-        -->
-
-        <!-- ══ CONNECTORS & LABELS no-crossing guaranteed: dot Y increases as r decreases ══ -->
-
-        <!-- L1: Outer Jute r=158, 225° → dot=(338,68) top label y=42 -->
-        <circle cx="338" cy="68"  r="3.5" fill="#4a7aaa"/>
-        <line x1="338" y1="68"  x2="210" y2="42"  stroke="#4a7aaa" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
-        <line x1="210" y1="42"  x2="200" y2="42"  stroke="#4a7aaa" stroke-width="1" opacity="0.85"/>
-        <rect x="2"   y="28"  width="196" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(74,122,170,0.4)" stroke-width="1"/>
-        <text x="10"  y="44"  fill="#7ab0d8" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Outer Jute</text>
-        <text x="10"  y="55"  fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Weather &amp; abrasion protection</text>
-
-        <!-- L3: Inner Jute r=106, 215° → dot=(363,119) label y=98 -->
-        <circle cx="363" cy="119" r="3.5" fill="#2d6a9a"/>
-        <line x1="363" y1="119" x2="210" y2="98"  stroke="#2d6a9a" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
-        <line x1="210" y1="98"  x2="200" y2="98"  stroke="#2d6a9a" stroke-width="1" opacity="0.85"/>
-        <rect x="2"   y="84"  width="196" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(45,106,154,0.4)" stroke-width="1"/>
-        <text x="10"  y="100" fill="#5a9ac8" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Inner Jute</text>
-        <text x="10"  y="111" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Cushioning between layers</text>
-
-        <!-- L5: Copper r=66, 225° → dot=(403,133) label y=154 -->
-        <circle cx="403" cy="133" r="3.5" fill="#e8a030"/>
-        <line x1="403" y1="133" x2="210" y2="154" stroke="#e8a030" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
-        <line x1="210" y1="154" x2="200" y2="154" stroke="#e8a030" stroke-width="1" opacity="0.85"/>
-        <rect x="2"   y="140" width="196" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(232,160,48,0.4)" stroke-width="1"/>
-        <text x="10"  y="156" fill="#e8a030" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Copper (anti-worm)</text>
-        <text x="10"  y="167" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Repels teredo worms</text>
-
-        <!-- L7: Conducting Tape r=36, 240° → dot=(432,149) label y=210 -->
-        <circle cx="432" cy="149" r="3.5" fill="#00c2d4" filter="url(#glow)"/>
-        <line x1="432" y1="149" x2="210" y2="210" stroke="#00c2d4" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
-        <line x1="210" y1="210" x2="200" y2="210" stroke="#00c2d4" stroke-width="1" opacity="0.85"/>
-        <rect x="2"   y="196" width="196" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(0,194,212,0.45)" stroke-width="1"/>
-        <text x="10"  y="212" fill="#00c2d4" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Conducting Tape</text>
-        <text x="10"  y="223" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Coaxial return path</text>
-
-        <!-- L9: Copper Core r=13, 258° → dot=(447,167) label y=266 -->
-        <circle cx="447" cy="167" r="3.5" fill="#ffe066"/>
-        <line x1="447" y1="167" x2="210" y2="266" stroke="#ffe066" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
-        <line x1="210" y1="266" x2="200" y2="266" stroke="#ffe066" stroke-width="1" opacity="0.85"/>
-        <rect x="2"   y="252" width="196" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(255,224,102,0.45)" stroke-width="1"/>
-        <text x="10"  y="268" fill="#ffe066" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Copper Core</text>
-        <text x="10"  y="279" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Primary signal wire</text>
-
-        <!-- R2: Steel Armor r=130, 335° → dot=(568,125) label y=42 -->
-        <circle cx="568" cy="125" r="3.5" fill="#4a8ab8"/>
-        <line x1="568" y1="125" x2="690" y2="42"  stroke="#4a8ab8" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
-        <line x1="690" y1="42"  x2="700" y2="42"  stroke="#4a8ab8" stroke-width="1" opacity="0.85"/>
-        <rect x="702"  y="28"  width="192" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(74,138,184,0.4)" stroke-width="1"/>
-        <text x="712"  y="44"  fill="#7ab0d8" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Steel Armor Wire</text>
-        <text x="712"  y="55"  fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Tensile strength for laying</text>
-
-        <!-- R4: Cotton Tape r=84, 345° → dot=(531,158) label y=98 -->
-        <circle cx="531" cy="158" r="3.5" fill="#a8d8e8"/>
-        <line x1="531" y1="158" x2="690" y2="98"  stroke="#a8d8e8" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
-        <line x1="690" y1="98"  x2="700" y2="98"  stroke="#a8d8e8" stroke-width="1" opacity="0.85"/>
-        <rect x="702"  y="84"  width="192" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(168,216,232,0.4)" stroke-width="1"/>
-        <text x="712"  y="100" fill="#a8d8e8" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Cotton Tape</text>
-        <text x="712"  y="111" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Insulating wrap</text>
-
-        <!-- R6: Polyethylene r=50, 355° → dot=(500,176) label y=154 -->
-        <circle cx="500" cy="176" r="3.5" fill="#40c0d0"/>
-        <line x1="500" y1="176" x2="690" y2="154" stroke="#40c0d0" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
-        <line x1="690" y1="154" x2="700" y2="154" stroke="#40c0d0" stroke-width="1" opacity="0.85"/>
-        <rect x="702"  y="140" width="192" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(64,192,208,0.4)" stroke-width="1"/>
-        <text x="712"  y="156" fill="#40c0d0" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Polyethylene</text>
-        <text x="712"  y="167" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Signal insulation</text>
-
-        <!-- R8: PE inner r=23, 10° → dot=(473,184) label y=210 -->
-        <circle cx="473" cy="184" r="3.5" fill="#6ab8c8"/>
-        <line x1="473" y1="184" x2="690" y2="210" stroke="#6ab8c8" stroke-width="1" stroke-dasharray="4,2" opacity="0.85"/>
-        <line x1="690" y1="210" x2="700" y2="210" stroke="#6ab8c8" stroke-width="1" opacity="0.85"/>
-        <rect x="702"  y="196" width="192" height="30" rx="6" fill="rgba(10,26,60,0.75)" stroke="rgba(106,184,200,0.4)" stroke-width="1"/>
-        <text x="712"  y="212" fill="#6ab8c8" font-size="11" font-family="'DM Sans',sans-serif" font-weight="600">Polyethylene (inner)</text>
-        <text x="712"  y="223" fill="#4a6880" font-size="9"  font-family="'DM Sans',sans-serif">Dielectric spacer</text>
-
-      </svg>
+  <!-- Signal chain -->
+  <div class="section-label">01 &mdash; The signal chain</div>
+  <div class="signal-chain">
+    <div class="chain-node">
+      <div class="node-code">src</div>
+      <div class="node-name">Source</div>
+      <div class="node-desc">Where the message originates — a voice, a file, a thought</div>
+    </div>
+    <div class="chain-node">
+      <div class="node-code">tx</div>
+      <div class="node-name">Transmitter</div>
+      <div class="node-desc">Encodes the message into a signal</div>
+    </div>
+    <div class="chain-node noise">
+      <div class="node-code" style="font-size:13px;">&#9889;</div>
+      <div class="node-name">Noise</div>
+      <div class="node-desc">Always present in every channel</div>
+    </div>
+    <div class="chain-node">
+      <div class="node-code">rx</div>
+      <div class="node-name">Receiver</div>
+      <div class="node-desc">Decodes the signal back into a message</div>
+    </div>
+    <div class="chain-node">
+      <div class="node-code">dst</div>
+      <div class="node-name">Destination</div>
+      <div class="node-desc">Where the (hopefully intact) message arrives</div>
     </div>
   </div>
 
-  <!-- OCEAN ROUTE -->
-  <div class="route-section">
-    <p class="section-label">The Route · Newfoundland to Scotland</p>
-    <div class="route-map">
-      <div class="route-visual">
-        <div class="route-point">
-          <div class="route-dot"></div>
-          <div class="route-name">CLARENVILLE</div>
-          <div class="route-country">Newfoundland, Canada</div>
-        </div>
-        <div style="flex:1; position:relative; margin: 0 8px; top: -10px;">
-          <div class="route-line"></div>
-          <div class="repeater-marks" id="repeaterMarks"></div>
-          <script>
-            (function(){
-              var c = document.getElementById('repeaterMarks');
-              if(c) { for(var i=0;i<52;i++){ var d=document.createElement('div'); d.className='rep-mark'; c.appendChild(d); } }
-            })();
-          </script>
-        </div>
-        <div class="route-point">
-          <div class="route-dot"></div>
-          <div class="route-name">OBAN</div>
-          <div class="route-country">Scotland, UK</div>
+  <!-- Five core concepts -->
+  <div class="section-label">02 &mdash; Five core concepts</div>
+  <div class="concepts">
+
+    <!-- 01 The bit -->
+    <div class="card">
+      <div class="card-num">01 &mdash; The bit</div>
+      <div class="card-title">The fundamental unit of information</div>
+      <div class="bit-row">
+        <div class="bit on">1</div>
+        <div class="bit">0</div>
+        <div class="bit on">1</div>
+        <div class="bit on">1</div>
+        <div class="bit">0</div>
+        <div class="bit">0</div>
+        <div class="bit on">1</div>
+      </div>
+      <p class="card-body">A bit is a single yes/no choice. Shannon showed any message — text, audio, video — can be broken into 1s and 0s. The letter "A" in ASCII is 01000001.</p>
+    </div>
+
+    <!-- 02 Entropy -->
+    <div class="card">
+      <div class="card-num">02 &mdash; Entropy</div>
+      <div class="card-title">Information = surprise</div>
+      <div class="entropy-row" style="margin-top:0.7rem;">
+        <span class="entropy-key">predictable</span>
+        <div class="entropy-track"><div class="entropy-fill" style="width:18%"></div></div>
+      </div>
+      <div class="entropy-row">
+        <span class="entropy-key">surprising</span>
+        <div class="entropy-track"><div class="entropy-fill" style="width:88%"></div></div>
+      </div>
+      <p class="card-body" style="margin-top:0.5rem;">"The sun rose" tells you almost nothing. "It snowed in Vegas in July" is high-entropy — unexpected, therefore genuinely informative.</p>
+    </div>
+
+    <!-- 03 Redundancy -->
+    <div class="card">
+      <div class="card-num">03 &mdash; Redundancy</div>
+      <div class="card-title">Language is mostly predictable</div>
+      <div class="redund">
+        <span class="k">F</span><span class="s">A</span><span class="k">C</span><span class="s">T</span>&nbsp;<span class="k">I</span><span class="s">S</span>&nbsp;<span class="k">S</span><span class="s">T</span><span class="k">R</span><span class="s">A</span><span class="k">N</span><span class="s">G</span><span class="k">E</span><span class="s">R</span>
+      </div>
+      <p class="card-body">Shannon calculated English is ~75% redundant. You can strip vowels from most sentences and still read them. Less redundancy = harder to crack; more = safer to transmit.</p>
+    </div>
+
+    <!-- 04 Channel capacity -->
+    <div class="card">
+      <div class="card-num">04 &mdash; Channel capacity</div>
+      <div class="card-title">Every channel has a maximum</div>
+      <div class="cap-row" style="margin-top:0.7rem;">
+        <span class="cap-key">within limit</span>
+        <div class="cap-track">
+          <div class="cap-used" style="width:60%"></div>
         </div>
       </div>
-      <div style="text-align:center; margin-bottom: 20px;">
-        <span style="font-family:'Space Mono',monospace; font-size:9px; color:var(--gold); letter-spacing:2px;">▲ GOLD MARKS = REPEATER LOCATIONS (52 total: every ~40 miles)</span>
-      </div>
-      <div class="route-facts">
-        <div class="route-fact">
-          <div class="route-fact-label">Max Depth</div>
-          <div class="route-fact-value">Over 2 miles below sea surface at deepest points</div>
-        </div>
-        <div class="route-fact">
-          <div class="route-fact-label">Signal Speed</div>
-          <div class="route-fact-value">New York to London in under 1/10th of a second</div>
-        </div>
-        <div class="route-fact">
-          <div class="route-fact-label">Project Cost</div>
-          <div class="route-fact-value">~$42 million (≈$340 million today)</div>
+      <div class="cap-row">
+        <span class="cap-key">over capacity</span>
+        <div class="cap-track">
+          <div class="cap-used" style="width:60%"></div>
+          <div class="cap-over" style="width:40%"></div>
         </div>
       </div>
+      <p class="card-body" style="margin-top:0.5rem;">A channel carries only so many bits per second — like a pipe with a fixed diameter. Shannon gave engineers the math to measure this exactly.</p>
+    </div>
+
+    <!-- 05 Error-correcting codes (wide) -->
+    <div class="card wide">
+      <div class="card-num">05 &mdash; Error-correcting codes</div>
+      <div class="card-title">Any message can be sent near-perfectly, even through noise</div>
+      <div class="ecc-row">
+        <div class="ecc-pill solid">original msg</div>
+        <span class="ecc-op">+</span>
+        <div class="ecc-pill dashed">extra parity bits</div>
+        <span class="ecc-op">&rarr;</span>
+        <div class="ecc-pill result">msg survives noise</div>
+      </div>
+      <p class="card-body">Shannon's most surprising result: by adding carefully designed extra bits, a message can survive even a very noisy channel with near-zero errors. This is how your phone calls stay clear, how CDs still play with scratches, and how the Voyager probe sent photos from billions of miles away.</p>
+    </div>
+
+  </div>
+
+  <!-- Modern impact -->
+  <div class="section-label">03 &mdash; Why it still matters</div>
+  <div class="impact-grid">
+    <div class="impact-card">
+      <div class="impact-name">Wi-Fi</div>
+      <div class="impact-desc">Channel capacity math determines how much data your router can push per second</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-name">ZIP</div>
+      <div class="impact-desc">File compression exploits Shannon's redundancy insights to shrink data without losing it</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-name">QR</div>
+      <div class="impact-desc">Error-correcting codes let QR codes work even when up to 30% of the image is damaged</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-name">CDs</div>
+      <div class="impact-desc">Error correction lets scratched discs play perfectly by reconstructing missing data on the fly</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-name">4G/5G</div>
+      <div class="impact-desc">Mobile networks use Shannon's capacity formula to maximize data rates over radio channels</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-name">AI</div>
+      <div class="impact-desc">Language models use entropy and probability concepts rooted directly in information theory</div>
     </div>
   </div>
 
-  <!-- CHALLENGES -->
-  <div class="challenges-section">
-    <p class="section-label">Engineering Problems That Had to Be Solved</p>
-    <div class="challenges-grid">
-      <div class="challenge-card" style="--card-accent: #00c2d4;">
-        <span class="challenge-icon">🌊</span>
-        <div class="challenge-title">Deep Ocean Pressure</div>
-        <div class="challenge-desc">Repeaters had to withstand crushing pressure miles underwater while remaining fully operational, with zero access for repairs once deployed.</div>
-      </div>
-      <div class="challenge-card" style="--card-accent: #e8b84b;">
-        <span class="challenge-icon">⚡</span>
-        <div class="challenge-title">Power Delivery</div>
-        <div class="challenge-desc">A continuous electrical current had to be pushed through 2,250 miles of cable to keep every repeater alive, with no interruptions for 20+ years.</div>
-      </div>
-      <div class="challenge-card" style="--card-accent: #b87333;">
-        <span class="challenge-icon">🪱</span>
-        <div class="challenge-title">Teredo Worms</div>
-        <div class="challenge-desc">Marine wood-boring organisms could gnaw through cable sheathing. A copper anti-worm layer was engineered specifically to counter this biological threat.</div>
-      </div>
-      <div class="challenge-card" style="--card-accent: #00c2d4;">
-        <span class="challenge-icon">🏔️</span>
-        <div class="challenge-title">Uneven Seafloor</div>
-        <div class="challenge-desc">The North Atlantic floor has massive peaks and trenches. Cable had to be flexible enough to drape across mile-long underwater inclines without stress fractures.</div>
-      </div>
-      <div class="challenge-card" style="--card-accent: #e8b84b;">
-        <span class="challenge-icon">🔧</span>
-        <div class="challenge-title">Repeater Reliability</div>
-        <div class="challenge-desc">Kelly insisted the cable had to last 20 years without a single failure to be economically viable. Only vacuum tube designs from the 1930s, with 16 years of test data, were trusted.</div>
-      </div>
-      <div class="challenge-card" style="--card-accent: #b87333;">
-        <span class="challenge-icon">🚢</span>
-        <div class="challenge-title">Cable Laying at Sea</div>
-        <div class="challenge-desc">The SS Monarch had to pay out cable continuously while navigating Atlantic storms, keeping the line taut enough to avoid kinking but slack enough not to snap.</div>
-      </div>
-    </div>
-  </div>
+  <!-- Citation -->
+  <p class="citation">
+    Gertner, J. (2012). <em>The idea factory: Bell Labs and the great age of American innovation.</em> Penguin Press.
+    &mdash; Infographic by Daniel, ISTA 100 Module 4
+  </p>
 
-  <!-- TIMELINE -->
-  <div class="timeline-section">
-    <p class="section-label">From Idea to Ocean Floor</p>
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-year">1850s</div>
-        <div class="timeline-title">Early Telegraph Failures</div>
-        <div class="timeline-desc">Multiple attempts to lay transatlantic telegraph cables end in catastrophe, snapped lines, leaks, and transmissions that died within weeks. The British royal astronomer calls it "a mathematical impossibility."</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-year">1866</div>
-        <div class="timeline-title">First Successful Telegraph Cable</div>
-        <div class="timeline-desc">A better-constructed cable finally carries dots and dashes between Canada and Ireland, proving the Atlantic can be crossed, at least for telegraph signals.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-year">Late 1920s</div>
-        <div class="timeline-title">Transatlantic Radio Telephone</div>
-        <div class="timeline-desc">Kelly works with a Bell Labs team to build radio-telephone service between the US and Europe. It works, but atmospheric interference causes "cosmic frying-pan" sounds and sometimes days of complete blackout.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-year">1953</div>
-        <div class="timeline-title">Planning Begins</div>
-        <div class="timeline-desc">Kelly begins formal planning with British phone engineers. The Labs draw on test data from a successful Key West–Havana submarine cable to inform the design of repeaters that must last two decades.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-year">1955–1956</div>
-        <div class="timeline-title">Laying the Cable</div>
-        <div class="timeline-desc">The SS Monarch lays the first cable in 1955, the return cable in 1956. A hurricane passes through during operations. The cable holds.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-year">Sept 25, 1956</div>
-        <div class="timeline-title">Opening Day</div>
-        <div class="timeline-desc">AT&T chairman Cleo Craig calls Britain's postmaster general. The signal travels from New York through 52 repeaters across the ocean floor to Scotland and back, in under a tenth of a second.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TASI -->
-  <div class="tasi-section">
-    <div class="tasi-inner">
-      <div class="tasi-text">
-        <h3>TASI: Doubling the Cable's Capacity</h3>
-        <p>Bell Labs engineers discovered that a telephone talker only actually sends signal about 35% of the time, the rest is pauses, listening, and silence.</p>
-        <p>TASI (Time Assignment Speech Interpolation) inspected voice channels 2,000 times per second and instantly reassigned idle channels to other conversations. This effectively doubled capacity from 36 to 72 simultaneous calls, with no new cable required.</p>
-        <div style="font-family:'Space Mono',monospace; font-size:10px; color:var(--gold); letter-spacing:1px; margin-top:8px;">→ "Better and cheaper" - Kelly's standard</div>
-      </div>
-      <div class="tasi-visual">
-        <div style="font-family:'Space Mono',monospace; font-size:10px; color:var(--dim); margin-bottom:12px; letter-spacing:1px;">TYPICAL CALL: SIGNAL VS SILENCE</div>
-        <div class="speech-bar">
-          <div class="speech-label">SPEAKING</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:35%; background: linear-gradient(90deg, var(--cyan), var(--teal));">
-              <span class="bar-pct">35%</span>
-            </div>
-          </div>
-        </div>
-        <div class="speech-bar">
-          <div class="speech-label">SILENCE</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:65%; background: linear-gradient(90deg, rgba(14,52,96,0.8), rgba(14,52,96,0.4));">
-              <span class="bar-pct" style="color:var(--dim);">65%</span>
-            </div>
-          </div>
-        </div>
-        <div style="font-family:'Space Mono',monospace; font-size:9px; color:var(--dim); margin-top:16px; line-height:1.6;">
-          TASI reclaims that 65% silence<br>
-          and assigns it to other callers<br>
-          in real time - 2,000×/sec
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- QUOTE -->
-  <div class="quote-block">
-    <div class="quote-text">"If such a complex and technically difficult system could be made operational, it would still have to prove that it was economically justified."</div>
-    <div class="quote-attr">— Mervin Kelly, Bell Labs President · Gertner (2012, p. 162)</div>
-  </div>
-
-  <!-- LEGACY -->
-  <p class="section-label">Why TAT-1 Still Matters</p>
-  <div class="legacy-grid">
-    <div class="legacy-card">
-      <h4>The Engineering Philosophy</h4>
-      <p>Kelly insisted on using only proven, conservative components: vacuum tubes with 16 years of test data rather than the newer transistor. In systems that must not fail, innovation means knowing when NOT to use the newest thing.</p>
-    </div>
-    <div class="legacy-card">
-      <h4>Seeds of the Internet</h4>
-      <p>TAT-1 established the undersea cable infrastructure model still used today. Modern fiber-optic cables follow the same ocean routes, and the principle of spaced repeaters amplifying signals remains unchanged.</p>
-    </div>
-    <div class="legacy-card">
-      <h4>The Monopoly Paradox</h4>
-      <p>As scientist Max Mathews noted, Shannon's information theory, born at Bell Labs, was also the "mathematical basis for breaking up the Bell System." The Labs' greatest achievements contained the seeds of its own disruption.</p>
-    </div>
-    <div class="legacy-card">
-      <h4>22 Years, Zero Failures</h4>
-      <p>Kelly's requirement was 20 years of uninterrupted service. TAT-1 delivered 22. It's a benchmark for what obsessive quality control, long-horizon planning, and institutional patience can achieve.</p>
-    </div>
-  </div>
-
-  <div class="citation">
-    <strong>Sources:</strong><br>
-    Gertner, J. (2012). <em>The idea factory: Bell Labs and the great age of American innovation.</em> Penguin Press.<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;— Chapter 3: "System," pp. 41–56 (Bell Labs research culture &amp; engineering philosophy)<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;— Chapter 9: "Formula," pp. 148–168 (Kelly's innovation framework &amp; proximity principles)<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;— Chapter 11: "Empire," pp. 161–184 (TAT-1 cable, TASI, legacy of Bell Labs)<br><br>
-    Kelly, M. (as cited in Gertner, 2012, p. 162). Quote on economic viability of the transatlantic cable.
-  </div>
-
-  <!-- FOOTER -->
-  <div style="
-    border-top: 1px solid rgba(255,255,255,0.06);
-    margin-top: 40px;
-    padding-top: 20px;
-    text-align: center;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: rgba(138,160,184,0.45);
-  ">
-    DANIEL CORRON &nbsp;·&nbsp; ISTA 100 &nbsp;·&nbsp; ASSIGNMENT 2 &nbsp;·&nbsp; FEBRUARY 28, 2026
-  </div>
 </div>
-<script>
-(function() {
-  const canvas = document.getElementById('ocean-canvas');
-  const ctx = canvas.getContext('2d');
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // --- BUBBLES ---
-  const bubbles = [];
-  for (let i = 0; i < 55; i++) {
-    bubbles.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      r: Math.random() * 3.5 + 0.5,
-      speed: Math.random() * 0.4 + 0.1,
-      drift: (Math.random() - 0.5) * 0.3,
-      alpha: Math.random() * 0.35 + 0.08,
-      wobble: Math.random() * Math.PI * 2,
-      wobbleSpeed: Math.random() * 0.015 + 0.005,
-    });
-  }
-
-  // --- PLANKTON ---
-  // Two types: drifters (ellipse blobs) and sparklers (tiny glowing dots)
-  const plankton = [];
-  for (let i = 0; i < 38; i++) {
-    plankton.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      rx: Math.random() * 3 + 1.5,   // ellipse x radius
-      ry: Math.random() * 1.5 + 0.8, // ellipse y radius
-      angle: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.012,
-      vx: (Math.random() - 0.5) * 0.18,
-      vy: (Math.random() - 0.5) * 0.12,
-      alpha: Math.random() * 0.25 + 0.06,
-      pulsePhase: Math.random() * Math.PI * 2,
-      pulseSpeed: Math.random() * 0.02 + 0.008,
-      hue: Math.random() > 0.5 ? '0,194,212' : '168,230,239', // cyan or ice
-    });
-  }
-
-  // sparkle dots bioluminescent
-  const sparks = [];
-  for (let i = 0; i < 28; i++) {
-    sparks.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      r: Math.random() * 1.2 + 0.3,
-      vx: (Math.random() - 0.5) * 0.22,
-      vy: (Math.random() - 0.5) * 0.15,
-      alpha: Math.random() * 0.5 + 0.1,
-      phase: Math.random() * Math.PI * 2,
-      phaseSpeed: Math.random() * 0.025 + 0.008,
-    });
-  }
-
-  function wrap(val, max) {
-    if (val < -20) return max + 20;
-    if (val > max + 20) return -20;
-    return val;
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const W = canvas.width, H = canvas.height;
-
-    // --- Draw bubbles ---
-    bubbles.forEach(b => {
-      b.wobble += b.wobbleSpeed;
-      b.x += b.drift + Math.sin(b.wobble) * 0.25;
-      b.y -= b.speed;
-
-      if (b.y < -10) {
-        b.y = H + 10;
-        b.x = Math.random() * W;
-      }
-      b.x = wrap(b.x, W);
-
-      ctx.beginPath();
-      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(0,194,212,${b.alpha})`;
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
-
-      // tiny highlight inside bubble
-      ctx.beginPath();
-      ctx.arc(b.x - b.r * 0.28, b.y - b.r * 0.28, b.r * 0.32, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(168,230,239,${b.alpha * 0.9})`;
-      ctx.fill();
-    });
-
-    // --- Draw plankton blobs ---
-    plankton.forEach(p => {
-      p.pulsePhase += p.pulseSpeed;
-      p.angle += p.rotSpeed;
-      p.x += p.vx;
-      p.y += p.vy;
-      p.x = wrap(p.x, W);
-      p.y = wrap(p.y, H);
-
-      const pulse = 0.7 + 0.3 * Math.sin(p.pulsePhase);
-      const a = p.alpha * pulse;
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.angle);
-      ctx.scale(1, p.ry / p.rx);
-      ctx.beginPath();
-      ctx.arc(0, 0, p.rx * pulse, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${p.hue},${a})`;
-      ctx.fill();
-      ctx.restore();
-    });
-
-    // --- Draw sparkles ---
-    sparks.forEach(s => {
-      s.phase += s.phaseSpeed;
-      s.x += s.vx;
-      s.y += s.vy;
-      s.x = wrap(s.x, W);
-      s.y = wrap(s.y, H);
-
-      const glow = 0.4 + 0.6 * Math.abs(Math.sin(s.phase));
-      const a = s.alpha * glow;
-
-      // glow halo
-      const grad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 3.5);
-      grad.addColorStop(0, `rgba(0,194,212,${a})`);
-      grad.addColorStop(1, `rgba(0,194,212,0)`);
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r * 3.5, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      // core dot
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(168,230,239,${a * 1.2})`;
-      ctx.fill();
-    });
-
-    requestAnimationFrame(draw);
-  }
-
-  draw();
-})();
-</script>
 </body>
 </html>
