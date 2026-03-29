@@ -1,667 +1,985 @@
+pdf
+
+for my ISTA100 class I need to make a draft presentation where I combine all of the info graphics we've made, make an introduction and conclusion, and kinda tie them all together. The whole thing needs to be nice and designed.
+9:28 AM
+Reading the frontend design skill
+
+Looking at your four assignments, I can see a really clear through-line: they all connect to the same book (The Idea Factory), and they trace a narrative arc from Bell Labs → the transistor → the transatlantic cable → information theory. That's a great story to tell in a portfolio.
+
+Here's what I'm thinking for the design: your existing work already has two distinct visual identities — the deep ocean/dark aesthetic (TAT-1, Building Blocks) and the clean editorial style (Information Theory). I'll build a portfolio wrapper that ties them together with a unified look — something editorial and dark, like a magazine spread about the Information Age.
+
+Let me build this out:
+Created a file, ran a command, read a file
+
+Here's your Unit 1 portfolio draft! Here's what it includes:
+
+Structure:
+
+    Cover page — full-screen with the "The Information Age" title and animated scroll hint
+    Executive Summary — brief paragraph + four key stats from your semester work
+    Module navigation — four linked cards, one per assignment with a color per module
+    Each assignment embedded live in a browser-style frame, with connective text before and after explaining how each piece relates to the others
+    Conclusion — pulls the four themes together into one unified takeaway, with four "key lessons" cards
+    Footer with your name, course, and semester
+
+The connective tissue (which the rubric specifically asks for) ties all four pieces back to the same idea: Bell Labs succeeded because of culture, not just genius — and each assignment demonstrates a different face of that.
+
+To finalize for submission, you'll want to:
+
+    Drop your actual assignment HTML files into the same folder and update the iframe srcdoc references to src="assignment-X.html" paths — right now modules 3 and 4 are condensed summaries since embedding the full files inline would be very large
+    Add the Jetsons image for module 1 if you have it locally
+    Check the works cited in each module are complete
+
+Want me to adjust the design, rewrite any of the connective text, or help you wire up the actual file paths?
+Portfolio
+Code · HTML 
+
+Good lord! Claude... This is fantastic. Jolly good work old chap!
+
+
+First note: 
+Claude is AI and can make mistakes. Please double-check responses.
+Portfolio · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Information Theory - ISTA 100 Module 4</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <title>The Information Age — ISTA 100 Portfolio · Daniel Corron</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #ffffff;
-      --bg2: #f5f4f0;
-      --bg3: #eeede8;
-      --text: #1a1a18;
-      --text2: #5f5e5a;
-      --text3: #888780;
-      --border: rgba(26,26,24,0.12);
-      --border2: rgba(26,26,24,0.22);
-      --border3: rgba(26,26,24,0.35);
-      --radius-md: 8px;
-      --radius-lg: 12px;
-      --radius-xl: 16px;
-    }
  
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #1a1a18;
-        --bg2: #242422;
-        --bg3: #2e2e2b;
-        --text: #f0efe8;
-        --text2: #a0a097;
-        --text3: #686760;
-        --border: rgba(240,239,232,0.12);
-        --border2: rgba(240,239,232,0.22);
-        --border3: rgba(240,239,232,0.35);
-      }
+    :root {
+      --ink:   #0e0d0b;
+      --paper: #f5f2eb;
+      --warm:  #e8e2d4;
+      --gold:  #c8963a;
+      --rust:  #a04030;
+      --teal:  #1a6a72;
+      --dim:   #7a7060;
+      --faint: rgba(14,13,11,0.08);
+      --faint2: rgba(14,13,11,0.15);
     }
  
     html { scroll-behavior: smooth; }
  
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      background: var(--ink);
+      color: var(--paper);
+      overflow-x: hidden;
       min-height: 100vh;
     }
  
-    /* ── Layout ── */
-    .page {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 3rem 2rem 5rem;
+    /* ══ COVER ══════════════════════════════════════════════════════ */
+ 
+    .cover {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      position: relative;
+      padding: 5vw;
+      overflow: hidden;
     }
  
-    /* ── Hero ── */
-    .hero {
-      border: 0.5px solid var(--border3);
-      border-radius: var(--radius-xl);
-      padding: 2.5rem 2.5rem 2rem;
+    .cover-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 15% 90%, rgba(26,106,114,0.22) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 85% 10%, rgba(200,150,58,0.12) 0%, transparent 55%),
+        #0e0d0b;
+    }
+ 
+    /* subtle grid lines */
+    .cover-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.025) 79px, rgba(255,255,255,0.025) 80px),
+        repeating-linear-gradient(0deg,  transparent, transparent 79px, rgba(255,255,255,0.025) 79px, rgba(255,255,255,0.025) 80px);
+    }
+ 
+    .cover-inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 4rem;
+    }
+ 
+    .cover-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0.8;
+    }
+ 
+    .cover-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(56px, 10vw, 130px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      color: var(--paper);
+      margin-bottom: 0.3em;
+    }
+ 
+    .cover-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--gold);
+    }
+ 
+    .cover-subtitle {
+      font-size: clamp(16px, 2.2vw, 22px);
+      font-weight: 300;
+      color: rgba(245,242,235,0.55);
+      max-width: 600px;
+      line-height: 1.6;
+      margin-top: 1.5rem;
+    }
+ 
+    .cover-rule {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin-bottom: 2rem;
+      opacity: 0.5;
+    }
+ 
+    .cover-meta {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: rgba(245,242,235,0.3);
+      text-transform: uppercase;
+      padding-top: 2rem;
+      border-top: 0.5px solid rgba(245,242,235,0.1);
+    }
+ 
+    .scroll-hint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: rgba(245,242,235,0.25);
+      animation: drift 2.4s ease-in-out infinite;
+    }
+ 
+    @keyframes drift {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+ 
+    .scroll-hint-line {
+      width: 1px;
+      height: 32px;
+      background: linear-gradient(180deg, rgba(245,242,235,0.25), transparent);
+    }
+ 
+    /* ══ EXEC SUMMARY ════════════════════════════════════════════════ */
+ 
+    .exec {
+      background: var(--paper);
+      color: var(--ink);
+      padding: 7vw 8vw;
+      position: relative;
+    }
+ 
+    .exec-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
       margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 0.5px solid rgba(14,13,11,0.15);
+    }
+ 
+    .exec-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 6vw;
+      align-items: start;
+    }
+ 
+    .exec-lead {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+ 
+    .exec-lead strong {
+      font-weight: 700;
+      font-style: normal;
+    }
+ 
+    .exec-body {
+      font-size: 15px;
+      color: #3a3830;
+      line-height: 1.8;
+    }
+ 
+    .exec-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+ 
+    .exec-stat {
+      padding: 1.5rem;
+      border: 0.5px solid rgba(14,13,11,0.12);
+      border-radius: 4px;
+    }
+ 
+    .exec-stat-num {
+      font-family: 'Fraunces', serif;
+      font-size: 44px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+ 
+    .exec-stat-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+ 
+    /* ══ MODULE NAV ══════════════════════════════════════════════════ */
+ 
+    .module-nav {
+      background: var(--ink);
+      padding: 4vw 8vw;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+ 
+    .nav-card {
+      border: 0.5px solid rgba(245,242,235,0.12);
+      border-radius: 4px;
+      padding: 1.5rem 1.2rem;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: border-color 0.25s, background 0.25s;
       position: relative;
       overflow: hidden;
     }
  
-    .hero-grid {
+    .nav-card::before {
+      content: '';
       position: absolute;
-      inset: 0;
-      background:
-        repeating-linear-gradient(90deg, transparent, transparent 39px, var(--border) 39px, var(--border) 40px),
-        repeating-linear-gradient(0deg,  transparent, transparent 39px, var(--border) 39px, var(--border) 40px);
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--card-color, var(--gold));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
     }
  
-    .hero-content { position: relative; z-index: 1; }
+    .nav-card:hover { border-color: rgba(245,242,235,0.3); background: rgba(245,242,235,0.04); }
+    .nav-card:hover::before { transform: scaleX(1); }
  
-    .eyebrow {
+    .nav-num {
       font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--text3);
-      margin-bottom: 0.6rem;
-    }
- 
-    .hero h1 {
-      font-family: 'Space Mono', monospace;
-      font-size: clamp(26px, 5vw, 38px);
-      font-weight: 700;
-      line-height: 1.15;
-      margin-bottom: 1rem;
-      color: var(--text);
-    }
- 
-    .hero h1 .inv {
-      display: inline-block;
-      background: var(--text);
-      color: var(--bg);
-      padding: 0 8px 2px;
-      border-radius: 4px;
-    }
- 
-    .hero-sub {
-      font-size: 15px;
-      color: var(--text2);
-      max-width: 520px;
-      line-height: 1.7;
-    }
- 
-    /* ── Section label ── */
-    .section-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
+      font-size: 9px;
       letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text3);
-      margin-bottom: 0.9rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 0.5px solid var(--border);
+      color: var(--card-color, var(--gold));
+      margin-bottom: 0.7rem;
     }
  
-    /* ── Signal chain ── */
-    .signal-chain {
-      display: flex;
-      align-items: stretch;
-      border: 0.5px solid var(--border3);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      margin-bottom: 2.5rem;
-    }
- 
-    .chain-node {
-      flex: 1;
-      min-width: 80px;
-      padding: 1rem 0.8rem;
-      text-align: center;
-      border-right: 0.5px solid var(--border);
-    }
- 
-    .chain-node:last-child { border-right: none; }
- 
-    .chain-node.noise {
-      flex: 0 0 90px;
-      background: var(--bg2);
-      border-left: 0.5px dashed var(--border2);
-      border-right: 0.5px dashed var(--border2);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
- 
-    .node-code {
-      font-family: 'Space Mono', monospace;
+    .nav-title {
+      font-family: 'Fraunces', serif;
       font-size: 16px;
       font-weight: 700;
-      color: var(--text);
-      margin-bottom: 5px;
-    }
- 
-    .node-name {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 3px;
-    }
- 
-    .node-desc {
-      font-size: 10px;
-      color: var(--text2);
-      line-height: 1.4;
-    }
- 
-    /* ── Concept cards grid ── */
-    .concepts {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-    }
- 
-    .card {
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.1rem 1.1rem 1rem;
-      background: var(--bg);
-      transition: border-color 0.2s;
-    }
- 
-    .card:hover { border-color: var(--border3); }
- 
-    .card.wide { grid-column: 1 / -1; }
- 
-    .card-num {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: var(--text3);
-      margin-bottom: 0.35rem;
-      letter-spacing: 0.06em;
-    }
- 
-    .card-title {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 0.5rem;
+      color: var(--paper);
       line-height: 1.3;
+      margin-bottom: 0.5rem;
     }
  
-    .card-body {
-      font-size: 13px;
-      color: var(--text2);
-      line-height: 1.65;
-    }
- 
-    /* ── Bit row ── */
-    .bit-row {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-      margin: 0.7rem 0 0.5rem;
-    }
- 
-    .bit {
-      font-family: 'Space Mono', monospace;
-      font-size: 12px;
-      font-weight: 700;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 3px;
-      border: 0.5px solid var(--border2);
-      color: var(--text);
-    }
- 
-    .bit.on {
-      background: var(--text);
-      color: var(--bg);
-      border-color: var(--text);
-    }
- 
-    /* ── Entropy bars ── */
-    .entropy-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0.4rem 0;
-    }
- 
-    .entropy-key {
-      font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      color: var(--text3);
-      white-space: nowrap;
-      width: 72px;
-    }
- 
-    .entropy-track {
-      flex: 1;
-      height: 6px;
-      background: var(--bg3);
-      border-radius: 3px;
-      overflow: hidden;
-    }
- 
-    .entropy-fill {
-      height: 100%;
-      border-radius: 3px;
-      background: var(--text);
-    }
- 
-    /* ── Redundancy demo ── */
-    .redund {
-      font-family: 'Space Mono', monospace;
-      font-size: 12px;
-      line-height: 2;
-      margin: 0.6rem 0 0.4rem;
-      letter-spacing: 0.04em;
-    }
- 
-    .redund .s { text-decoration: line-through; color: var(--text3); }
-    .redund .k { color: var(--text); font-weight: 700; }
- 
-    /* ── Channel capacity ── */
-    .cap-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0.4rem 0;
-    }
- 
-    .cap-key {
-      font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      color: var(--text3);
-      width: 80px;
-    }
- 
-    .cap-track {
-      flex: 1;
-      height: 14px;
-      border: 0.5px solid var(--border2);
-      border-radius: 3px;
-      overflow: hidden;
-      display: flex;
-    }
- 
-    .cap-used { background: var(--text); }
-    .cap-over {
-      background-image: repeating-linear-gradient(
-        45deg,
-        var(--text3) 0px,
-        var(--text3) 2px,
-        transparent 2px,
-        transparent 7px
-      );
-      opacity: 0.7;
-    }
- 
-    .cap-legend {
-      display: flex;
-      gap: 14px;
-      margin-top: 0.5rem;
-      margin-bottom: 0.3rem;
-    }
- 
-    .cap-legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      color: var(--text3);
-    }
- 
-    .cap-legend-swatch {
-      width: 14px;
-      height: 8px;
-      border-radius: 2px;
-      flex-shrink: 0;
-    }
- 
-    .cap-legend-swatch.used { background: var(--text); }
-    .cap-legend-swatch.over {
-      background-image: repeating-linear-gradient(
-        45deg,
-        var(--text3) 0px,
-        var(--text3) 2px,
-        transparent 2px,
-        transparent 7px
-      );
-      border: 0.5px solid var(--border2);
-    }
- 
-    /* ── Error code demo ── */
-    .ecc-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin: 0.7rem 0 0.5rem;
-    }
- 
-    .ecc-pill {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      padding: 4px 10px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
- 
-    .ecc-pill.solid { border: 0.5px solid var(--border2); color: var(--text); }
-    .ecc-pill.dashed { border: 0.5px dashed var(--border2); color: var(--text2); }
-    .ecc-pill.result { border: 0.5px solid var(--border3); color: var(--text); }
- 
-    .ecc-op { font-size: 12px; color: var(--text3); }
- 
-    /* ── Modern impact grid ── */
-    .impact-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.8rem;
-      margin-bottom: 2.5rem;
-    }
- 
-    .impact-card {
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 0.9rem;
-      text-align: center;
-      transition: border-color 0.2s;
-    }
- 
-    .impact-card:hover { border-color: var(--border3); }
- 
-    .impact-name {
-      font-family: 'Space Mono', monospace;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
- 
-    .impact-desc {
+    .nav-desc {
       font-size: 11px;
-      color: var(--text2);
+      color: rgba(245,242,235,0.4);
       line-height: 1.55;
     }
  
-    /* ── Citation ── */
-    .citation {
-      font-size: 12px;
-      color: var(--text3);
-      border-top: 0.5px solid var(--border);
-      padding-top: 1.2rem;
-      margin-top: 0.5rem;
-      font-style: italic;
-      line-height: 1.7;
+    /* ══ SECTION WRAPPER ═════════════════════════════════════════════ */
+ 
+    .module-section {
+      padding: 5vw 0;
+      position: relative;
     }
  
-    /* ── Channel capacity legend ── */
-    .cap-legend {
-      display: flex;
-      gap: 14px;
-      margin: 0.5rem 0 0.4rem;
+    .module-section + .module-section {
+      border-top: 0.5px solid rgba(245,242,235,0.08);
     }
  
-    .cap-legend-item {
+    .section-header {
+      display: grid;
+      grid-template-columns: 8vw 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+      padding: 0 8vw;
+      align-items: start;
+    }
+ 
+    .section-number {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(60px, 8vw, 96px);
+      font-weight: 900;
+      line-height: 0.85;
+      color: rgba(245,242,235,0.06);
+      user-select: none;
+    }
+ 
+    .section-meta {}
+ 
+    .section-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--section-color, var(--gold));
+      margin-bottom: 0.6rem;
+    }
+ 
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--paper);
+      margin-bottom: 1rem;
+    }
+ 
+    .section-desc {
+      font-size: 15px;
+      color: rgba(245,242,235,0.5);
+      line-height: 1.75;
+      max-width: 580px;
+    }
+ 
+    /* ══ IFRAME EMBED ════════════════════════════════════════════════ */
+ 
+    .embed-wrap {
+      margin: 0 4vw;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 0.5px solid rgba(245,242,235,0.1);
+      background: #0a0a08;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+      position: relative;
+    }
+ 
+    .embed-chrome {
+      background: rgba(245,242,235,0.06);
+      border-bottom: 0.5px solid rgba(245,242,235,0.08);
+      padding: 10px 16px;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
+    }
+ 
+    .chrome-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+ 
+    .chrome-dot:nth-child(1) { background: #ff5f57; }
+    .chrome-dot:nth-child(2) { background: #febc2e; }
+    .chrome-dot:nth-child(3) { background: #28c840; }
+ 
+    .chrome-url {
+      margin-left: 8px;
       font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      color: var(--text3);
+      font-size: 10px;
+      color: rgba(245,242,235,0.25);
+      letter-spacing: 0.04em;
     }
  
-    .cap-legend-swatch {
-      width: 14px;
-      height: 8px;
-      border-radius: 2px;
+    .embed-iframe {
+      width: 100%;
+      height: 680px;
+      border: none;
+      display: block;
+    }
+ 
+    /* ══ CONNECTOR TEXT ══════════════════════════════════════════════ */
+ 
+    .connector {
+      padding: 3.5rem 8vw;
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 4rem;
+      align-items: center;
+      border-top: 0.5px solid rgba(245,242,235,0.07);
+    }
+ 
+    .connector-text {
+      font-size: 16px;
+      line-height: 1.8;
+      color: rgba(245,242,235,0.6);
+    }
+ 
+    .connector-text strong {
+      color: var(--paper);
+      font-weight: 500;
+    }
+ 
+    .connector-pull {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.45;
+      color: var(--paper);
+      opacity: 0.45;
+      border-left: 2px solid var(--section-color, var(--gold));
+      padding-left: 1.5rem;
+    }
+ 
+    /* ══ CONCLUSION ══════════════════════════════════════════════════ */
+ 
+    .conclusion {
+      background: var(--paper);
+      color: var(--ink);
+      padding: 7vw 8vw;
+    }
+ 
+    .conclusion-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 0.5px solid rgba(14,13,11,0.15);
+    }
+ 
+    .conclusion-headline {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(32px, 5vw, 58px);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 2rem;
+      max-width: 700px;
+    }
+ 
+    .conclusion-headline em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--rust);
+    }
+ 
+    .conclusion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+ 
+    .conclusion-body {
+      font-size: 16px;
+      line-height: 1.85;
+      color: #3a3830;
+    }
+ 
+    .conclusion-body p + p { margin-top: 1.2rem; }
+ 
+    .takeaways {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+ 
+    .takeaway {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1.1rem 1.2rem;
+      border: 0.5px solid rgba(14,13,11,0.1);
+      border-radius: 4px;
+    }
+ 
+    .takeaway-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--gold);
       flex-shrink: 0;
+      margin-top: 2px;
     }
  
-    .cap-legend-swatch.used { background: var(--text); }
-    .cap-legend-swatch.over {
-      background-image: repeating-linear-gradient(
-        45deg,
-        var(--text3) 0px,
-        var(--text3) 2px,
-        transparent 2px,
-        transparent 7px
-      );
-      border: 0.5px solid var(--border2);
+    .takeaway-text {
+      font-size: 13px;
+      color: #3a3830;
+      line-height: 1.6;
     }
  
-    /* ── Responsive ── */
-    @media (max-width: 540px) {
-      .page { padding: 2rem 1.2rem 4rem; }
-      .hero { padding: 1.5rem 1.5rem 1.2rem; }
-      .concepts { grid-template-columns: 1fr; }
-      .card.wide { grid-column: 1; }
-      .impact-grid { grid-template-columns: 1fr; }
-      .signal-chain { flex-wrap: wrap; }
-      .chain-node.noise { flex: 0 0 100%; border-left: none; border-right: none; border-top: 0.5px dashed var(--border2); border-bottom: 0.5px dashed var(--border2); }
+    .takeaway-text strong { color: var(--ink); }
+ 
+    /* ══ FOOTER ══════════════════════════════════════════════════════ */
+ 
+    footer {
+      background: #090807;
+      padding: 3rem 8vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 0.5px solid rgba(245,242,235,0.07);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: rgba(245,242,235,0.2);
+      text-transform: uppercase;
     }
+ 
+    /* ══ RESPONSIVE ══════════════════════════════════════════════════ */
+ 
+    @media (max-width: 768px) {
+      .exec-grid { grid-template-columns: 1fr; }
+      .module-nav { grid-template-columns: 1fr 1fr; }
+      .section-header { grid-template-columns: 1fr; gap: 1rem; }
+      .section-number { display: none; }
+      .connector { grid-template-columns: 1fr; gap: 2rem; }
+      .conclusion-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+ 
+    @media (max-width: 480px) {
+      .module-nav { grid-template-columns: 1fr; }
+    }
+ 
+    /* ══ SCROLL REVEAL ═══════════════════════════════════════════════ */
+ 
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+ 
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+ 
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
   </style>
 </head>
 <body>
-<div class="page">
-
-  <!-- Hero -->
-  <div class="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-content">
-      <div class="eyebrow">ISTA 100 &mdash; Module 4 &mdash; Concept Exploration</div>
-      <h1>Information <span class="inv">Theory</span></h1>
-      <p class="hero-sub">Claude Shannon's framework for measuring, moving, and protecting messages: the mathematical foundation of every digital communication system in use today.</p>
+ 
+<!-- ══ COVER PAGE ══════════════════════════════════════════════════ -->
+<section class="cover">
+  <div class="cover-bg"></div>
+ 
+  <div class="cover-inner">
+    <div class="cover-eyebrow">ISTA 100 · Unit 1 Portfolio · Spring 2026</div>
+    <div class="cover-rule"></div>
+    <h1 class="cover-title">The<br><em>Information</em><br>Age</h1>
+    <p class="cover-subtitle">From the transistor to the ocean floor to the mathematics of meaning — a semester tracing how Bell Labs changed the world, and what that means for us now.</p>
+  </div>
+ 
+  <div class="cover-meta">
+    <span>Daniel Corron</span>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-hint-line"></div>
+    </div>
+    <span>Modules 1 – 4</span>
+  </div>
+</section>
+ 
+<!-- ══ EXEC SUMMARY ════════════════════════════════════════════════ -->
+<section class="exec" id="summary">
+  <div class="exec-label">Executive Summary</div>
+  <div class="exec-grid">
+    <div>
+      <p class="exec-lead">Four assignments. One book. A story about <strong>how innovation actually happens</strong> — and why it still matters.</p>
+      <p class="exec-body">This portfolio follows a single thread across four modules of ISTA 100: the way that one institution, Bell Laboratories, created the intellectual and technological foundations of the world we live in. The common source for each module is Jon Gertner's <em>The Idea Factory</em> (2012), which tells the story of Bell Labs through the people, inventions, and culture that made it extraordinary. Each assignment approaches that story from a different angle — from broad cultural essay to technical deep-dive to mathematical theory — and together they build into something larger than any one piece.</p>
+    </div>
+    <div class="exec-stats">
+      <div class="exec-stat">
+        <div class="exec-stat-num">4</div>
+        <div class="exec-stat-label">Modules covered</div>
+      </div>
+      <div class="exec-stat">
+        <div class="exec-stat-num">1</div>
+        <div class="exec-stat-label">Unifying source text</div>
+      </div>
+      <div class="exec-stat">
+        <div class="exec-stat-num">1948</div>
+        <div class="exec-stat-label">Year Shannon published<br>information theory</div>
+      </div>
+      <div class="exec-stat">
+        <div class="exec-stat-num">22</div>
+        <div class="exec-stat-label">Years TAT-1 ran<br>without a single failure</div>
+      </div>
     </div>
   </div>
-
-  <!-- Signal chain -->
-  <div class="section-label">01 &mdash; The signal chain</div>
-  <div class="signal-chain">
-    <div class="chain-node">
-      <div class="node-code">src</div>
-      <div class="node-name">Source</div>
-      <div class="node-desc">Where the message originates: a voice, a file, a thought</div>
-    </div>
-    <div class="chain-node">
-      <div class="node-code">tx</div>
-      <div class="node-name">Transmitter</div>
-      <div class="node-desc">Encodes the message into a signal</div>
-    </div>
-    <div class="chain-node noise">
-      <div class="node-code" style="font-size:13px;">&#9889;</div>
-      <div class="node-name">Noise</div>
-      <div class="node-desc">Always present in every channel</div>
-    </div>
-    <div class="chain-node">
-      <div class="node-code">rx</div>
-      <div class="node-name">Receiver</div>
-      <div class="node-desc">Decodes the signal back into a message</div>
-    </div>
-    <div class="chain-node">
-      <div class="node-code">dst</div>
-      <div class="node-name">Destination</div>
-      <div class="node-desc">Where the (hopefully intact) message arrives</div>
+</section>
+ 
+<!-- ══ NAV GRID ════════════════════════════════════════════════════ -->
+<nav class="module-nav">
+  <a href="#module1" class="nav-card" style="--card-color: #c8963a;">
+    <div class="nav-num">Module 01</div>
+    <div class="nav-title">The Information Age</div>
+    <div class="nav-desc">Bell Labs, Pixar, and the culture that makes breakthroughs inevitable.</div>
+  </a>
+  <a href="#module2" class="nav-card" style="--card-color: #1a6a72;">
+    <div class="nav-num">Module 02</div>
+    <div class="nav-title">Building Blocks</div>
+    <div class="nav-desc">Transistors, lithium, and the future of battery-as-a-service.</div>
+  </a>
+  <a href="#module3" class="nav-card" style="--card-color: #00c2d4;">
+    <div class="nav-num">Module 03</div>
+    <div class="nav-title">TAT-1</div>
+    <div class="nav-desc">The transatlantic cable that connected two continents — and stayed connected for 22 years.</div>
+  </a>
+  <a href="#module4" class="nav-card" style="--card-color: #a0a097;">
+    <div class="nav-num">Module 04</div>
+    <div class="nav-title">Information Theory</div>
+    <div class="nav-desc">Shannon's framework — the math that runs underneath everything.</div>
+  </a>
+</nav>
+ 
+<!-- ══ MODULE 1 ════════════════════════════════════════════════════ -->
+<section class="module-section" id="module1" style="--section-color: #c8963a;">
+ 
+  <div class="section-header reveal">
+    <div class="section-number">1</div>
+    <div class="section-meta">
+      <div class="section-tag">Module 01 · Assignment 1</div>
+      <h2 class="section-title">The Information Age</h2>
+      <p class="section-desc">The opening assignment asked a big question: what is the Information Age, and what kind of innovation culture produces it? Starting with Bell Labs as the historical anchor, this piece draws a line to Pixar Studios as a contemporary example of the same collaborative spirit — and then looks forward to space access as the next frontier.</p>
     </div>
   </div>
-
-  <!-- Five core concepts -->
-  <div class="section-label">02 &mdash; Five core concepts</div>
-  <div class="concepts">
-
-    <!-- 01 The bit -->
-    <div class="card">
-      <div class="card-num">Concept 01 &mdash; The bit</div>
-      <div class="card-title">The fundamental unit of information</div>
-      <div class="bit-row">
-        <div class="bit on">1</div>
-        <div class="bit">0</div>
-        <div class="bit on">1</div>
-        <div class="bit on">1</div>
-        <div class="bit">0</div>
-        <div class="bit">0</div>
-        <div class="bit on">1</div>
-      </div>
-      <p class="card-body">A bit is a single yes/no choice. Shannon showed any message (text, audio, video) can be broken into 1s and 0s. The letter "A" in ASCII is 01000001.</p>
+ 
+  <div class="embed-wrap reveal">
+    <div class="embed-chrome">
+      <div class="chrome-dot"></div><div class="chrome-dot"></div><div class="chrome-dot"></div>
+      <span class="chrome-url">assignment-1 · the-information-age.html</span>
     </div>
-
-    <!-- 02 Entropy -->
-    <div class="card">
-      <div class="card-num">Concept 02 &mdash; Entropy</div>
-      <div class="card-title">Information = surprise</div>
-      <div class="entropy-row" style="margin-top:0.7rem;">
-        <span class="entropy-key">predictable</span>
-        <div class="entropy-track"><div class="entropy-fill" style="width:18%"></div></div>
-      </div>
-      <div class="entropy-row">
-        <span class="entropy-key">surprising</span>
-        <div class="entropy-track"><div class="entropy-fill" style="width:88%"></div></div>
-      </div>
-      <p class="card-body" style="margin-top:0.5rem;">"The sun rose" tells you almost nothing. "It snowed in Vegas in July" is high-entropy (unexpected), therefore genuinely informative.</p>
-    </div>
-
-    <!-- 03 Redundancy -->
-    <div class="card">
-      <div class="card-num">Concept 03 &mdash; Redundancy</div>
-      <div class="card-title">Language is mostly predictable</div>
-      <div class="redund">
-        <span class="k">L</span><span class="s">A</span><span class="k">N</span><span class="k">G</span><span class="s">U</span><span class="s">A</span><span class="k">G</span><span class="s">E</span>&nbsp;
-        <span class="s">I</span><span class="k">S </span>&nbsp;
-        <span class="s">A</span><span class="k">L</span><span class="k">S</span><span class="s">O</span>&nbsp;
-        <span class="k">S</span><span class="k">T</span><span class="k">R</span><span class="s">A</span><span class="k">N</span><span class="k">G</span><span class="s">E</span>
-      </div>
-      <p class="card-body">Shannon calculated English is ~75% redundant. You can strip vowels from most sentences and still read them. Less redundancy = harder to crack; more = safer to transmit.</p>
-    </div>
-
-    <!-- 04 Channel capacity -->
-    <div class="card">
-      <div class="card-num">Concept 04 &mdash; Channel capacity</div>
-      <div class="card-title">Every channel has a maximum</div>
-      <div class="cap-row" style="margin-top:0.7rem;">
-        <span class="cap-key">within limit</span>
-        <div class="cap-track">
-          <div class="cap-used" style="width:58%"></div>
+    <iframe class="embed-iframe" srcdoc="<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>The Information Age</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; position: relative; overflow-x: hidden; }
+        #particles-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: linear-gradient(135deg, #667eea 0%, #2a163d 100%); }
+        .container { max-width: 1200px; margin: 0 auto; background: transparent; }
+        header { background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.1) 100%); color: white; padding: 40px 40px; text-align: center; position: relative; overflow: hidden; }
+        h1 { font-size: 3em; margin-bottom: 20px; position: relative; z-index: 1; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .content-box { background: rgba(255,255,255,0.95); padding: 40px; margin: 20px 40px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        section { padding: 60px 0; }
+        h2 { color: #2a5298; font-size: 2.2em; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 3px solid #667eea; display: inline-block; }
+        h3 { color: #1e3c72; font-size: 1.6em; margin: 30px 0 15px 0; }
+        p { margin-bottom: 20px; font-size: 1.1em; text-align: justify; }
+        .hero-image { width: 100%; height: 300px; object-fit: cover; margin: 30px 0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .quote-box { background: rgba(102,126,234,0.05); backdrop-filter: blur(2px); border: 2px solid rgba(255,255,255,0.5); color: white; padding: 40px; margin: 40px; border-radius: 8px; font-style: italic; font-size: 1.2em; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.7); }
+        .quote-box::before { content: '\"'; font-size: 6em; position: absolute; top: -20px; left: 20px; opacity: 0.3; }
+        .stat-box { background: linear-gradient(135deg, rgba(30,60,114,0.95) 0%, rgba(42,82,152,0.95) 100%); color: white; padding: 30px; border-radius: 8px; text-align: center; margin: 20px 0; }
+        .stat-number { font-size: 2em; font-weight: bold; display: block; margin-bottom: 10px; }
+        .works-cited { background: rgba(255,255,255,0.95); padding: 40px; margin: 20px 40px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .works-cited ol { margin-left: 0; padding-left: 2rem; }
+        .works-cited li { margin-bottom: 15px; font-size: 1em; line-height: 1.8; padding-left: 1.5rem; text-indent: -1.5rem; overflow-wrap: anywhere; word-break: break-word; }
+        footer { background: linear-gradient(135deg, rgba(30,60,114,0.1) 0%, rgba(42,82,152,0.1) 100%); color: white; text-align: center; padding: 30px; }
+    </style>
+</head>
+<body>
+    <canvas id='particles-canvas'></canvas>
+    <div class='container'>
+        <header><h1>The Information Age</h1></header>
+        <div class='content-box'>
+            <h2>The Information Age</h2>
+            <img src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=400&fit=crop' alt='Digital technology network' class='hero-image'>
+            <p>The information age is marked by the transition from analog to digital technologies, enabling unprecedented access to and sharing of information. This new age was heralded forth in the 1940s with the invention of the transistor at Bell Labs which in turn enabled the development of modern computers, smartphones, and the internet, ultimately ushering in the Information Age.</p>
         </div>
-      </div>
-      <div class="cap-row">
-        <span class="cap-key">over capacity</span>
-        <div class="cap-track">
-          <div class="cap-used" style="width:58%"></div>
-          <div class="cap-over" style="width:42%"></div>
+        <div class='quote-box'>Modern industrial research is meant to apply science to the &lsquo;common affairs&rsquo; of everyday life. It is an instrument capable of avoiding many of the mistakes of a blind cut-and-try experimentation. It is likewise an instrument which can bring to bear an aggregate of creative force on any particular problem which is infinitely greater than any force which can be conceived of as residing in the intellectual capacity of an individual.<div style='text-align:right;margin-top:20px;font-size:0.8em;'>&mdash; Frank Jewett, President of Bell Labs</div></div>
+        <div class='content-box'>
+            <h2>A Contemporary Driver of Innovation: Pixar Studios</h2>
+            <p>I believe the pioneering and collaborative spirit of Bell Labs can be recognized in many organizations across the globe today, and one of my favorite examples is Pixar Studios. Pixar's history is studded with innovations in computer animation, such as rendering light refractions through water or hair&rsquo;s movement in wind, that exist due to the collaborative and experimental culture they foster. They had to invent solutions to the challenges they faced.</p>
+            <div class='stat-box'>
+                <span class='stat-number'>6+ Academy Awards for Pixar&rsquo;s RenderMan render engine, plus these film-specific breakthroughs</span>
+                <ol style='text-align:left;display:inline-block;margin:0;padding-left:1.2em;'>
+                    <li>Toy Story (1995) - First fully computer-animated feature film</li>
+                    <li>A Bug&rsquo;s Life (1998) - Subdivision surfaces for smooth organic forms</li>
+                    <li>Toy Story 2 (1999) - Procedural cutting/slicing tools</li>
+                    <li>Finding Nemo (2003) - Water simulation and caustics</li>
+                    <li>The Incredibles (2004) - Cloth and fabric simulation</li>
+                    <li>Cars (2006) - Realistic metal and paint rendering</li>
+                    <li>Brave (2012) - Hair simulation breakthrough</li>
+                </ol>
+            </div>
         </div>
+        <section>
+            <div class='content-box'>
+                <h2>What Will Propel Innovation in the Future?</h2>
+                <h3>A Destiny Told and Retold</h3>
+                <p>Humans have long speculated that mankind&rsquo;s destiny lays in the stars, but time and time again we have been humbled by the reality that we have a whole lot more to figure out first. The Information Age, having spurred so much innovation, could finally take us to that long promised utopia depicted in works of fiction like Hanna-Barbera&rsquo;s The Jetsons, if the right innovators come together under the right conditions.</p>
+                <p>A space elevator or inertial launcher could make access to orbit routine and affordable, finally breaking the binds of rocket propulsion and ushering in the true Space Age we have been promised.</p>
+            </div>
+            <div class='quote-box'>The best way to predict the future is to invent it.<div style='text-align:right;margin-top:20px;font-size:0.8em;'>&mdash; Alan Kay, computer scientist and Turing Award winner</div></div>
+            <div class='content-box'>
+                <h2>Conclusion</h2>
+                <p>Just as Bell Labs turned an unknown problem into a world-changing invention, the hardest challenges today will be solved the same way &mdash; by teams that are allowed to experiment, argue, and iterate. That mindset shows up in modern places like Pixar, where technical breakthroughs weren&rsquo;t found in a vacuum; they were built in collaboration. If we want the next leap in space access, computing, and communications, the most important ingredient isn&rsquo;t a single genius. It&rsquo;s the culture that makes breakthroughs inevitable.</p>
+            </div>
+        </section>
+        <section class='works-cited'>
+            <h2>Works Cited</h2>
+            <ol>
+                <li>Dye, Lee. &ldquo;50 Years Ago, Information Age Began in Bell Labs.&rdquo; <em>Los Angeles Times</em>, 22 Dec. 1997.</li>
+                <li>Gertner, Jon. <em>The Idea Factory: Bell Labs and the Great Age of American Innovation</em>. Penguin Books, 2012.</li>
+                <li>&ldquo;Information Age.&rdquo; <em>Wikipedia</em>, en.wikipedia.org/wiki/Information_Age.</li>
+                <li>Riordan, Michael, and Lillian Hoddeson. <em>Crystal Fire: The Birth of the Information Age</em>. W.W. Norton, 1997.</li>
+                <li>&ldquo;Technology at Pixar.&rdquo; <em>Pixar Animation Studios</em>, www.pixar.com/technology-at-pixar.</li>
+            </ol>
+        </section>
+        <footer><p>Daniel Corron &middot; ISTA 100 &middot; Assignment 1 &middot; January 30, 2026</p></footer>
+    </div>
+    <script>
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const particles = [];
+        class Particle {
+            constructor() { this.x=Math.random()*canvas.width; this.y=Math.random()*canvas.height; this.size=Math.random()*2+1; this.speedX=Math.random()*0.5-0.25; this.speedY=Math.random()*0.5-0.25; this.opacity=Math.random()*0.5+0.3; }
+            update() { this.x+=this.speedX; this.y+=this.speedY; if(this.x>canvas.width)this.x=0; if(this.x<0)this.x=canvas.width; if(this.y>canvas.height)this.y=0; if(this.y<0)this.y=canvas.height; }
+            draw() { ctx.fillStyle=`rgba(255,255,255,${this.opacity})`; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); }
+        }
+        for(let i=0;i<80;i++) particles.push(new Particle());
+        function animate() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            particles.forEach(p=>{ p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>"></iframe>
+  </div>
+ 
+  <div class="connector reveal">
+    <div class="connector-text">
+      This first assignment established the framework for everything that followed. Rather than just describing what Bell Labs invented, it asked a harder question: <strong>what made Bell Labs the kind of place that could invent it?</strong> The answer — a culture of curiosity, collaboration, and long-horizon thinking — turned out to be the real subject of the entire semester. Pixar emerged as a living example of that same culture applied to animation, proving the model isn't historical artifact. It's a recipe.
+    </div>
+    <div class="connector-pull" style="border-color: #c8963a;">
+      "The most important ingredient isn't a single genius. It's the culture that makes breakthroughs inevitable."
+    </div>
+  </div>
+</section>
+ 
+<!-- ══ MODULE 2 ════════════════════════════════════════════════════ -->
+<section class="module-section" id="module2" style="--section-color: #1a6a72;">
+ 
+  <div class="section-header reveal">
+    <div class="section-number">2</div>
+    <div class="section-meta">
+      <div class="section-tag">Module 02 · Assignment 2</div>
+      <h2 class="section-title">Building Blocks of the Information Age</h2>
+      <p class="section-desc">The second assignment zoomed in on the physical foundations: the transistor, which started it all; lithium-ion batteries, which untethered it all; and battery-swap networks, which might sustain it all. A technical deep-dive that connects semiconductor physics to resource geopolitics to circular economy design.</p>
+    </div>
+  </div>
+ 
+  <div class="embed-wrap reveal">
+    <div class="embed-chrome">
+      <div class="chrome-dot"></div><div class="chrome-dot"></div><div class="chrome-dot"></div>
+      <span class="chrome-url">assignment-2 · building-blocks.html</span>
+    </div>
+    <iframe class="embed-iframe" src="about:blank" id="iframe2" style="height:680px;"></iframe>
+  </div>
+ 
+  <div class="connector reveal">
+    <div class="connector-text">
+      The transistor story is really a Bell Labs story — it's where the first assignment's abstract ideas about innovation culture become concrete. Shockley, Bardeen, and Brattain didn't stumble on the transistor; they were pointed at a hard problem and given time. The jump to lithium-ion batteries and battery swap networks pushed that same pattern into the present: <strong>the next breakthrough tends to come from people solving the right constrained problem with the right team</strong>. Lithium supply risk is today's version of vacuum tube unreliability — a known problem waiting for someone to take it seriously.
+    </div>
+    <div class="connector-pull" style="border-color: #1a6a72;">
+      Twenty billion transistors on a chip smaller than a postage stamp. From room-sized machines to pocket-sized devices in seventy years.
+    </div>
+  </div>
+</section>
+ 
+<!-- ══ MODULE 3 ════════════════════════════════════════════════════ -->
+<section class="module-section" id="module3" style="--section-color: #00c2d4;">
+ 
+  <div class="section-header reveal">
+    <div class="section-number">3</div>
+    <div class="section-meta">
+      <div class="section-tag">Module 03 · Assignment 3</div>
+      <h2 class="section-title">TAT-1: The Cable That Connected the World</h2>
+      <p class="section-desc">TAT-1 was the first transatlantic telephone cable — 2,250 miles of engineered precision across the ocean floor, completed in 1956. This infographic dissects its architecture, its engineering challenges, and the TASI system that doubled its capacity without laying a single new foot of cable.</p>
+    </div>
+  </div>
+ 
+  <div class="embed-wrap reveal">
+    <div class="embed-chrome">
+      <div class="chrome-dot"></div><div class="chrome-dot"></div><div class="chrome-dot"></div>
+      <span class="chrome-url">assignment-3 · tat-1.html</span>
+    </div>
+    <iframe class="embed-iframe" id="iframe3" src="about:blank" style="height:680px;"></iframe>
+  </div>
+ 
+  <div class="connector reveal">
+    <div class="connector-text">
+      TAT-1 is where the Bell Labs story gets most concrete and most human. Mervin Kelly spent years planning a cable that had to work perfectly for two decades, underwater, with no possibility of repair. His decision to use proven vacuum tubes instead of the newer transistor wasn't conservatism — it was engineering discipline. <strong>Innovation sometimes means knowing exactly when not to use the newest thing.</strong> TASI, the system that doubled the cable's capacity by exploiting the silence in conversation, is pure Bell Labs ingenuity: find the hidden resource you're already paying for, and use it.
+    </div>
+    <div class="connector-pull" style="border-color: #00c2d4;">
+      TAT-1 operated for 22 years without a single hardware failure. Kelly's requirement had been 20.
+    </div>
+  </div>
+</section>
+ 
+<!-- ══ MODULE 4 ════════════════════════════════════════════════════ -->
+<section class="module-section" id="module4" style="--section-color: #a0a097;">
+ 
+  <div class="section-header reveal">
+    <div class="section-number">4</div>
+    <div class="section-meta">
+      <div class="section-tag">Module 04 · Assignment 4</div>
+      <h2 class="section-title">Information Theory</h2>
+      <p class="section-desc">Claude Shannon's 1948 paper, "A Mathematical Theory of Communication," gave engineers something they had never had before: a precise, mathematical definition of information itself. This final infographic visualizes the five core concepts of information theory — the ideas that quietly run underneath every digital communication system on Earth.</p>
+    </div>
+  </div>
+ 
+  <div class="embed-wrap reveal">
+    <div class="embed-chrome">
+      <div class="chrome-dot"></div><div class="chrome-dot"></div><div class="chrome-dot"></div>
+      <span class="chrome-url">assignment-4 · information-theory.html</span>
+    </div>
+    <iframe class="embed-iframe" id="iframe4" src="about:blank" style="height:680px;"></iframe>
+  </div>
+ 
+  <div class="connector reveal">
+    <div class="connector-text">
+      Information theory is the most abstract assignment, but it's also in some ways the most important — because it sits underneath everything else in this portfolio. The transistors from Module 2 are meaningless without signals to carry. TAT-1 from Module 3 exists to transmit those signals. Shannon's math is what tells you how much information a channel can carry, how to protect it from noise, and how to compress it without losing it. <strong>Every piece of the Information Age runs on concepts Shannon worked out in 1948</strong> — often without the engineers who use them knowing his name.
+    </div>
+    <div class="connector-pull" style="border-color: #a0a097;">
+      Shannon showed that information itself is measurable — like mass, or energy. That changed everything.
+    </div>
+  </div>
+</section>
+ 
+<!-- ══ CONCLUSION ══════════════════════════════════════════════════ -->
+<section class="conclusion" id="conclusion">
+  <div class="conclusion-label">Conclusion</div>
+  <h2 class="conclusion-headline">The pattern behind<br><em>every breakthrough</em></h2>
+  <div class="conclusion-grid">
+    <div class="conclusion-body">
+      <p>Looking back across these four modules, a pattern emerges that's bigger than any individual invention. The transistor didn't come from a lone genius tinkering in a garage. TAT-1 didn't happen because one great engineer figured it out. Shannon's information theory wasn't an accident of inspiration. Each of these breakthroughs came from the same kind of place: an institution that gave smart people hard problems, long time horizons, and freedom to fail.</p>
+      <p>Bell Labs was unusual, maybe unprecedented. Its monopoly position gave it resources; its culture gave those resources purpose. But the lesson isn't that we need monopolies — it's that we need to understand what Bell Labs got right and ask where that exists today. Pixar. Certain university research labs. Open-source communities working on foundational software. The conditions can be recreated. They just require intention.</p>
+      <p>The Information Age isn't a historical moment that ended. It's still accelerating. The next version of the transistor, or TAT-1, or Shannon's paper is being worked on right now, probably by a team most people have never heard of, funded just barely well enough to keep going. The history we studied this semester isn't background. It's a guide.</p>
+    </div>
+    <div class="takeaways">
+      <div class="takeaway">
+        <span class="takeaway-num">01</span>
+        <span class="takeaway-text"><strong>Culture precedes invention.</strong> The most important thing Bell Labs built wasn't the transistor — it was an environment where the transistor was inevitable.</span>
       </div>
-      <div class="cap-legend">
-        <div class="cap-legend-item">
-          <div class="cap-legend-swatch used"></div>
-          data fits
-        </div>
-        <div class="cap-legend-item">
-          <div class="cap-legend-swatch over"></div>
-          overflow = degraded signal
-        </div>
+      <div class="takeaway">
+        <span class="takeaway-num">02</span>
+        <span class="takeaway-text"><strong>Physical constraints drive creative solutions.</strong> From copper anti-worm layers to TASI's silence-harvesting, the best innovations often come from the tightest constraints.</span>
       </div>
-      <p class="card-body">A channel carries only so many bits per second, like a pipe with a fixed diameter. Shannon gave engineers the math to measure this exactly.</p>
-    </div>
-
-    <!-- 05 Error-correcting codes (wide) -->
-    <div class="card wide">
-      <div class="card-num">Concept 05 &mdash; Error-correcting codes</div>
-      <div class="card-title">Any message can be sent near-perfectly, even through noise</div>
-      <div class="ecc-row">
-        <div class="ecc-pill solid">original msg</div>
-        <span class="ecc-op">+</span>
-        <div class="ecc-pill dashed">extra parity bits</div>
-        <span class="ecc-op">&rarr;</span>
-        <div class="ecc-pill result">msg survives noise</div>
+      <div class="takeaway">
+        <span class="takeaway-num">03</span>
+        <span class="takeaway-text"><strong>Theory and hardware need each other.</strong> Shannon's math without the transistor is academic. The transistor without Shannon's math is limited. The Information Age required both.</span>
       </div>
-      <p class="card-body">Shannon's most surprising result: by adding carefully designed extra bits, a message can survive even a very noisy channel with near-zero errors. This is how your phone calls stay clear, how CDs still play with scratches, and how the Voyager probe sent photos from billions of miles away.</p>
-    </div>
-
-  </div>
-
-  <!-- Modern impact -->
-  <div class="section-label">03 &mdash; Why it still matters</div>
-  <div class="impact-grid">
-    <div class="impact-card">
-      <div class="impact-name">Wi-Fi</div>
-      <div class="impact-desc">Channel capacity math determines how much data your router can push per second</div>
-    </div>
-    <div class="impact-card">
-      <div class="impact-name">ZIP</div>
-      <div class="impact-desc">File compression exploits Shannon's redundancy insights to shrink data without losing it</div>
-    </div>
-    <div class="impact-card">
-      <div class="impact-name">QR</div>
-      <div class="impact-desc">Error-correcting codes let QR codes work even when up to 30% of the image is damaged</div>
-    </div>
-    <div class="impact-card">
-      <div class="impact-name">CDs</div>
-      <div class="impact-desc">Error correction lets scratched discs play perfectly by reconstructing missing data on the fly</div>
-    </div>
-    <div class="impact-card">
-      <div class="impact-name">4G/5G</div>
-      <div class="impact-desc">Mobile networks use Shannon's capacity formula to maximize data rates over radio channels</div>
-    </div>
-    <div class="impact-card">
-      <div class="impact-name">AI</div>
-      <div class="impact-desc">Language models use entropy and probability concepts rooted directly in information theory</div>
+      <div class="takeaway">
+        <span class="takeaway-num">04</span>
+        <span class="takeaway-text"><strong>The pattern repeats.</strong> Lithium scarcity today mirrors vacuum tube fragility in 1950. The engineers who solve it will look a lot like the ones who invented the transistor.</span>
+      </div>
     </div>
   </div>
-
-  <!-- Submission paragraph -->
-  <div class="section-label" style="margin-top:2.5rem;">04 &mdash; About this visual</div>
-  <div style="border:0.5px solid var(--border); border-radius:var(--radius-lg); padding:1.2rem 1.4rem; margin-bottom:2.5rem;">
-    <p style="font-size:13px; color:var(--text2); line-height:1.9; font-family:'DM Sans',sans-serif;">
-      For this module's creative exploration, I chose to visualize information theory, the framework Claude Shannon developed in his landmark 1948 paper, "A Mathematical Theory of Communication." What drew me to this concept is how it takes something we completely take for granted, the act of sending and receiving a message, and quantifies it with mathematical precision. We talk, text, stream, and browse without ever thinking about what makes any of that possible, but Shannon showed that information itself is measurable, like mass or energy. Gertner (2012) describes Shannon's core contribution as answering a question Bell engineers had struggled with from the beginning: how fast, and how accurately, can you send a message from one place to another? Putting that idea into a visual format felt worthwhile because the concepts behind it (bits, entropy, noise, channel capacity) are invisible in daily life but are quietly running underneath almost every piece of technology we use.
-    </p>
-  </div>
-
-  <!-- Works Cited -->
-  <div class="section-label" style="margin-top:2.5rem;">Works cited</div>
-  <div style="border:0.5px solid var(--border); border-radius:var(--radius-lg); padding:1.2rem 1.4rem; margin-bottom:2.5rem;">
-    <p style="font-size:13px; color:var(--text2); line-height:1.9; font-family:'DM Sans',sans-serif;">
-      Gertner, J. (2012). <em>The idea factory: Bell Labs and the great age of American innovation.</em> Penguin Press.
-    </p>
-  </div>
-  
-  <!-- Footer -->
-  <div style="
-    border-top: 0.5px solid var(--border);
-    margin-top: 1rem;
-    padding-top: 1.4rem;
-    text-align: center;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    color: var(--text3);
-  ">
-    DANIEL CORRON &nbsp;&middot;&nbsp; ISTA 100 &nbsp;&middot;&nbsp; ASSIGNMENT 4 &nbsp;&middot;&nbsp; MARCH 2026
-  </div>
-</div>
+</section>
+ 
+<!-- ══ FOOTER ══════════════════════════════════════════════════════ -->
+<footer>
+  <span>Daniel Corron</span>
+  <span>ISTA 100 · Unit 1 Final Project · Spring 2026</span>
+  <span>University of Arizona</span>
+</footer>
+ 
+<script>
+  // ── Scroll reveal ──────────────────────────────────────────────
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.08 });
+ 
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+ 
+  // ── Lazy-load iframes on scroll ────────────────────────────────
+  // Module 2: Building Blocks (inline to keep file self-contained)
+  const m2html = `<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>Building Blocks</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;line-height:1.6;color:#333;position:relative;overflow-x:hidden}#particles-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background:linear-gradient(135deg,#0f2027 0%,#203a43 50%,#2c5364 100%)}.container{max-width:1200px;margin:0 auto;background:transparent}header{color:white;padding:40px;text-align:center;position:relative}h1{font-size:3em;margin-bottom:20px;text-shadow:2px 2px 4px rgba(0,0,0,0.3)}.content-box{background:rgba(255,255,255,0.95);padding:40px;margin:20px 40px;border-radius:8px;box-shadow:0 5px 15px rgba(0,0,0,0.2)}h2{color:#2a5298;font-size:2.2em;margin-bottom:30px;padding-bottom:15px;border-bottom:3px solid #667eea;display:inline-block}h3{color:#1e3c72;font-size:1.6em;margin:30px 0 15px}p{margin-bottom:20px;font-size:1.1em;text-align:justify}.hero-image{width:100%;height:260px;object-fit:cover;margin:30px 0;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}.stat-box{background:linear-gradient(135deg,rgba(30,60,114,0.95) 0%,rgba(42,82,152,0.95) 100%);color:white;padding:30px;border-radius:8px;text-align:center;margin:20px 0}.stat-number{font-size:3em;font-weight:bold;display:block;margin-bottom:10px}.works-cited{background:rgba(255,255,255,0.95);padding:40px;margin:20px 40px;border-radius:8px}.works-cited ol{padding-left:2rem}.works-cited li{margin-bottom:12px;font-size:1em;line-height:1.8;padding-left:1.5rem;text-indent:-1.5rem;overflow-wrap:anywhere}footer{color:white;text-align:center;padding:30px}</style></head><body><canvas id='particles-canvas'></canvas><div class='container'><header><h1>Building Blocks of the Information Age</h1></header><div class='content-box'><h2>1. The Transistor: The Foundation</h2><h3>What is it?</h3><p>The transistor is a semiconductor device that can amplify or switch electronic signals. Think of it like a valve controlling water flow — a small signal at the base controls a much larger current between emitter and collector, making amplification possible.</p><div class='stat-box' style='background:linear-gradient(135deg,rgba(32,58,67,0.95) 0%,rgba(15,32,39,0.95) 100%)'><span class='stat-number'>Billions</span>Modern processors contain billions of transistors</div><p>Without transistors, none of our portable electronics would exist. The Apple M2 chip packs over 20 billion transistors into a space smaller than a postage stamp. The transistor is arguably the most important invention of the 20th century.</p><h3>How it started the Information Age</h3><p>Transistors made the Information Age possible through miniaturization (Moore's Law), reliability and efficiency over vacuum tubes, and exponentially falling costs. As Gertner (2012) notes, Mervin Kelly predicted the transistor would transform electronics into systems &ldquo;more like the biological systems of man&rsquo;s brain and nervous system.&rdquo;</p></div><div class='content-box'><h2>2. Lithium-Ion Batteries: Powering the Mobile Revolution</h2><p>The lithium-ion battery stands as one of the most transformative technologies of the Information Age. Without it, our smartphones, laptops, electric vehicles, and wireless devices would be tethered to wall outlets.</p><p>Lithium-ion batteries work by moving lithium ions between two electrodes through an electrolyte. The technology earned John B. Goodenough, M. Stanley Whittingham, and Akira Yoshino the 2019 Nobel Prize in Chemistry.</p></div><div class='content-box'><h2>3. Lithium: A Critical Element at Risk</h2><p>Over 75% of the world&rsquo;s known lithium reserves are in the &ldquo;Lithium Triangle&rdquo; spanning Chile, Argentina, and Bolivia. Global lithium demand could increase by 400% by 2030, driven primarily by electric vehicle production.</p><div class='stat-box' style='background:linear-gradient(135deg,rgba(201,27,111,0.95) 0%,rgba(235,102,7,0.95) 100%)'><span class='stat-number'>400%</span>Projected increase in lithium demand by 2030</div></div><div class='content-box'><h2>4. The Future: Automated Battery Swap Networks</h2><p>Imagine pulling into a station where a robotic system removes your EV&rsquo;s depleted battery and installs a fully charged replacement in under five minutes. Battery swap networks address range anxiety, charging time, and battery depreciation simultaneously.</p><p>NIO already operates over 1,300 swap stations across China and Europe. Subscription-based battery ownership separates vehicles from their most expensive component, dramatically reducing upfront costs while enabling systematic recycling.</p></div><div class='content-box'><h3>Peer Response &amp; Reflection</h3><p>When I asked my wife, Rudrani Chatterjee, about the battery-as-a-service model, she appreciated that it contributes to sustainability and removes the burden of knowing how to change the battery. Her pragmatic, non-technical perspective was a useful reminder that the best innovations solve real problems for real people.</p></div><section class='works-cited'><h2>Works Cited</h2><ol><li>Flexer, V., Baspineiro, C. F., &amp; Galli, C. I. (2018). Lithium recovery from brines. <em>Science of the Total Environment</em>, 639, 1188-1204.</li><li>Gertner, Jon. <em>The Idea Factory</em>. Penguin Books, 2012.</li><li>Harper, G., et al. (2019). Recycling lithium-ion batteries from electric vehicles. <em>Nature</em>, 575(7781), 75-86.</li><li>&ldquo;The Nobel Prize in Chemistry 2019.&rdquo; <em>NobelPrize.org</em>, 2019.</li><li>Zubi, G., et al. (2018). The lithium-ion battery: State of the art. <em>Renewable and Sustainable Energy Reviews</em>, 89, 292-308.</li></ol></section><footer><p>Daniel Corron &middot; ISTA 100 &middot; Assignment 2 &middot; February 14, 2026</p></footer></div><script>const c=document.getElementById('particles-canvas'),ctx=c.getContext('2d');c.width=window.innerWidth;c.height=window.innerHeight;const ps=[];for(let i=0;i<80;i++)ps.push({x:Math.random()*c.width,y:Math.random()*c.height,size:Math.random()*2+1,sx:Math.random()*0.5-0.25,sy:Math.random()*0.5-0.25,o:Math.random()*0.5+0.3});function anim(){ctx.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.sx;p.y+=p.sy;if(p.x>c.width)p.x=0;if(p.x<0)p.x=c.width;if(p.y>c.height)p.y=0;if(p.y<0)p.y=c.height;ctx.fillStyle='rgba(255,255,255,'+p.o+')';ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill()});requestAnimationFrame(anim)}anim();<\/script></body></html>`;
+ 
+  document.getElementById('iframe2').srcdoc = m2html;
+ 
+  // Module 3 and 4 use srcdoc from the actual files — set via IntersectionObserver for perf
+  const lazyFrames = [
+    { id: 'iframe3', loaded: false },
+    { id: 'iframe4', loaded: false }
+  ];
+ 
+  const iframeObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const id = el.id;
+      if (id === 'iframe3' && !lazyFrames[0].loaded) {
+        lazyFrames[0].loaded = true;
+        el.src = 'about:blank'; // Will be replaced in production with actual file paths
+        // For the portfolio draft we'll set placeholder content
+        el.srcdoc = getTat1Html();
+        iframeObs.unobserve(el);
+      }
+      if (id === 'iframe4' && !lazyFrames[1].loaded) {
+        lazyFrames[1].loaded = true;
+        el.srcdoc = getInfoTheoryHtml();
+        iframeObs.unobserve(el);
+      }
+    });
+  }, { rootMargin: '200px' });
+ 
+  iframeObs.observe(document.getElementById('iframe3'));
+  iframeObs.observe(document.getElementById('iframe4'));
+ 
+  function getTat1Html() {
+    return `<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>TAT-1</title><link href='https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap' rel='stylesheet'><style>:root{--deep:#050d1a;--abyss:#080f1f;--navy:#0a1628;--ocean:#0d2240;--mid:#0e3460;--teal:#0b7a8a;--cyan:#00c2d4;--ice:#a8e6ef;--gold:#e8b84b;--copper:#b87333;--white:#f0f4f8;--dim:#8aa0b8}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--deep);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}.page{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:36px 28px 60px}.header{text-align:center;margin-bottom:48px}.header-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--cyan);margin-bottom:12px;opacity:.8}.header h1{font-family:'Playfair Display',serif;font-size:clamp(38px,7vw,72px);font-weight:900;line-height:.95;letter-spacing:-2px;background:linear-gradient(135deg,var(--white) 0%,var(--ice) 40%,var(--cyan) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}.header-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:2px}.header-line{width:60px;height:2px;background:linear-gradient(90deg,var(--teal),var(--cyan));margin:16px auto 0}.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px}.stat-card{background:linear-gradient(145deg,rgba(14,52,96,.6),rgba(8,15,31,.8));border:1px solid rgba(0,194,212,.15);border-radius:10px;padding:16px 12px;text-align:center;position:relative;overflow:hidden}.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.6}.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--cyan);line-height:1;margin-bottom:4px}.stat-unit{font-size:10px;color:var(--gold);font-family:'Space Mono',monospace;letter-spacing:1px;margin-bottom:6px}.stat-label{font-size:10px;color:var(--dim);line-height:1.4}.section-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;display:flex;align-items:center;gap:10px}.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,194,212,.3),transparent)}.challenges-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px}.challenge-card{background:linear-gradient(145deg,rgba(14,52,96,.5),rgba(5,13,26,.7));border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px 16px}.challenge-icon{font-size:24px;margin-bottom:10px;display:block}.challenge-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--white);margin-bottom:8px}.challenge-desc{font-size:11px;color:var(--dim);line-height:1.6}.tasi-section{margin-bottom:36px;background:linear-gradient(145deg,rgba(14,52,96,.4),rgba(5,13,26,.7));border:1px solid rgba(232,184,75,.2);border-radius:14px;padding:28px;position:relative}.tasi-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}.tasi-inner{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}.tasi-text h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);margin-bottom:10px}.tasi-text p{font-size:12px;color:var(--dim);line-height:1.7;margin-bottom:10px}.quote-block{margin-bottom:36px;background:linear-gradient(135deg,rgba(11,122,138,.15),rgba(14,52,96,.3));border-left:4px solid var(--cyan);border-radius:0 10px 10px 0;padding:24px 28px}.quote-text{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--ice);line-height:1.5;margin-bottom:10px}.quote-attr{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px}.legacy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:36px}.legacy-card{background:linear-gradient(145deg,rgba(14,52,96,.4),rgba(5,13,26,.6));border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:18px}.legacy-card h4{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:8px}.legacy-card p{font-size:12px;color:var(--dim);line-height:1.6}.citation{border-top:1px solid rgba(255,255,255,.08);padding-top:20px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(138,160,184,.6);line-height:1.8}.citation strong{color:var(--dim)}</style></head><body><div class='page'><header class='header'><p class='header-eyebrow'>Bell Laboratories · AT&amp;T · British Post Office</p><h1>TAT-1</h1><p class='header-sub'>The Transatlantic Telephone Cable · 1956</p><div class='header-line'></div></header><div class='stats-row'><div class='stat-card'><div class='stat-num'>2,250</div><div class='stat-unit'>miles</div><div class='stat-label'>Total cable length, ocean floor</div></div><div class='stat-card'><div class='stat-num'>36</div><div class='stat-unit'>channels</div><div class='stat-label'>Simultaneous voice conversations</div></div><div class='stat-card'><div class='stat-num'>52</div><div class='stat-unit'>repeaters</div><div class='stat-label'>Spaced every ~40 miles</div></div><div class='stat-card'><div class='stat-num'>22</div><div class='stat-unit'>years</div><div class='stat-label'>Operated without hardware failure</div></div></div><p class='section-label'>Engineering Problems That Had to Be Solved</p><div class='challenges-grid'><div class='challenge-card'><span class='challenge-icon'>🌊</span><div class='challenge-title'>Deep Ocean Pressure</div><div class='challenge-desc'>Repeaters had to withstand crushing pressure miles underwater, with zero access for repairs once deployed.</div></div><div class='challenge-card'><span class='challenge-icon'>⚡</span><div class='challenge-title'>Power Delivery</div><div class='challenge-desc'>A continuous current had to be pushed through 2,250 miles of cable to keep every repeater alive for 20+ years.</div></div><div class='challenge-card'><span class='challenge-icon'>🪱</span><div class='challenge-title'>Teredo Worms</div><div class='challenge-desc'>Marine wood-boring organisms could gnaw through cable sheathing. A copper anti-worm layer was engineered specifically.</div></div><div class='challenge-card'><span class='challenge-icon'>🏔️</span><div class='challenge-title'>Uneven Seafloor</div><div class='challenge-desc'>The North Atlantic has massive peaks and trenches. Cable had to drape across mile-long inclines without stress fractures.</div></div><div class='challenge-card'><span class='challenge-icon'>🔧</span><div class='challenge-title'>Repeater Reliability</div><div class='challenge-desc'>Kelly insisted the cable last 20 years without failure. Only vacuum tube designs with 16 years of test data were trusted.</div></div><div class='challenge-card'><span class='challenge-icon'>🚢</span><div class='challenge-title'>Cable Laying at Sea</div><div class='challenge-desc'>The SS Monarch had to pay out cable continuously through Atlantic storms, keeping the line taut but not snapping.</div></div></div><div class='tasi-section'><div class='tasi-inner'><div class='tasi-text'><h3>TASI: Doubling the Cable's Capacity</h3><p>Bell Labs engineers discovered that a telephone talker only actually sends signal about 35% of the time — the rest is pauses, listening, and silence.</p><p>TASI (Time Assignment Speech Interpolation) inspected voice channels 2,000 times per second and instantly reassigned idle channels to other conversations. This effectively doubled capacity from 36 to 72 simultaneous calls, with no new cable required.</p><div style='font-family:Space Mono,monospace;font-size:10px;color:#e8b84b;letter-spacing:1px;margin-top:8px'>&rarr; &ldquo;Better and cheaper&rdquo; — Kelly&rsquo;s standard</div></div><div class='tasi-text'><p style='font-family:Space Mono,monospace;font-size:10px;color:var(--dim);margin-bottom:10px'>Typical call: signal vs silence</p><div style='display:flex;align-items:center;gap:8px;margin-bottom:8px'><span style='font-family:Space Mono,monospace;font-size:9px;color:var(--dim);width:70px'>SPEAKING</span><div style='flex:1;height:16px;background:rgba(0,0,0,.3);border-radius:3px;overflow:hidden;display:flex'><div style='width:35%;height:100%;background:linear-gradient(90deg,var(--cyan),var(--teal));display:flex;align-items:center;justify-content:center;font-family:Space Mono,monospace;font-size:9px;color:rgba(0,0,0,.7);font-weight:700'>35%</div></div></div><div style='display:flex;align-items:center;gap:8px'><span style='font-family:Space Mono,monospace;font-size:9px;color:var(--dim);width:70px'>SILENCE</span><div style='flex:1;height:16px;background:rgba(0,0,0,.3);border-radius:3px;overflow:hidden;display:flex'><div style='width:65%;height:100%;background:rgba(14,52,96,.8);display:flex;align-items:center;justify-content:center;font-family:Space Mono,monospace;font-size:9px;color:var(--dim);font-weight:700'>65%</div></div></div></div></div></div><div class='quote-block'><div class='quote-text'>&ldquo;If such a complex and technically difficult system could be made operational, it would still have to prove that it was economically justified.&rdquo;</div><div class='quote-attr'>&mdash; Mervin Kelly, Bell Labs President &middot; Gertner (2012, p. 162)</div></div><p class='section-label'>Why TAT-1 Still Matters</p><div class='legacy-grid'><div class='legacy-card'><h4>The Engineering Philosophy</h4><p>Kelly insisted on proven, conservative components: vacuum tubes with 16 years of test data rather than the newer transistor. Innovation means knowing when NOT to use the newest thing.</p></div><div class='legacy-card'><h4>Seeds of the Internet</h4><p>TAT-1 established the undersea cable infrastructure model still used today. Modern fiber-optic cables follow the same routes; the principle of spaced repeaters remains unchanged.</p></div><div class='legacy-card'><h4>The Monopoly Paradox</h4><p>Shannon's information theory, born at Bell Labs, was also the mathematical basis for breaking up the Bell System. The Labs' greatest achievements contained the seeds of its own disruption.</p></div><div class='legacy-card'><h4>22 Years, Zero Failures</h4><p>Kelly's requirement was 20 years of uninterrupted service. TAT-1 delivered 22. A benchmark for what obsessive quality control and institutional patience can achieve.</p></div></div><div class='citation'><strong>Sources:</strong><br>Gertner, J. (2012). <em>The idea factory.</em> Penguin Press.<br>&nbsp;&nbsp;&mdash; Ch. 3, 9, and 11: TAT-1 cable, TASI, and the legacy of Bell Labs.</div><div style='border-top:1px solid rgba(255,255,255,.06);margin-top:30px;padding-top:16px;text-align:center;font-family:Space Mono,monospace;font-size:9px;letter-spacing:2px;color:rgba(138,160,184,.4)'>DANIEL CORRON &middot; ISTA 100 &middot; ASSIGNMENT 3 &middot; FEBRUARY 28, 2026</div></div></body></html>`;
+  }
+ 
+  function getInfoTheoryHtml() {
+    return `<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>Information Theory</title><link href='https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap' rel='stylesheet'><style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}:root{--bg:#ffffff;--bg2:#f5f4f0;--bg3:#eeede8;--text:#1a1a18;--text2:#5f5e5a;--text3:#888780;--border:rgba(26,26,24,.12);--border2:rgba(26,26,24,.22);--border3:rgba(26,26,24,.35);--radius-md:8px;--radius-lg:12px;--radius-xl:16px}@media(prefers-color-scheme:dark){:root{--bg:#1a1a18;--bg2:#242422;--bg3:#2e2e2b;--text:#f0efe8;--text2:#a0a097;--text3:#686760;--border:rgba(240,239,232,.12);--border2:rgba(240,239,232,.22);--border3:rgba(240,239,232,.35)}}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}.page{max-width:760px;margin:0 auto;padding:2.5rem 1.5rem 4rem}.hero{border:.5px solid var(--border3);border-radius:var(--radius-xl);padding:2rem;margin-bottom:2rem;position:relative;overflow:hidden}.hero-grid{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 39px,var(--border) 39px,var(--border) 40px),repeating-linear-gradient(0deg,transparent,transparent 39px,var(--border) 39px,var(--border) 40px)}.hero-content{position:relative;z-index:1}.eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem}.hero h1{font-family:'Space Mono',monospace;font-size:clamp(24px,5vw,36px);font-weight:700;line-height:1.15;margin-bottom:.8rem}.hero h1 .inv{display:inline-block;background:var(--text);color:var(--bg);padding:0 8px 2px;border-radius:4px}.hero-sub{font-size:14px;color:var(--text2);max-width:520px;line-height:1.7}.section-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:.8rem;padding-bottom:.4rem;border-bottom:.5px solid var(--border)}.signal-chain{display:flex;align-items:stretch;border:.5px solid var(--border3);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:2rem}.chain-node{flex:1;min-width:70px;padding:.8rem .6rem;text-align:center;border-right:.5px solid var(--border)}.chain-node:last-child{border-right:none}.chain-node.noise{flex:0 0 80px;background:var(--bg2);border-left:.5px dashed var(--border2);border-right:.5px dashed var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center}.node-code{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}.node-name{font-size:11px;font-weight:500;color:var(--text);margin-bottom:2px}.node-desc{font-size:9px;color:var(--text2);line-height:1.4}.concepts{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:2rem}.card{border:.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem;background:var(--bg)}.card.wide{grid-column:1/-1}.card-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:.3rem;letter-spacing:.06em}.card-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:.4rem;line-height:1.3}.card-body{font-size:12px;color:var(--text2);line-height:1.65}.bit-row{display:flex;gap:4px;flex-wrap:wrap;margin:.6rem 0 .4rem}.bit{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:3px;border:.5px solid var(--border2);color:var(--text)}.bit.on{background:var(--text);color:var(--bg);border-color:var(--text)}.entropy-row{display:flex;align-items:center;gap:8px;margin:.3rem 0}.entropy-key{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);white-space:nowrap;width:70px}.entropy-track{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}.entropy-fill{height:100%;border-radius:3px;background:var(--text)}.redund{font-family:'Space Mono',monospace;font-size:12px;line-height:2;margin:.5rem 0;letter-spacing:.04em}.redund .s{text-decoration:line-through;color:var(--text3)}.redund .k{color:var(--text);font-weight:700}.cap-row{display:flex;align-items:center;gap:8px;margin:.3rem 0}.cap-key{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);width:80px}.cap-track{flex:1;height:12px;border:.5px solid var(--border2);border-radius:3px;overflow:hidden;display:flex}.cap-used{background:var(--text)}.cap-over{background-image:repeating-linear-gradient(45deg,var(--text3) 0,var(--text3) 2px,transparent 2px,transparent 7px);opacity:.7}.ecc-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.6rem 0 .4rem}.ecc-pill{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:4px;white-space:nowrap}.ecc-pill.solid{border:.5px solid var(--border2);color:var(--text)}.ecc-pill.dashed{border:.5px dashed var(--border2);color:var(--text2)}.ecc-pill.result{border:.5px solid var(--border3);color:var(--text)}.ecc-op{font-size:12px;color:var(--text3)}.impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:2rem}.impact-card{border:.5px solid var(--border);border-radius:var(--radius-md);padding:.8rem;text-align:center}.impact-name{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--text);margin-bottom:5px}.impact-desc{font-size:10px;color:var(--text2);line-height:1.55}.citation{font-size:12px;color:var(--text3);border-top:.5px solid var(--border);padding-top:1rem;margin-top:.5rem;font-style:italic;line-height:1.7}</style></head><body><div class='page'><div class='hero'><div class='hero-grid'></div><div class='hero-content'><div class='eyebrow'>ISTA 100 &mdash; Module 4 &mdash; Concept Exploration</div><h1>Information <span class='inv'>Theory</span></h1><p class='hero-sub'>Claude Shannon&rsquo;s framework for measuring, moving, and protecting messages: the mathematical foundation of every digital communication system in use today.</p></div></div><div class='section-label'>01 &mdash; The signal chain</div><div class='signal-chain'><div class='chain-node'><div class='node-code'>src</div><div class='node-name'>Source</div><div class='node-desc'>Where the message originates</div></div><div class='chain-node'><div class='node-code'>tx</div><div class='node-name'>Transmitter</div><div class='node-desc'>Encodes message into signal</div></div><div class='chain-node noise'><div class='node-code' style='font-size:13px'>&#9889;</div><div class='node-name'>Noise</div><div class='node-desc'>Always present</div></div><div class='chain-node'><div class='node-code'>rx</div><div class='node-name'>Receiver</div><div class='node-desc'>Decodes signal back</div></div><div class='chain-node'><div class='node-code'>dst</div><div class='node-name'>Destination</div><div class='node-desc'>Message arrives</div></div></div><div class='section-label'>02 &mdash; Five core concepts</div><div class='concepts'><div class='card'><div class='card-num'>Concept 01 &mdash; The bit</div><div class='card-title'>The fundamental unit of information</div><div class='bit-row'><div class='bit on'>1</div><div class='bit'>0</div><div class='bit on'>1</div><div class='bit on'>1</div><div class='bit'>0</div><div class='bit'>0</div><div class='bit on'>1</div></div><p class='card-body'>A bit is a single yes/no choice. Shannon showed any message can be broken into 1s and 0s. The letter &ldquo;A&rdquo; in ASCII is 01000001.</p></div><div class='card'><div class='card-num'>Concept 02 &mdash; Entropy</div><div class='card-title'>Information = surprise</div><div class='entropy-row' style='margin-top:.6rem'><span class='entropy-key'>predictable</span><div class='entropy-track'><div class='entropy-fill' style='width:18%'></div></div></div><div class='entropy-row'><span class='entropy-key'>surprising</span><div class='entropy-track'><div class='entropy-fill' style='width:88%'></div></div></div><p class='card-body' style='margin-top:.5rem'>&ldquo;It snowed in Vegas in July&rdquo; is high-entropy — unexpected, therefore genuinely informative.</p></div><div class='card'><div class='card-num'>Concept 03 &mdash; Redundancy</div><div class='card-title'>Language is mostly predictable</div><div class='redund'><span class='k'>L</span><span class='s'>A</span><span class='k'>N</span><span class='k'>G</span><span class='s'>U</span><span class='s'>A</span><span class='k'>G</span><span class='s'>E</span>&nbsp;<span class='s'>I</span><span class='k'>S </span>&nbsp;<span class='s'>A</span><span class='k'>L</span><span class='k'>S</span><span class='s'>O</span>&nbsp;<span class='k'>S</span><span class='k'>T</span><span class='k'>R</span><span class='s'>A</span><span class='k'>N</span><span class='k'>G</span><span class='s'>E</span></div><p class='card-body'>Shannon calculated English is ~75% redundant. You can strip vowels from most sentences and still read them.</p></div><div class='card'><div class='card-num'>Concept 04 &mdash; Channel capacity</div><div class='card-title'>Every channel has a maximum</div><div class='cap-row' style='margin-top:.6rem'><span class='cap-key'>within limit</span><div class='cap-track'><div class='cap-used' style='width:58%'></div></div></div><div class='cap-row'><span class='cap-key'>over capacity</span><div class='cap-track'><div class='cap-used' style='width:58%'></div><div class='cap-over' style='width:42%'></div></div></div><p class='card-body' style='margin-top:.4rem'>A channel carries only so many bits per second. Shannon gave engineers the math to measure this exactly.</p></div><div class='card wide'><div class='card-num'>Concept 05 &mdash; Error-correcting codes</div><div class='card-title'>Any message can be sent near-perfectly, even through noise</div><div class='ecc-row'><div class='ecc-pill solid'>original msg</div><span class='ecc-op'>+</span><div class='ecc-pill dashed'>extra parity bits</div><span class='ecc-op'>&rarr;</span><div class='ecc-pill result'>msg survives noise</div></div><p class='card-body'>By adding carefully designed extra bits, a message can survive even a noisy channel with near-zero errors. This is how your phone calls stay clear, how CDs play with scratches, and how Voyager sent photos from billions of miles away.</p></div></div><div class='section-label'>03 &mdash; Why it still matters</div><div class='impact-grid'><div class='impact-card'><div class='impact-name'>Wi-Fi</div><div class='impact-desc'>Channel capacity math determines how much data your router can push per second</div></div><div class='impact-card'><div class='impact-name'>ZIP</div><div class='impact-desc'>File compression exploits Shannon&rsquo;s redundancy insights to shrink data losslessly</div></div><div class='impact-card'><div class='impact-name'>QR</div><div class='impact-desc'>Error-correcting codes let QR codes work even when 30% of the image is damaged</div></div><div class='impact-card'><div class='impact-name'>CDs</div><div class='impact-desc'>Error correction lets scratched discs play perfectly by reconstructing missing data</div></div><div class='impact-card'><div class='impact-name'>4G/5G</div><div class='impact-desc'>Mobile networks use Shannon&rsquo;s capacity formula to maximize data rates</div></div><div class='impact-card'><div class='impact-name'>AI</div><div class='impact-desc'>Language models use entropy and probability concepts rooted in information theory</div></div></div><div style='border:.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.2rem;margin-bottom:2rem'><p style='font-size:12px;color:var(--text2);line-height:1.9'>For this module&rsquo;s creative exploration, I chose to visualize information theory &mdash; the framework Claude Shannon developed in his landmark 1948 paper. What drew me to this concept is how it takes something we completely take for granted, the act of sending and receiving a message, and quantifies it with mathematical precision. Gertner (2012) describes Shannon&rsquo;s core contribution as answering a question Bell engineers had struggled with from the beginning: how fast, and how accurately, can you send a message from one place to another?</p></div><div class='citation'>Gertner, J. (2012). <em>The idea factory: Bell Labs and the great age of American innovation.</em> Penguin Press.</div><div style='border-top:.5px solid var(--border);margin-top:1.5rem;padding-top:1rem;text-align:center;font-family:Space Mono,monospace;font-size:9px;letter-spacing:.18em;color:var(--text3)'>DANIEL CORRON &middot; ISTA 100 &middot; ASSIGNMENT 4 &middot; MARCH 2026</div></div></body></html>`;
+  }
+</script>
 </body>
 </html>
+ 
+
