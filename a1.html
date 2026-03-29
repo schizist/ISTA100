@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Information Age</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; line-height:1.6; color:#333; overflow-x:hidden; }
+#pc { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; background:linear-gradient(135deg,#667eea 0%,#2a163d 100%); }
+.container { max-width:1100px; margin:0 auto; }
+header { color:white; padding:48px 40px; text-align:center; }
+h1 { font-size:2.8em; margin-bottom:12px; text-shadow:2px 2px 4px rgba(0,0,0,0.4); }
+.content-box { background:rgba(255,255,255,0.96); padding:36px 40px; margin:16px 32px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.15); }
+h2 { color:#2a5298; font-size:1.9em; margin-bottom:24px; padding-bottom:12px; border-bottom:3px solid #667eea; display:inline-block; }
+h3 { color:#1e3c72; font-size:1.4em; margin:24px 0 12px; }
+p { margin-bottom:16px; font-size:1.05em; line-height:1.75; text-align:justify; }
+.hero-img { width:100%; height:260px; object-fit:cover; margin:24px 0; border-radius:6px; box-shadow:0 8px 24px rgba(0,0,0,0.2); }
+.quote-box { background:rgba(30,60,114,0.08); border:1.5px solid rgba(255,255,255,0.6); color:white; padding:36px 40px; margin:16px 32px; border-radius:8px; font-style:italic; font-size:1.15em; position:relative; text-shadow:1px 1px 8px rgba(0,0,0,0.8); }
+.quote-box::before { content:'\201C'; font-size:5em; position:absolute; top:-16px; left:20px; opacity:0.25; font-style:normal; }
+.quote-attr { text-align:right; margin-top:16px; font-size:0.8em; font-style:normal; }
+.stat-box { background:linear-gradient(135deg,rgba(30,60,114,0.95),rgba(42,82,152,0.95)); color:white; padding:28px; border-radius:8px; text-align:center; margin:16px 0; }
+.stat-number { font-size:1.6em; font-weight:bold; display:block; margin-bottom:10px; }
+.works-cited { background:rgba(255,255,255,0.96); padding:36px 40px; margin:16px 32px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.15); }
+.works-cited ol { padding-left:2rem; }
+.works-cited li { margin-bottom:12px; font-size:0.95em; line-height:1.75; padding-left:1.5rem; text-indent:-1.5rem; overflow-wrap:anywhere; }
+footer { color:white; text-align:center; padding:28px; font-size:0.9em; opacity:0.8; }
+</style>
+</head>
+<body>
+<canvas id="pc"></canvas>
+<div class="container">
+  <header><h1>The Information Age</h1></header>
+
+  <div class="content-box">
+    <h2>The Information Age</h2>
+    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1100&h=400&fit=crop" alt="Digital network" class="hero-img">
+    <p>The information age is marked by the transition from analog to digital technologies, enabling unprecedented access to and sharing of information. This new age was heralded forth in the 1940s with the invention of the transistor at Bell Labs which in turn enabled the development of modern computers, smartphones, and the internet, ultimately ushering in the Information Age.</p>
+  </div>
+
+  <div class="quote-box">
+    Modern industrial research is meant to apply science to the &lsquo;common affairs&rsquo; of everyday life. It is an instrument capable of avoiding many of the mistakes of a blind cut-and-try experimentation. It is likewise an instrument which can bring to bear an aggregate of creative force on any particular problem which is infinitely greater than any force which can be conceived of as residing in the intellectual capacity of an individual.
+    <div class="quote-attr">- Frank Jewett, President of Bell Labs</div>
+  </div>
+
+  <div class="content-box">
+    <h2>A Contemporary Driver of Innovation: Pixar Studios</h2>
+    <p>I believe the pioneering and collaborative spirit of Bell Labs can be recognized in many organizations across the globe today, and one of my favorite examples is Pixar Studios. Pixar&rsquo;s history is studded with innovations in computer animation, such as rendering light refractions through water or hair&rsquo;s movement in wind, that exist due to the collaborative and experimental culture they foster. They had to invent solutions to the challenges they faced.</p>
+    <div class="stat-box">
+      <span class="stat-number">6+ Academy Awards for Pixar&rsquo;s RenderMan engine, plus these film-specific breakthroughs</span>
+      <ol style="text-align:left;display:inline-block;margin:12px 0 0;padding-left:1.4em;">
+        <li>Toy Story (1995): First fully computer-animated feature film</li>
+        <li>A Bug&rsquo;s Life (1998): Subdivision surfaces for smooth organic forms</li>
+        <li>Toy Story 2 (1999): Procedural cutting/slicing tools</li>
+        <li>Finding Nemo (2003): Water simulation and caustics</li>
+        <li>The Incredibles (2004): Cloth and fabric simulation</li>
+        <li>Cars (2006): Realistic metal and paint rendering</li>
+        <li>Brave (2012): Hair simulation breakthrough</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="content-box">
+    <h2>What Will Propel Innovation in the Future?</h2>
+    <h3>A Destiny Told and Retold</h3>
+    <p>Humans have long speculated that mankind&rsquo;s destiny lays in the stars, but time and time again we have been humbled by the reality that we have a whole lot more to figure out first. The Information Age, having spurred so much innovation, could finally take us to that long promised utopia depicted in works of fiction like Hanna-Barbera&rsquo;s The Jetsons, if the right innovators come together under the right conditions.</p>
+    <p>Picture a world where reaching space is as simple as boarding an elevator. A space elevator or inertial launcher could make access to orbit routine and affordable, finally breaking the binds of rocket propulsion and ushering in the true Space Age we have been promised for so long.</p>
+  </div>
+
+  <div class="quote-box">
+    The best way to predict the future is to invent it.
+    <div class="quote-attr">- Alan Kay, computer scientist and Turing Award winner</div>
+  </div>
+
+  <div class="content-box">
+    <h2>Conclusion</h2>
+    <p>Just as Bell Labs turned an unknown problem into a world-changing invention, the hardest challenges today will be solved the same way, by teams that are allowed to experiment, argue, and iterate. That mindset shows up in modern places like Pixar, where technical breakthroughs weren&rsquo;t found in a vacuum; they were built in collaboration. If we want the next leap in space access, computing, and communications, the most important ingredient isn&rsquo;t a single genius. It&rsquo;s the culture that makes breakthroughs inevitable.</p>
+  </div>
+
+  <div class="works-cited">
+    <h2>Works Cited</h2>
+    <ol>
+      <li>Dye, Lee. &ldquo;50 Years Ago, Information Age Began in Bell Labs.&rdquo; <em>Los Angeles Times</em>, 22 Dec. 1997.</li>
+      <li>Gertner, Jon. <em>The Idea Factory: Bell Labs and the Great Age of American Innovation</em>. Penguin Books, 2012.</li>
+      <li>&ldquo;Information Age.&rdquo; <em>Wikipedia</em>, Wikimedia Foundation. Accessed 30 Jan. 2026.</li>
+      <li>Riordan, Michael, and Lillian Hoddeson. <em>Crystal Fire: The Birth of the Information Age</em>. W.W. Norton, 1997.</li>
+      <li>&ldquo;Technology at Pixar.&rdquo; <em>Pixar Animation Studios</em>. Accessed 30 Jan. 2026.</li>
+    </ol>
+  </div>
+
+  <footer>Daniel Corron &middot; ISTA 100 &middot; Assignment 1 &middot; January 30, 2026</footer>
+</div>
+<script>
+const c=document.getElementById('pc'),ctx=c.getContext('2d');
+function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+const ps=[];for(let i=0;i<80;i++)ps.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+0.5,sx:(Math.random()-0.5)*0.3,sy:(Math.random()-0.5)*0.3,o:Math.random()*0.5+0.2});
+function draw(){ctx.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x=(p.x+p.sx+c.width)%c.width;p.y=(p.y+p.sy+c.height)%c.height;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+p.o+')';ctx.fill();});requestAnimationFrame(draw);}
+draw();
+</script>
+</body>
+</html>

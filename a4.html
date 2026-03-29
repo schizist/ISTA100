@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Information Theory</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#ffffff;--bg2:#f5f4f0;--bg3:#eeede8;--text:#1a1a18;--text2:#5f5e5a;--text3:#888780;--border:rgba(26,26,24,.12);--border2:rgba(26,26,24,.22);--border3:rgba(26,26,24,.35)}
+@media(prefers-color-scheme:dark){:root{--bg:#1a1a18;--bg2:#242422;--bg3:#2e2e2b;--text:#f0efe8;--text2:#a0a097;--text3:#686760;--border:rgba(240,239,232,.12);--border2:rgba(240,239,232,.22);--border3:rgba(240,239,232,.35)}}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.page{max-width:740px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+.hero{border:.5px solid var(--border3);border-radius:14px;padding:2rem;margin-bottom:1.8rem;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 39px,var(--border) 39px,var(--border) 40px),repeating-linear-gradient(0deg,transparent,transparent 39px,var(--border) 39px,var(--border) 40px)}
+.hero-content{position:relative;z-index:1}
+.eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem}
+.hero h1{font-family:'Space Mono',monospace;font-size:clamp(22px,5vw,34px);font-weight:700;line-height:1.15;margin-bottom:.8rem}
+.hero h1 .inv{display:inline-block;background:var(--text);color:var(--bg);padding:0 8px 2px;border-radius:4px}
+.hero-sub{font-size:13px;color:var(--text2);max-width:520px;line-height:1.7}
+.slabel{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem;padding-bottom:.4rem;border-bottom:.5px solid var(--border)}
+.chain{display:flex;align-items:stretch;border:.5px solid var(--border3);border-radius:10px;overflow:hidden;margin-bottom:1.8rem}
+.cnode{flex:1;min-width:60px;padding:.75rem .6rem;text-align:center;border-right:.5px solid var(--border)}
+.cnode:last-child{border-right:none}
+.cnode.noise{flex:0 0 75px;background:var(--bg2);border-left:.5px dashed var(--border2);border-right:.5px dashed var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.nc{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.nn{font-size:10px;font-weight:500;color:var(--text);margin-bottom:2px}
+.nd{font-size:9px;color:var(--text2);line-height:1.4}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.8rem}
+.card{border:.5px solid var(--border);border-radius:10px;padding:.9rem;background:var(--bg)}
+.card.wide{grid-column:1/-1}
+.cnum{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);margin-bottom:.3rem;letter-spacing:.06em}
+.ctitle{font-size:13px;font-weight:500;color:var(--text);margin-bottom:.4rem;line-height:1.3}
+.cbody{font-size:12px;color:var(--text2);line-height:1.65}
+.bits{display:flex;gap:3px;flex-wrap:wrap;margin:.5rem 0 .35rem}
+.bit{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:3px;border:.5px solid var(--border2);color:var(--text)}
+.bit.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.erow{display:flex;align-items:center;gap:7px;margin:.3rem 0}
+.ekey{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);white-space:nowrap;width:68px}
+.etrack{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.efill{height:100%;border-radius:3px;background:var(--text)}
+.redund{font-family:'Space Mono',monospace;font-size:11px;line-height:2;margin:.5rem 0;letter-spacing:.04em}
+.redund .s{text-decoration:line-through;color:var(--text3)}
+.redund .k{color:var(--text);font-weight:700}
+.crow{display:flex;align-items:center;gap:7px;margin:.3rem 0}
+.ckey{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);width:78px}
+.ctrack{flex:1;height:11px;border:.5px solid var(--border2);border-radius:3px;overflow:hidden;display:flex}
+.cused{background:var(--text)}
+.cover{background-image:repeating-linear-gradient(45deg,var(--text3) 0,var(--text3) 2px,transparent 2px,transparent 7px);opacity:.7}
+.epill{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:4px;white-space:nowrap}
+.epill.solid{border:.5px solid var(--border2);color:var(--text)}
+.epill.dashed{border:.5px dashed var(--border2);color:var(--text2)}
+.epill.result{border:.5px solid var(--border3);color:var(--text)}
+.eop{font-size:12px;color:var(--text3)}
+.igrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.8rem}
+.icard{border:.5px solid var(--border);border-radius:8px;padding:.75rem;text-align:center}
+.iname{font-family:'Space Mono',monospace;font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px}
+.idesc{font-size:10px;color:var(--text2);line-height:1.55}
+.para{border:.5px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-bottom:1.8rem}
+.para p{font-size:12px;color:var(--text2);line-height:1.9}
+.wcite{font-size:12px;color:var(--text3);border-top:.5px solid var(--border);padding-top:1rem;margin-top:.5rem;font-style:italic;line-height:1.7}
+.foot{border-top:.5px solid var(--border);margin-top:1.5rem;padding-top:1rem;text-align:center;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--text3)}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="eyebrow">ISTA 100 · Module 4 · Concept Exploration</div>
+      <h1>Information <span class="inv">Theory</span></h1>
+      <p class="hero-sub">Claude Shannon&rsquo;s framework for measuring, moving, and protecting messages: the mathematical foundation of every digital communication system in use today.</p>
+    </div>
+  </div>
+
+  <div class="slabel">01. The signal chain</div>
+  <div class="chain">
+    <div class="cnode"><div class="nc">src</div><div class="nn">Source</div><div class="nd">Where the message originates</div></div>
+    <div class="cnode"><div class="nc">tx</div><div class="nn">Transmitter</div><div class="nd">Encodes message into signal</div></div>
+    <div class="cnode noise"><div class="nc" style="font-size:13px">&#9889;</div><div class="nn">Noise</div><div class="nd">Always present</div></div>
+    <div class="cnode"><div class="nc">rx</div><div class="nn">Receiver</div><div class="nd">Decodes signal back</div></div>
+    <div class="cnode"><div class="nc">dst</div><div class="nn">Destination</div><div class="nd">Message arrives</div></div>
+  </div>
+
+  <div class="slabel">02. Five core concepts</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="cnum">Concept 01: The bit</div>
+      <div class="ctitle">The fundamental unit of information</div>
+      <div class="bits"><div class="bit on">1</div><div class="bit">0</div><div class="bit on">1</div><div class="bit on">1</div><div class="bit">0</div><div class="bit">0</div><div class="bit on">1</div></div>
+      <p class="cbody">A bit is a single yes/no choice. Shannon showed any message can be broken into 1s and 0s. The letter &ldquo;A&rdquo; in ASCII is 01000001.</p>
+    </div>
+    <div class="card">
+      <div class="cnum">Concept 02: Entropy</div>
+      <div class="ctitle">Information = surprise</div>
+      <div class="erow" style="margin-top:.55rem"><span class="ekey">predictable</span><div class="etrack"><div class="efill" style="width:18%"></div></div></div>
+      <div class="erow"><span class="ekey">surprising</span><div class="etrack"><div class="efill" style="width:88%"></div></div></div>
+      <p class="cbody" style="margin-top:.45rem">&ldquo;It snowed in Vegas in July&rdquo; is high-entropy, unexpected and therefore genuinely informative.</p>
+    </div>
+    <div class="card">
+      <div class="cnum">Concept 03: Redundancy</div>
+      <div class="ctitle">Language is mostly predictable</div>
+      <div class="redund"><span class="k">L</span><span class="s">A</span><span class="k">N</span><span class="k">G</span><span class="s">U</span><span class="s">A</span><span class="k">G</span><span class="s">E</span>&nbsp;<span class="s">I</span><span class="k">S </span>&nbsp;<span class="s">A</span><span class="k">L</span><span class="k">S</span><span class="s">O</span>&nbsp;<span class="k">S</span><span class="k">T</span><span class="k">R</span><span class="s">A</span><span class="k">N</span><span class="k">G</span><span class="s">E</span></div>
+      <p class="cbody">Shannon calculated English is ~75% redundant. You can strip vowels from most sentences and still read them.</p>
+    </div>
+    <div class="card">
+      <div class="cnum">Concept 04: Channel capacity</div>
+      <div class="ctitle">Every channel has a maximum</div>
+      <div class="crow" style="margin-top:.55rem"><span class="ckey">within limit</span><div class="ctrack"><div class="cused" style="width:58%"></div></div></div>
+      <div class="crow"><span class="ckey">over capacity</span><div class="ctrack"><div class="cused" style="width:58%"></div><div class="cover" style="width:42%"></div></div></div>
+      <p class="cbody" style="margin-top:.4rem">A channel carries only so many bits per second. Shannon gave engineers the math to measure this exactly.</p>
+    </div>
+    <div class="card wide">
+      <div class="cnum">Concept 05: Error-correcting codes</div>
+      <div class="ctitle">Any message can be sent near-perfectly, even through noise</div>
+      <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:.55rem 0 .4rem">
+        <div class="epill solid">original msg</div><span class="eop">+</span><div class="epill dashed">extra parity bits</div><span class="eop">&rarr;</span><div class="epill result">msg survives noise</div>
+      </div>
+      <p class="cbody">By adding carefully designed extra bits, a message can survive even a noisy channel with near-zero errors. This is how your phone calls stay clear, how CDs play with scratches, and how Voyager sent photos from billions of miles away.</p>
+    </div>
+  </div>
+
+  <div class="slabel">03. Why it still matters</div>
+  <div class="igrid">
+    <div class="icard"><div class="iname">Wi-Fi</div><div class="idesc">Channel capacity math determines how much data your router can push per second</div></div>
+    <div class="icard"><div class="iname">ZIP</div><div class="idesc">File compression exploits Shannon&rsquo;s redundancy insights to shrink data losslessly</div></div>
+    <div class="icard"><div class="iname">QR</div><div class="idesc">Error-correcting codes let QR codes work even when 30% of the image is damaged</div></div>
+    <div class="icard"><div class="iname">CDs</div><div class="idesc">Error correction lets scratched discs play perfectly by reconstructing missing data</div></div>
+    <div class="icard"><div class="iname">4G/5G</div><div class="idesc">Mobile networks use Shannon&rsquo;s capacity formula to maximize data rates</div></div>
+    <div class="icard"><div class="iname">AI</div><div class="idesc">Language models use entropy and probability concepts rooted in information theory</div></div>
+  </div>
+
+  <div class="slabel" style="margin-top:1.8rem">04. About this visual</div>
+  <div class="para">
+    <p>For this module&rsquo;s creative exploration, I chose to visualize information theory, the framework Claude Shannon developed in his landmark 1948 paper, &ldquo;A Mathematical Theory of Communication.&rdquo; What drew me to this concept is how it takes something we completely take for granted, the act of sending and receiving a message, and quantifies it with mathematical precision. Gertner (2012) describes Shannon&rsquo;s core contribution as answering a question Bell engineers had struggled with from the beginning: how fast, and how accurately, can you send a message from one place to another?</p>
+  </div>
+
+  <div class="slabel">Works Cited</div>
+  <div class="para">
+    <p>Gertner, J. (2012). <em>The idea factory: Bell Labs and the great age of American innovation.</em> Penguin Press.</p>
+  </div>
+
+  <div class="foot">DANIEL CORRON &middot; ISTA 100 &middot; ASSIGNMENT 4 &middot; MARCH 2026</div>
+</div>
+</body>
+</html>
