@@ -1,653 +1,540 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Information Age: ISTA 100 Portfolio · Daniel Corron</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three Futures</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --ink:   #0e0d0b;
-      --paper: #f5f2eb;
-      --warm:  #e8e2d4;
-      --gold:  #c8963a;
-      --rust:  #a04030;
-      --teal:  #1a6a72;
-      --dim:   #7a7060;
-      --faint: rgba(14,13,11,0.08);
-    }
-
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--ink);
-      color: var(--paper);
+      background: #0a0000;
+      color: #ff4444;
+      font-family: 'Share Tech Mono', monospace;
+      transition: background-color 1.4s ease, color 1.4s ease;
       overflow-x: hidden;
-      min-height: 100vh;
     }
 
-    /* ── COVER ─────────────────────────────────────────────── */
-    .cover {
-      min-height: 100vh;
-      display: grid;
-      grid-template-rows: 1fr auto;
-      position: relative;
-      padding: 5vw;
-      overflow: hidden;
+    /* ── Progress bar ── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      z-index: 100;
+      transition: background-color 1.4s ease, width 0.1s linear;
+      background: #ff2222;
     }
 
-    .cover-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 70% 60% at 15% 90%, rgba(26,106,114,0.22) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 85% 10%, rgba(200,150,58,0.12) 0%, transparent 55%),
-        #0e0d0b;
-    }
-
-    .cover-bg::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,0.025) 79px, rgba(255,255,255,0.025) 80px),
-        repeating-linear-gradient(0deg,  transparent, transparent 79px, rgba(255,255,255,0.025) 79px, rgba(255,255,255,0.025) 80px);
-    }
-
-    .cover-inner {
-      position: relative;
-      z-index: 2;
+    /* ── Section nav dots ── */
+    #section-nav {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
-      padding-bottom: 4rem;
+      gap: 12px;
+      z-index: 100;
     }
-
-    .cover-eyebrow {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 2rem;
-      opacity: 0.8;
-    }
-
-    .cover-rule {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, var(--gold), transparent);
-      margin-bottom: 2rem;
+    .nav-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      cursor: pointer;
       opacity: 0.5;
+      transition: opacity 0.3s, transform 0.3s, border-color 1.4s ease;
     }
+    .nav-dot.active { opacity: 1; transform: scale(1.5); }
 
-    .cover-title {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(56px, 10vw, 130px);
-      font-weight: 900;
-      line-height: 0.9;
-      letter-spacing: -0.03em;
-      color: var(--paper);
-      margin-bottom: 0.3em;
-    }
-
-    .cover-title em {
-      font-style: italic;
-      font-weight: 300;
-      color: var(--gold);
-    }
-
-    .cover-subtitle {
-      font-size: clamp(15px, 2vw, 20px);
-      font-weight: 300;
-      color: rgba(245,242,235,0.5);
-      max-width: 560px;
-      line-height: 1.65;
-      margin-top: 1.5rem;
-    }
-
-    .cover-meta {
+    /* ══════════════════════════════════
+       SECTION BASE
+    ══════════════════════════════════ */
+    section {
+      min-height: 100vh;
+      scroll-snap-align: start;
       position: relative;
-      z-index: 2;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      color: rgba(245,242,235,0.3);
-      text-transform: uppercase;
-      padding-top: 2rem;
-      border-top: 0.5px solid rgba(245,242,235,0.1);
-    }
-
-    .scroll-hint {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      color: rgba(245,242,235,0.25);
-      animation: drift 2.4s ease-in-out infinite;
-    }
-
-    @keyframes drift { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
-
-    .scroll-hint-line {
-      width: 1px;
-      height: 32px;
-      background: linear-gradient(180deg, rgba(245,242,235,0.25), transparent);
-    }
-
-    /* ── EXEC SUMMARY ────────────────────────────────────── */
-    .exec {
-      background: var(--paper);
-      color: var(--ink);
-      padding: 6vw 8vw;
-    }
-
-    .section-tag-light {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--dim);
-      margin-bottom: 2rem;
-      padding-bottom: 0.9rem;
-      border-bottom: 0.5px solid rgba(14,13,11,0.15);
-    }
-
-    .exec-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 5vw;
-      align-items: start;
-    }
-
-    .exec-lead {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(20px, 2.8vw, 30px);
-      font-weight: 300;
-      font-style: italic;
-      line-height: 1.5;
-      color: var(--ink);
-      margin-bottom: 1.2rem;
-    }
-
-    .exec-lead strong { font-weight: 700; font-style: normal; }
-
-    .exec-body {
-      font-size: 15px;
-      color: #3a3830;
-      line-height: 1.8;
-    }
-
-    .exec-stats { display: flex; flex-direction: column; gap: 1.2rem; }
-
-    .exec-stat {
-      padding: 1.3rem;
-      border: 0.5px solid rgba(14,13,11,0.12);
-      border-radius: 4px;
-    }
-
-    .exec-stat-num {
-      font-family: 'Fraunces', serif;
-      font-size: 40px;
-      font-weight: 700;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 3px;
-    }
-
-    .exec-stat-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      letter-spacing: 0.1em;
-      color: var(--dim);
-      text-transform: uppercase;
-    }
-
-    /* ── MODULE NAV ───────────────────────────────────────── */
-    .module-nav {
-      background: var(--ink);
-      padding: 3vw 8vw;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.2rem;
-    }
-
-    .nav-card {
-      border: 0.5px solid rgba(245,242,235,0.12);
-      border-radius: 4px;
-      padding: 1.3rem 1.1rem;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-      transition: border-color 0.25s, background 0.25s;
-      position: relative;
+      justify-content: center;
+      padding: 80px 8vw;
       overflow: hidden;
     }
 
-    .nav-card::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--card-color, var(--gold));
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.3s;
-    }
-
-    .nav-card:hover { border-color: rgba(245,242,235,0.3); background: rgba(245,242,235,0.04); }
-    .nav-card:hover::before { transform: scaleX(1); }
-
-    .nav-num {
-      font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      letter-spacing: 0.14em;
-      color: var(--card-color, var(--gold));
-      margin-bottom: 0.6rem;
-    }
-
-    .nav-title {
-      font-family: 'Fraunces', serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--paper);
-      line-height: 1.3;
-      margin-bottom: 0.45rem;
-    }
-
-    .nav-desc { font-size: 11px; color: rgba(245,242,235,0.4); line-height: 1.5; }
-
-    /* ── MODULE SECTIONS ──────────────────────────────────── */
-    .module-section {
-      padding: 5vw 0;
-      border-top: 0.5px solid rgba(245,242,235,0.08);
-    }
-
-    .section-header {
-      display: grid;
-      grid-template-columns: 8vw 1fr;
-      gap: 2.5rem;
-      margin-bottom: 2.5rem;
-      padding: 0 8vw;
-      align-items: start;
-    }
-
-    .section-number {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(60px, 8vw, 96px);
-      font-weight: 900;
-      line-height: 0.85;
-      color: rgba(245,242,235,0.06);
-      user-select: none;
-    }
-
-    .section-tag {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.18em;
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
       text-transform: uppercase;
-      color: var(--section-color, var(--gold));
-      margin-bottom: 0.5rem;
+      opacity: 0.5;
+      margin-bottom: 12px;
     }
 
     .section-title {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(26px, 3.5vw, 44px);
-      font-weight: 700;
-      line-height: 1.1;
-      color: var(--paper);
-      margin-bottom: 0.8rem;
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      line-height: 1;
+      margin-bottom: 40px;
     }
 
-    .section-desc {
-      font-size: 14px;
-      color: rgba(245,242,235,0.5);
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+      max-width: 1200px;
+    }
+
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; }
+    }
+
+    .section-text {
       line-height: 1.75;
-      max-width: 560px;
+      font-size: 0.95rem;
+      opacity: 0.85;
     }
 
-    /* ── EMBED ────────────────────────────────────────────── */
-    .embed-wrap {
-      margin: 0 4vw;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 0.5px solid rgba(245,242,235,0.1);
-      background: #0a0a08;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.45);
-    }
+    .section-text p + p { margin-top: 1em; }
 
-    .embed-chrome {
-      background: rgba(245,242,235,0.06);
-      border-bottom: 0.5px solid rgba(245,242,235,0.08);
-      padding: 9px 14px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .chrome-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .chrome-dot:nth-child(1) { background: #ff5f57; }
-    .chrome-dot:nth-child(2) { background: #febc2e; }
-    .chrome-dot:nth-child(3) { background: #28c840; }
-
-    .chrome-url {
-      margin-left: 8px;
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: rgba(245,242,235,0.22);
-    }
-
-    .embed-iframe {
+    .section-image {
       width: 100%;
-      height: 680px;
-      border: none;
+      aspect-ratio: 16/9;
+      object-fit: cover;
       display: block;
     }
 
-    /* ── CONNECTOR ────────────────────────────────────────── */
-    .connector {
-      padding: 3rem 8vw;
-      display: grid;
-      grid-template-columns: 3fr 2fr;
-      gap: 3.5rem;
-      align-items: center;
-      border-top: 0.5px solid rgba(245,242,235,0.07);
+    /* ══════════════════════════════════
+       SECTION 1 — DYSTOPIA
+    ══════════════════════════════════ */
+    #dystopia {
+      background: #080000;
+      color: #ff3333;
+      font-family: 'Share Tech Mono', monospace;
     }
 
-    .connector-text {
-      font-size: 15px;
-      line-height: 1.8;
-      color: rgba(245,242,235,0.58);
+    #dystopia .section-title {
+      font-family: 'Share Tech Mono', monospace;
+      color: #ff1a1a;
+      text-shadow: 0 0 40px #ff000088, 0 0 80px #ff000044;
+      position: relative;
     }
 
-    .connector-text strong { color: var(--paper); font-weight: 500; }
+    #dystopia .section-title::before,
+    #dystopia .section-title::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+    }
+    #dystopia .section-title::before {
+      color: #00ffff44;
+      animation: glitch-1 3.5s infinite;
+      clip-path: polygon(0 30%, 100% 30%, 100% 55%, 0 55%);
+    }
+    #dystopia .section-title::after {
+      color: #ff005544;
+      animation: glitch-2 3.5s infinite;
+      clip-path: polygon(0 65%, 100% 65%, 100% 80%, 0 80%);
+    }
 
-    .connector-pull {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(18px, 2.2vw, 26px);
-      font-style: italic;
+    @keyframes glitch-1 {
+      0%, 90%, 100% { transform: translateX(0); opacity: 0; }
+      92% { transform: translateX(-4px); opacity: 1; }
+      94% { transform: translateX(4px); opacity: 1; }
+      96% { transform: translateX(0); opacity: 0; }
+    }
+    @keyframes glitch-2 {
+      0%, 88%, 100% { transform: translateX(0); opacity: 0; }
+      90% { transform: translateX(3px); opacity: 1; }
+      93% { transform: translateX(-3px); opacity: 1; }
+      95% { transform: translateX(0); opacity: 0; }
+    }
+
+    #dystopia::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.15) 2px,
+        rgba(0,0,0,0.15) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #dystopia::after {
+      content: '';
+      position: absolute;
+      top: -200px; left: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #ff000022 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    #dystopia .content-grid,
+    #dystopia .section-label,
+    #dystopia .section-title { position: relative; z-index: 2; }
+
+    #dystopia .section-image {
+      border: 1px solid #ff333333;
+      box-shadow: 0 0 40px #ff000055, inset 0 0 20px #ff000022;
+    }
+
+    .bracket-wrap { position: relative; display: inline-block; width: 100%; }
+    .bracket-wrap::before, .bracket-wrap::after {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      border-color: currentColor;
+      border-style: solid;
+      opacity: 0.6;
+    }
+    .bracket-wrap::before { top: -6px; left: -6px; border-width: 2px 0 0 2px; }
+    .bracket-wrap::after  { bottom: -6px; right: -6px; border-width: 0 2px 2px 0; }
+
+    /* ══════════════════════════════════
+       SECTION 2 — UTOPIA
+    ══════════════════════════════════ */
+    #utopia {
+      background: #00060f;
+      color: #a8d8f0;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    #utopia .section-label {
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.4em;
+      color: #4fc3f7;
+    }
+
+    #utopia .section-title {
+      font-family: 'Cormorant Garamond', serif;
       font-weight: 300;
-      line-height: 1.45;
-      color: var(--paper);
-      opacity: 0.42;
-      border-left: 2px solid var(--section-color, var(--gold));
-      padding-left: 1.4rem;
+      font-style: italic;
+      color: #e0f4ff;
+      text-shadow: 0 0 60px #0099ff33, 0 0 120px #0066ff22;
+      letter-spacing: -0.01em;
+      animation: float 6s ease-in-out infinite;
     }
 
-    /* ── CONCLUSION ───────────────────────────────────────── */
-    .conclusion {
-      background: var(--paper);
-      color: var(--ink);
-      padding: 6vw 8vw;
+    #utopia .section-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      line-height: 1.85;
+      color: #b8dff5;
     }
 
-    .conclusion-headline {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(30px, 4.5vw, 54px);
-      font-weight: 900;
-      line-height: 1.05;
-      color: var(--ink);
-      margin-bottom: 2rem;
-      max-width: 640px;
+    #utopia::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 25%, #ffffff55, transparent),
+        radial-gradient(1px 1px at 35% 60%, #ffffff44, transparent),
+        radial-gradient(1.5px 1.5px at 55% 15%, #ffffffaa, transparent),
+        radial-gradient(1px 1px at 75% 80%, #ffffff55, transparent),
+        radial-gradient(1px 1px at 88% 40%, #ffffff66, transparent),
+        radial-gradient(1px 1px at 22% 78%, #ffffff33, transparent),
+        radial-gradient(1px 1px at 62% 45%, #ffffff44, transparent),
+        radial-gradient(2px 2px at 48% 90%, #4fc3f766, transparent),
+        radial-gradient(1px 1px at 8%  55%, #ffffff55, transparent),
+        radial-gradient(1px 1px at 92% 70%, #ffffff44, transparent);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .conclusion-headline em { font-style: italic; font-weight: 300; color: var(--rust); }
-
-    .conclusion-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+    #utopia::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: 50%;
+      transform: translateX(-50%);
+      width: 80%; height: 300px;
+      background: radial-gradient(ellipse, #0066ff18 0%, transparent 70%);
+      pointer-events: none;
     }
 
-    .conclusion-body { font-size: 15px; line-height: 1.85; color: #3a3830; }
-    .conclusion-body p + p { margin-top: 1.1rem; }
+    #utopia .content-grid,
+    #utopia .section-label,
+    #utopia .section-title { position: relative; z-index: 2; }
 
-    .takeaways { display: flex; flex-direction: column; gap: 1rem; }
+    #utopia .section-image {
+      border: 1px solid #4fc3f733;
+      box-shadow: 0 0 60px #0066ff33, inset 0 0 30px #0044ff11;
+    }
 
-    .takeaway {
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    /* ══════════════════════════════════
+       SECTION 3 — MIDDLE ROAD
+    ══════════════════════════════════ */
+    #middle {
+      background: #0d0d0d;
+      color: #c8a227;
+      font-family: 'Rajdhani', sans-serif;
+      padding-bottom: 120px;
+    }
+
+    #middle .section-label { color: #c8a22788; }
+
+    #middle .section-title {
+      font-family: 'Bebas Neue', cursive;
+      color: #c8a227;
+      letter-spacing: 0.05em;
+    }
+
+    #middle .section-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 300;
+      font-size: 1rem;
+      color: #c8a227aa;
+      line-height: 1.7;
+    }
+
+    .ticker-wrap {
+      position: absolute;
+      bottom: 40px; left: 0; right: 0;
+      overflow: hidden;
+      height: 32px;
+      border-top: 1px solid #c8a22733;
+      border-bottom: 1px solid #c8a22733;
+    }
+    .ticker {
       display: flex;
-      gap: 0.9rem;
-      align-items: flex-start;
-      padding: 1rem 1.1rem;
-      border: 0.5px solid rgba(14,13,11,0.1);
-      border-radius: 4px;
+      white-space: nowrap;
+      animation: ticker-scroll 18s linear infinite;
+    }
+    .ticker-item {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1rem;
+      letter-spacing: 0.3em;
+      padding: 4px 60px;
+      color: #c8a22766;
+    }
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
-    .takeaway-num {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: var(--gold);
-      flex-shrink: 0;
-      margin-top: 2px;
+    #middle::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(#c8a22708 1px, transparent 1px),
+        linear-gradient(90deg, #c8a22708 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
     }
 
-    .takeaway-text { font-size: 13px; color: #3a3830; line-height: 1.6; }
-    .takeaway-text strong { color: var(--ink); }
+    #middle .content-grid,
+    #middle .section-label,
+    #middle .section-title { position: relative; z-index: 2; }
 
-    /* ── FOOTER ───────────────────────────────────────────── */
-    footer {
-      background: #090807;
-      padding: 2.5rem 8vw;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 0.5px solid rgba(245,242,235,0.07);
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      color: rgba(245,242,235,0.2);
-      text-transform: uppercase;
+    #middle .section-image {
+      border: 1px solid #c8a22733;
+      box-shadow: 0 0 30px #c8a22722;
     }
 
-    /* ── SCROLL REVEAL ────────────────────────────────────── */
-    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* ── RESPONSIVE ───────────────────────────────────────── */
-    @media (max-width: 900px) {
-      .exec-grid { grid-template-columns: 1fr; }
-      .module-nav { grid-template-columns: 1fr 1fr; }
-      .conclusion-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .connector { grid-template-columns: 1fr; gap: 2rem; }
+    /* ══════════════════════════════════
+       SECTION 4 — RATIONALE
+    ══════════════════════════════════ */
+    #rationale {
+      background: #080808;
+      color: #888;
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 70vh;
     }
 
-    @media (max-width: 600px) {
-      .module-nav { grid-template-columns: 1fr; }
-      .section-header { grid-template-columns: 1fr; gap: 1rem; }
-      .section-number { display: none; }
-      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    #rationale .section-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(2rem, 5vw, 4rem);
+      color: #555;
+      letter-spacing: 0.05em;
     }
+
+    #rationale .section-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      line-height: 1.75;
+      max-width: 720px;
+      color: #666;
+    }
+
+    /* ── Scroll fade-in ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in.delay-1 { transition-delay: 0.15s; }
+    .fade-in.delay-2 { transition-delay: 0.30s; }
+    .fade-in.delay-3 { transition-delay: 0.45s; }
   </style>
 </head>
 <body>
 
-<!-- COVER -->
-<section class="cover">
-  <div class="cover-bg"></div>
-  <div class="cover-inner">
-    <div class="cover-eyebrow">ISTA 100 &middot; Unit 1 Portfolio &middot; Spring 2026</div>
-    <div class="cover-rule"></div>
-    <h1 class="cover-title">The<br><em>Information</em><br>Age</h1>
-    <p class="cover-subtitle">From the transistor to the ocean floor to the mathematics of meaning: a semester tracing how Bell Labs changed the world, and what that means for us now.</p>
-  </div>
-  <div class="cover-meta">
-    <span>Daniel Corron</span>
-    <div class="scroll-hint"><span>Scroll</span><div class="scroll-hint-line"></div></div>
-    <span>Modules 1 &ndash; 4</span>
-  </div>
-</section>
+  <div id="progress-bar"></div>
 
-<!-- EXEC SUMMARY -->
-<section class="exec" id="summary">
-  <div class="section-tag-light">Executive Summary</div>
-  <div class="exec-grid">
-    <div>
-      <p class="exec-lead">Four assignments. One book. A story about <strong>how innovation actually happens</strong> and why it still matters.</p>
-      <p class="exec-body">This portfolio follows a single thread across four modules of ISTA 100: the way that one institution, Bell Laboratories, created the intellectual and technological foundations of the world we live in. The common source for each module is Jon Gertner&rsquo;s <em>The Idea Factory</em> (2012), which tells the story of Bell Labs through the people, inventions, and culture that made it extraordinary. Each assignment approaches that story from a different angle, from broad cultural essay to technical deep-dive to mathematical theory, and together they build into something larger than any one piece.</p>
-    </div>
-    <div class="exec-stats">
-      <div class="exec-stat"><div class="exec-stat-num">4</div><div class="exec-stat-label">Modules covered</div></div>
-      <div class="exec-stat"><div class="exec-stat-num">1</div><div class="exec-stat-label">Unifying source text</div></div>
-      <div class="exec-stat"><div class="exec-stat-num">1948</div><div class="exec-stat-label">Year Shannon published<br>information theory</div></div>
-      <div class="exec-stat"><div class="exec-stat-num">22</div><div class="exec-stat-label">Years TAT-1 ran<br>without a single failure</div></div>
-    </div>
-  </div>
-</section>
+  <nav id="section-nav" aria-label="Section navigation">
+    <div class="nav-dot active" data-target="dystopia"  title="Dystopia"></div>
+    <div class="nav-dot"        data-target="utopia"    title="Utopia"></div>
+    <div class="nav-dot"        data-target="middle"    title="Middle Road"></div>
+    <div class="nav-dot"        data-target="rationale" title="Rationale"></div>
+  </nav>
 
-<!-- MODULE NAV -->
-<nav class="module-nav">
-  <a href="#m1" class="nav-card" style="--card-color:#c8963a">
-    <div class="nav-num">Module 01</div>
-    <div class="nav-title">The Information Age</div>
-    <div class="nav-desc">Bell Labs, Pixar, and the culture that makes breakthroughs inevitable.</div>
-  </a>
-  <a href="#m2" class="nav-card" style="--card-color:#1a6a72">
-    <div class="nav-num">Module 02</div>
-    <div class="nav-title">Building Blocks</div>
-    <div class="nav-desc">Transistors, lithium, and the future of battery-as-a-service.</div>
-  </a>
-  <a href="#m3" class="nav-card" style="--card-color:#00c2d4">
-    <div class="nav-num">Module 03</div>
-    <div class="nav-title">TAT-1</div>
-    <div class="nav-desc">The transatlantic cable that connected two continents for 22 years.</div>
-  </a>
-  <a href="#m4" class="nav-card" style="--card-color:#a0a097">
-    <div class="nav-num">Module 04</div>
-    <div class="nav-title">Information Theory</div>
-    <div class="nav-desc">Shannon&rsquo;s framework: the math that runs underneath everything.</div>
-  </a>
-</nav>
+  <!-- ════════════════ DYSTOPIA ════════════════ -->
+  <section id="dystopia">
+    <div class="section-label fade-in">Vision I</div>
+    <h1 class="section-title fade-in delay-1" data-text="THE MATRIXANATOR">THE MATRIXANATOR</h1>
+    <div class="content-grid">
+      <div class="section-text fade-in delay-2">
+        <p>One potential dystopic future we could face is something I like to call the Matrixanator&mdash;or maybe Termatrix&mdash;a mix between the timeless cinematic masterpieces <em>The Matrix</em> and <em>The Terminator</em>, but with a whole lot of mundane reality dumped in to ensure we don&rsquo;t have too much entertainment. This version of a dystopic future is marked by a completely docile population, ruled by a small number of neo-feudal tech-lords with familiar surnames like Vanderbilt, Rothschild, and Rockefeller, who together through absolute control of all networks and infrastructure control all aspects of human existence.</p>
+        <p>The few who are physically healthy or strong enough to possibly have agency over their lives will simply be manipulated, gaslit, or extorted into complicity. All of this is, of course, completely without human input&mdash;it&rsquo;s been long automated.</p>
+        <p>An extremely low value will be assigned to proletariat life; entire populations will be marginalized into extinction. Their lives will have so little perceived value that their existence will not be considered at all by those in power, relegated to ranks deserving less attention than common vermin or bacteria.</p>
+        <p>Once Earth has been thoroughly drained of any resources considered desirable by those in control it will be abandoned, and our solar system will become a testing ground for greater machines capable of even greater destruction, in search of even greater ROI for the shareholders.</p>
+      </div>
+      <div class="fade-in delay-3">
+        <div class="bracket-wrap">
+          <img class="section-image" src="dystopia.png" alt="Wireframe corporate skull looming over tiny human figures — symbolizing the neo-feudal tech-lord dystopia">
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- MODULE 1 -->
-<section class="module-section reveal" id="m1" style="--section-color:#c8963a">
-  <div class="section-header">
-    <div class="section-number">1</div>
-    <div>
-      <div class="section-tag">Module 01 &middot; Assignment 1</div>
-      <h2 class="section-title">The Information Age</h2>
-      <p class="section-desc">The opening assignment asked a big question: what is the Information Age, and what kind of innovation culture produces it? Starting with Bell Labs as the historical anchor, this piece draws a line to Pixar Studios as a contemporary example of the same collaborative spirit, then looks forward to space access as the next frontier.</p>
+  <!-- ════════════════ UTOPIA ════════════════ -->
+  <section id="utopia">
+    <div class="section-label fade-in">Vision II</div>
+    <h1 class="section-title fade-in delay-1">The Open World</h1>
+    <div class="content-grid">
+      <div class="fade-in delay-2">
+        <img class="section-image" src="utopia.png" alt="A vision of the utopian future">
+      </div>
+      <div class="section-text fade-in delay-3">
+        <p>A utopia can be challenging to imagine because it must be a utopia for everyone, and people are sometimes pleased by opposing actions. So a utopic future might be a bit tame compared to the extremes of a dystopic one.</p>
+        <p>Social cohesion is at the forefront of this society; decisions are made based on who they affect and how they affect them, and the general mindset of individuals is to &ldquo;always leave a place better than when you arrived.&rdquo; Information access is universal&mdash;there are no classified documents or top-secret research, because everything done by humans is done in pursuit of bettering the lives of all earthlings, or possibly all life in the universe.</p>
+        <p>There are no homeless people, though many do choose to live and sleep outside; they do so willingly, safely, and in a way that is congruent with nature and their health. Of course, bad things do still happen&mdash;however, we are better situated to handle them. Like a little salt on chocolate, the bad only elevates the good.</p>
+        <p>Technology is used for the betterment of all life. Automation replaces undesirable jobs, and nobody is required to perform a duty they do not choose. There are no castes, no beasts of burden, and there is no currency.</p>
+      </div>
     </div>
-  </div>
-  <div class="embed-wrap">
-    <div class="embed-chrome">
-      <div class="chrome-dot"></div><div class="chrome-dot"></div><div class="chrome-dot"></div>
-      <span class="chrome-url">a1.html: The Information Age</span>
-    </div>
-    <iframe class="embed-iframe" src="a1.html" loading="lazy" title="Assignment 1: The Information Age"></iframe>
-  </div>
-  <div class="connector">
-    <div class="connector-text">This first assignment established the framework for everything that followed. Rather than just describing what Bell Labs invented, it asked a harder question: <strong>what made Bell Labs the kind of place that could invent it?</strong> The answer, a culture of curiosity, collaboration, and long-term thinking, turned out to be the real subject. Pixar emerged as a living example of that same culture applied to animation, proving the model isn&rsquo;t historical artifact. It&rsquo;s a recipe.</div>
-    <div class="connector-pull" style="border-color:#c8963a">&ldquo;The most important ingredient isn&rsquo;t a single genius. It&rsquo;s the culture that makes breakthroughs inevitable.&rdquo;</div>
-  </div>
-</section>
+  </section>
 
-<!-- MODULE 2 -->
-<section class="module-section reveal" id="m2" style="--section-color:#1a6a72">
-  <div class="section-header">
-    <div class="section-number">2</div>
-    <div>
-      <div class="section-tag">Module 02 &middot; Assignment 2</div>
-      <h2 class="section-title">Building Blocks of the Information Age</h2>
-      <p class="section-desc">The second assignment zoomed in on the physical foundations: the transistor, which started it all; lithium-ion batteries, which untethered it all; and battery-swap networks, which might sustain it all. A technical deep-dive that connects semiconductor physics to resource geopolitics to circular economy design.</p>
+  <!-- ════════════════ MIDDLE ROAD ════════════════ -->
+  <section id="middle">
+    <div class="section-label fade-in">The Probable</div>
+    <h1 class="section-title fade-in delay-1">The Middle Road</h1>
+    <div class="content-grid">
+      <div class="section-text fade-in delay-2">
+        <p>In likelihood we will arrive at some state between these two fictions. The majority of people will continue to avoid living a meaningful life. With their ambitions hijacked by corporate interests, they&rsquo;ll be used as mascots for conduct beholden to a good citizen. The same dutiful mantra that echoes in the airwaves today will be bellowed from seemingly every surface in public.</p>
+        <p>We keep doing this until the world reaches a critical mass of suffering, and the system breaks. This will be very upsetting for the world as a whole, but will ultimately usher in a new era of reform where our interests, ethics, and conduct change drastically in favor of more social behavior. Goods, services, and commodities are priced fairly. The social safety net is expanded. New advances in medical technology temper the effects of aging. Taxes reach 95%.</p>
+        <p>Two generations later, the people have forgotten what they had to fight for, the social safety net is removed, and the cycle begins again. Humanity claims a tiny net gain, though no progress is actually made&mdash;for to measure progress one needs to have an intended goal. Earth grows ever closer to the volcanic belch that will render it uninhabitable for humanity, though life will find a way.</p>
+      </div>
+      <div class="fade-in delay-3">
+        <svg viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;opacity:0.7;margin-bottom:24px;">
+          <defs>
+            <linearGradient id="sineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   style="stop-color:#c8a22766"/>
+              <stop offset="50%"  style="stop-color:#c8a227cc"/>
+              <stop offset="100%" style="stop-color:#c8a22766"/>
+            </linearGradient>
+          </defs>
+          <path d="M 0 90
+            Q 20 60, 40 90  Q 60 120, 80 90
+            Q 105 50, 130 90 Q 155 130, 180 90
+            Q 210 35, 240 90 Q 270 145, 300 90
+            Q 338 20, 375 90 Q 413 160, 450 90
+            Q 475 50, 500 90"
+            fill="none" stroke="url(#sineGrad)" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="0"   y="172" font-family="'Bebas Neue', cursive" font-size="9" fill="#c8a22744" letter-spacing="2">PAST</text>
+          <text x="440" y="172" font-family="'Bebas Neue', cursive" font-size="9" fill="#c8a22744" letter-spacing="2">NOW</text>
+        </svg>
+        <img class="section-image" src="middle.png" alt="A realistic vision of the middle road future">
+      </div>
     </div>
-  </div>
-  <div class="embed-wrap">
-    <div class="embed-chrome">
-      <div class="chrome-dot"></div><div class="chrome-dot"></div><div class="chrome-dot"></div>
-      <span class="chrome-url">a2.html: Building Blocks</span>
-    </div>
-    <iframe class="embed-iframe" src="a2.html" loading="lazy" title="Assignment 2: Building Blocks"></iframe>
-  </div>
-  <div class="connector">
-    <div class="connector-text">The transistor story is really a Bell Labs story; it&rsquo;s where the first assignment&rsquo;s abstract ideas about innovation culture become concrete. The jump to lithium-ion batteries and battery swap networks pushed that same pattern into the present: <strong>the next breakthrough tends to come from people solving the right problem with the right team.</strong> Lithium supply risk is today&rsquo;s version of vacuum tube unreliability, a known problem waiting for someone to take it seriously.</div>
-    <div class="connector-pull" style="border-color:#1a6a72">Twenty billion transistors on a chip smaller than a postage stamp. From room-sized machines to pocket-sized devices in seventy years.</div>
-  </div>
-</section>
 
-<!-- MODULE 3 -->
-<section class="module-section reveal" id="m3" style="--section-color:#00c2d4">
-  <div class="section-header">
-    <div class="section-number">3</div>
-    <div>
-      <div class="section-tag">Module 03 &middot; Assignment 3</div>
-      <h2 class="section-title">TAT-1: The Cable That Connected the World</h2>
-      <p class="section-desc">TAT-1 was the first transatlantic telephone cable: 2,250 miles of engineered precision across the ocean floor, completed in 1956. This infographic dissects its architecture, its engineering challenges, and the TASI system that doubled its capacity without laying a single new foot of cable.</p>
+    <div class="ticker-wrap">
+      <div class="ticker">
+        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
+        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
+        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
+        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
+        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
+        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
+      </div>
     </div>
-  </div>
-  <div class="embed-wrap">
-    <div class="embed-chrome">
-      <div class="chrome-dot"></div><div class="chrome-dot"></div><div class="chrome-dot"></div>
-      <span class="chrome-url">a3.html: TAT-1</span>
-    </div>
-    <iframe class="embed-iframe" src="a3.html" loading="lazy" title="Assignment 3: TAT-1"></iframe>
-  </div>
-  <div class="connector">
-    <div class="connector-text">TAT-1 is where the Bell Labs story gets most concrete and most human. Mervin Kelly spent years planning a cable that had to work perfectly for two decades, underwater, with no possibility of repair. His decision to use proven vacuum tubes instead of the newer transistor wasn&rsquo;t conservatism; it was engineering discipline. <strong>Innovation sometimes means knowing exactly when not to use the newest thing.</strong> TASI, which doubled the cable&rsquo;s capacity by exploiting the silence in conversation, is pure Bell Labs ingenuity: find the hidden resource you&rsquo;re already paying for, and use it.</div>
-    <div class="connector-pull" style="border-color:#00c2d4">TAT-1 operated for 22 years without a single hardware failure. Kelly&rsquo;s requirement had been 20.</div>
-  </div>
-</section>
+  </section>
 
-<!-- MODULE 4 -->
-<section class="module-section reveal" id="m4" style="--section-color:#a0a097">
-  <div class="section-header">
-    <div class="section-number">4</div>
-    <div>
-      <div class="section-tag">Module 04 &middot; Assignment 4</div>
-      <h2 class="section-title">Information Theory</h2>
-      <p class="section-desc">Claude Shannon&rsquo;s 1948 paper gave engineers something they&rsquo;d never had before: a precise, mathematical definition of information itself. This final infographic visualizes the five core concepts of information theory, the ideas that quietly run underneath every digital communication system on Earth.</p>
+  <!-- ════════════════ RATIONALE ════════════════ -->
+  <section id="rationale">
+    <div class="section-label fade-in">The Author&rsquo;s Mind</div>
+    <h1 class="section-title fade-in delay-1">The Rationale</h1>
+    <div class="section-text fade-in delay-2">
+      <p>I think I went the direction I did for the dystopic future because I have been heavily influenced by literature and cinema. Aldous Huxley, George Orwell, and Ray Bradbury are among some of my favorite authors, and I spent almost a decade working in video rental stores, so my exposure to post-apocalyptic dystopian futurism is substantial. If we continue doing what we&rsquo;re doing now I think we will get there given a long enough timeline. Of course humanity&rsquo;s trajectory is never linear, so we will not arrive at this fearful fiction.</p>
+      <p style="margin-top:1em;">The utopia is essentially an extrapolation of what I find to be positive human traits, like curiosity and empathy. I believe a necessary part of empathy is experiencing hardships, so I wanted to include that humanity handles them gracefully in a utopia. Curiosity without bounds would certainly require a lot of knowhow, so I wanted to make sure that there are no barriers to knowledge.</p>
+      <p style="margin-top:1em;">Finally, I modeled a more realistic future based on my feeling that for as much as things change in the world, everything is still the same, and history feels cyclical. Nothing can sustain limitless growth, so things necessarily must break from time to time. When I step back and see how tech, health, and media are all propped up by limitless growth and circular trading, I think it can&rsquo;t be too long before we have multiple &ldquo;bubble pops&rdquo; at the same time that will crash the global market in ways we have never considered. If we graphed history into the future, it would resemble a sine wave with an ever-increasing amplitude and frequency.</p>
     </div>
-  </div>
-  <div class="embed-wrap">
-    <div class="embed-chrome">
-      <div class="chrome-dot"></div><div class="chrome-dot"></div><div class="chrome-dot"></div>
-      <span class="chrome-url">a4.html: Information Theory</span>
-    </div>
-    <iframe class="embed-iframe" src="a4.html" loading="lazy" title="Assignment 4: Information Theory"></iframe>
-  </div>
-  <div class="connector">
-    <div class="connector-text">Information theory is the most abstract assignment, but also in some ways the most important, because it sits underneath everything else in this portfolio. The transistors from Module 2 are meaningless without signals to carry. TAT-1 from Module 3 exists to transmit those signals. Shannon&rsquo;s math is what tells you how much information a channel can carry, how to protect it from noise, and how to compress it without losing it. <strong>Every piece of the Information Age runs on concepts Shannon worked out in 1948,</strong> often without the engineers who use them knowing his name.</div>
-    <div class="connector-pull" style="border-color:#a0a097">Shannon showed that information itself is measurable, like mass or energy. That changed everything.</div>
-  </div>
-</section>
+  </section>
 
-<!-- CONCLUSION -->
-<section class="conclusion reveal" id="conclusion">
-  <div class="section-tag-light">Conclusion</div>
-  <h2 class="conclusion-headline">The pattern behind<br><em>every breakthrough</em></h2>
-  <div class="conclusion-grid">
-    <div class="conclusion-body">
-      <p>Looking back across these four modules, a pattern emerges that&rsquo;s bigger than any individual invention. The transistor didn&rsquo;t come from a lone genius tinkering in a garage. TAT-1 didn&rsquo;t happen because one great engineer figured it out. Shannon&rsquo;s information theory wasn&rsquo;t an accident of inspiration. Each of these breakthroughs came from the same kind of place: an institution that gave smart people hard problems, long time horizons, and freedom to fail.</p>
-      <p>Bell Labs was unusual, maybe unprecedented. Its monopoly position gave it resources; its culture gave those resources purpose. But the lesson isn&rsquo;t that we need monopolies; it&rsquo;s about understanding what Bell Labs got right and ask where that exists today. Pixar. Certain university research labs. Open-source communities working on foundational software. The conditions can be recreated. They just require intention.</p>
-      <p>The Information Age isn&rsquo;t a historical moment that ended. It&rsquo;s still accelerating. The next version of the transistor, or TAT-1, or Shannon&rsquo;s paper is being worked on right now, probably by a team most people have never heard of, funded just barely well enough to keep going. The history we studied this semester isn&rsquo;t background. It&rsquo;s a guide.</p>
-    </div>
-    <div class="takeaways">
-      <div class="takeaway"><span class="takeaway-num">01</span><span class="takeaway-text"><strong>Culture precedes invention.</strong> The most important thing Bell Labs built wasn&rsquo;t the transistor. It was an environment where the transistor was inevitable.</span></div>
-      <div class="takeaway"><span class="takeaway-num">02</span><span class="takeaway-text"><strong>Physical constraints drive creative solutions.</strong> From copper anti-worm layers to TASI&rsquo;s silence-harvesting, the best innovations often come from the tightest constraints.</span></div>
-      <div class="takeaway"><span class="takeaway-num">03</span><span class="takeaway-text"><strong>Theory and hardware need each other.</strong> Shannon&rsquo;s math without the transistor is academic. The transistor without Shannon&rsquo;s math is limited. The Information Age required both.</span></div>
-      <div class="takeaway"><span class="takeaway-num">04</span><span class="takeaway-text"><strong>The pattern repeats.</strong> Lithium scarcity today mirrors vacuum tube fragility in 1950. The engineers who solve it will look a lot like the ones who invented the transistor.</span></div>
-    </div>
-  </div>
-</section>
+  <script>
+    const progressBar = document.getElementById('progress-bar');
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const total = document.body.scrollHeight - window.innerHeight;
+      progressBar.style.width = (scrolled / total * 100) + '%';
+    }, { passive: true });
 
-<footer>
-  <span>Daniel Corron</span>
-  <span>ISTA 100 &middot; Unit 1 Final Project &middot; Spring 2026</span>
-  <span>University of Arizona</span>
-</footer>
+    const sectionThemes = {
+      dystopia:  { bg: '#080000', progressColor: '#ff2222' },
+      utopia:    { bg: '#00060f', progressColor: '#4fc3f7' },
+      middle:    { bg: '#0d0d0d', progressColor: '#c8a227' },
+      rationale: { bg: '#080808', progressColor: '#555555' }
+    };
 
-<script>
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.06 });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-</script>
+    const dots = document.querySelectorAll('.nav-dot');
+
+    function applyTheme(id) {
+      const t = sectionThemes[id];
+      if (!t) return;
+      document.body.style.backgroundColor = t.bg;
+      progressBar.style.backgroundColor = t.progressColor;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.45) {
+          const id = entry.target.id;
+          applyTheme(id);
+          dots.forEach(d => d.classList.toggle('active', d.dataset.target === id));
+        }
+      });
+    }, { threshold: 0.45 });
+
+    document.querySelectorAll('section').forEach(s => observer.observe(s));
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        document.getElementById(dot.dataset.target).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          fadeObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+  </script>
 </body>
 </html>
