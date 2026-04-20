@@ -49,7 +49,7 @@
       transition: opacity 0.3s, transform 0.3s, border-color 1.4s ease;
     }
     .nav-dot.active { opacity: 1; transform: scale(1.5); }
-
+    
     .footer-credit {
       width: 100%;
       text-align: center;
@@ -556,24 +556,7 @@
         <p>Two generations later, the people have forgotten what they had fought for, the social safety net is removed, and the cycle begins again. Humanity claims a tiny net gain, though no progress is actually made; for to measure progress one needs to have an intended goal. Earth grows ever closer to the volcanic belch that will render it uninhabitable for humanity, and humanity is consumed by the light of its own potential.</p>
       </div>
       <div class="fade-in delay-3">
-        <svg viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;opacity:0.7;margin-bottom:24px;">
-          <defs>
-            <linearGradient id="sineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%"   style="stop-color:#c8a22766"/>
-              <stop offset="50%"  style="stop-color:#c8a227cc"/>
-              <stop offset="100%" style="stop-color:#c8a22766"/>
-            </linearGradient>
-          </defs>
-          <path d="M 0 90
-            Q 20 60, 40 90  Q 60 120, 80 90
-            Q 105 50, 130 90 Q 155 130, 180 90
-            Q 210 35, 240 90 Q 270 145, 300 90
-            Q 338 20, 375 90 Q 413 160, 450 90
-            Q 475 50, 500 90"
-            fill="none" stroke="url(#sineGrad)" stroke-width="2.5" stroke-linecap="round"/>
-          <text x="0"   y="172" font-family="'Bebas Neue', cursive" font-size="9" fill="#c8a22744" letter-spacing="2">PAST</text>
-          <text x="440" y="172" font-family="'Bebas Neue', cursive" font-size="9" fill="#c8a22744" letter-spacing="2">NOW</text>
-        </svg>
+        <canvas id="sine-canvas" style="width:100%;opacity:0.75;margin-bottom:24px;display:block;" height="90"></canvas>
         <img class="section-image" src="middle.png" alt="A realistic vision of the middle road future">
       </div>
     </div>
@@ -622,7 +605,60 @@
   </div>
 
   <script>
-    // ── Lightbox ──
+    // ── Animated sine wave ──
+    (function () {
+      const canvas = document.getElementById('sine-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let phase = 0;
+
+      function resize() {
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = 90;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function draw(ts) {
+        const W = canvas.width, H = canvas.height;
+        const mid = H / 2;
+        ctx.clearRect(0, 0, W, H);
+        phase = ts * 0.0012;
+
+        // Gradient stroke: dim on left, bright in centre, dim on right
+        const grad = ctx.createLinearGradient(0, 0, W, 0);
+        grad.addColorStop(0,    'rgba(200,162,39,0.15)');
+        grad.addColorStop(0.5,  'rgba(200,162,39,0.85)');
+        grad.addColorStop(1,    'rgba(200,162,39,0.15)');
+
+        ctx.beginPath();
+        ctx.strokeStyle = grad;
+        ctx.lineWidth   = 2;
+        ctx.lineJoin    = 'round';
+
+        for (let x = 0; x <= W; x++) {
+          const t         = x / W;                     // 0→1 left to right
+          const freq      = 1 + t * 10;                 // frequency grows: slow past, fast now
+          const amplitude = t * (mid * 0.85);          // amplitude grows left→right
+          const y = mid + Math.sin(t * freq * Math.PI * 2 - phase) * amplitude;
+          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // PAST / NOW labels
+        ctx.font         = '9px "Bebas Neue", cursive';
+        ctx.letterSpacing = '2px';
+        ctx.fillStyle    = 'rgba(200,162,39,0.25)';
+        ctx.fillText('PAST', 2,  H - 4);
+        ctx.fillText('PRESENT',  W / 2 - 16, H - 4);
+        ctx.fillText('FUTURE',  W - 32, H - 4);
+
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    })();
+
+
     const lightbox    = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const lbClose     = document.getElementById('lightbox-close');
