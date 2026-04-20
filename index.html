@@ -50,6 +50,18 @@
     }
     .nav-dot.active { opacity: 1; transform: scale(1.5); }
 
+    .footer-credit {
+      width: 100%;
+      text-align: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: #222;
+      text-transform: uppercase;
+      padding-top: 20px;
+      border-top: 1px solid #ffffff06;
+    }
+
     /* ══════════════════════════════════
        SECTION BASE
     ══════════════════════════════════ */
@@ -103,18 +115,6 @@
       aspect-ratio: 16/9;
       object-fit: cover;
       display: block;
-    }
-
-    .footer-credit {
-      width: 100%;
-      text-align: center;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: #222;
-      text-transform: uppercase;
-      padding-top: 20px;
-      border-top: 1px solid #ffffff06;
     }
 
     /* ══════════════════════════════════
@@ -431,6 +431,61 @@
       line-height: 1.8;
     }
 
+    /* ══════════════════════════════════
+       LIGHTBOX
+    ══════════════════════════════════ */
+    .section-image {
+      cursor: zoom-in;
+    }
+
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+
+    #lightbox.open {
+      display: flex;
+      animation: lb-fade-in 0.25s ease;
+    }
+
+    @keyframes lb-fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    #lightbox img {
+      max-width: 92vw;
+      max-height: 90vh;
+      object-fit: contain;
+      box-shadow: 0 0 80px rgba(0,0,0,0.8);
+      animation: lb-scale-in 0.25s ease;
+    }
+
+    @keyframes lb-scale-in {
+      from { transform: scale(0.93); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    #lightbox-close {
+      position: absolute;
+      top: 20px; right: 28px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.4rem;
+      color: #444;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+      user-select: none;
+    }
+    #lightbox-close:hover { color: #888; }
+
     /* ── Scroll fade-in ── */
     .fade-in {
       opacity: 0;
@@ -560,7 +615,43 @@
     <div class="footer-credit">All images original works by Daniel Corron</div>
   </footer>
 
+  <!-- ════════════════ LIGHTBOX ════════════════ -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <span id="lightbox-close" aria-label="Close">&#x2715; CLOSE</span>
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
   <script>
+    // ── Lightbox ──
+    const lightbox    = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lbClose     = document.getElementById('lightbox-close');
+
+    document.querySelectorAll('.section-image').forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    lightbox.addEventListener('click', closeLightbox);
+    lbClose.addEventListener('click', closeLightbox);
+
+    // Also close on Escape key
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    // Prevent click on image itself from closing
+    lightboxImg.addEventListener('click', e => e.stopPropagation());
+
     const progressBar = document.getElementById('progress-bar');
     window.addEventListener('scroll', () => {
       const scrolled = window.scrollY;
