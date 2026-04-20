@@ -105,6 +105,18 @@
       display: block;
     }
 
+    .footer-credit {
+      width: 100%;
+      text-align: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: #222;
+      text-transform: uppercase;
+      padding-top: 20px;
+      border-top: 1px solid #ffffff06;
+    }
+
     /* ══════════════════════════════════
        SECTION 1 — DYSTOPIA
     ══════════════════════════════════ */
@@ -368,6 +380,57 @@
       color: #666;
     }
 
+    /* ══════════════════════════════════
+       FOOTER
+    ══════════════════════════════════ */
+    footer {
+      background: #050505;
+      padding: 36px 8vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #ffffff0d;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .footer-name {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+      color: #444;
+    }
+
+    .footer-meta {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      color: #2e2e2e;
+      text-transform: uppercase;
+    }
+
+    .footer-divider {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #ffffff08, transparent);
+      min-width: 40px;
+    }
+
+    .footer-right {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: #2a2a2a;
+      letter-spacing: 0.15em;
+      text-align: right;
+      line-height: 1.8;
+    }
+
     /* ── Scroll fade-in ── */
     .fade-in {
       opacity: 0;
@@ -433,7 +496,7 @@
     <h1 class="section-title fade-in delay-1">The Middle Road</h1>
     <div class="content-grid">
       <div class="section-text fade-in delay-2">
-        <p>In likelihood we will arrive at some state between these two fictions. The majority of people will continue to avoid living a meaningful life. With their ambitions hijacked by corporate interests, they&rsquo;ll be used as mascots for conduct beholden to a good citizen. The same dutiful mantra that echoes in the airwaves today will be bellowed from seemingly every surface in public: "BUY, DISPOSE, REPEAT". It becomes the sircadian rhythm of life: "BUY, DISPOSE, REPEAT". We beg for more: "BUY, DISPOSE, REPEAT".</p>
+        <p>In likelihood we will arrive at some state between these two fictions. The majority of people will continue to avoid living a meaningful life. With their ambitions hijacked by corporate interests, they&rsquo;ll be used as mascots for conduct beholden to a good citizen. The same dutiful mantra that echoes in the airwaves today will be bellowed from seemingly every surface in public: "BUY, DISPOSE, REPEAT". It becomes the circadian rhythm of life: "BUY, DISPOSE, REPEAT". We beg for more: "BUY, DISPOSE, REPEAT".</p>
         <p>We keep doing this until the world reaches a critical mass of suffering, and the system breaks. This will be very upsetting for the world as a whole, but will ultimately usher in a new era of reform where our interests, ethics, and conduct change drastically in favor of more social behavior. Goods, services, and commodities are priced fairly. The social safety net is expanded. New advances in medical technology temper the effects of aging. Taxes reach 95%.</p>
         <p>Two generations later, the people have forgotten what they had fought for, the social safety net is removed, and the cycle begins again. Humanity claims a tiny net gain, though no progress is actually made; for to measure progress one needs to have an intended goal. Earth grows ever closer to the volcanic belch that will render it uninhabitable for humanity, and humanity is consumed by the light of its own potential.</p>
       </div>
@@ -482,6 +545,20 @@
       <p style="margin-top:1em;">Finally, I modeled a more realistic future based on my feeling that for as much as things change in the world, everything is still the same, and history feels cyclical. No system can sustain limitless growth, so things necessarily must break from time to time. If we graphed history into the future, it would resemble a sine wave with an ever-increasing amplitude and frequency.</p>
     </div>
   </section>
+
+  <!-- ════════════════ FOOTER ════════════════ -->
+  <footer>
+    <div class="footer-left">
+      <div class="footer-name">Daniel Corron</div>
+      <div class="footer-meta">University of Arizona</div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-right">
+      ISTA 100 &nbsp;&bull;&nbsp; Assignment 5<br>
+      Spring 2026
+    </div>
+    <div class="footer-credit">All images original works by Daniel Corron</div>
+  </footer>
 
   <script>
     const progressBar = document.getElementById('progress-bar');
