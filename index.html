@@ -1,744 +1,1268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Three Futures</title>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engineered for Tomorrow — Daniel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --bg:       #060c1a;
+      --surface:  #0d1a33;
+      --surface2: #132040;
+      --accent:   #4dd9ff;
+      --accent2:  #e8b45d;
+      --text:     #d0e4f7;
+      --muted:    #4a6a96;
+      --dim:      #8aa8cc;
+      --glow:     rgba(77, 217, 255, 0.18);
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+    html { scroll-behavior: smooth; }
 
     body {
-      background: #0a0000;
-      color: #ff4444;
-      font-family: 'Share Tech Mono', monospace;
-      transition: background-color 1.4s ease, color 1.4s ease;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
       overflow-x: hidden;
     }
 
-    /* ── Progress bar ── */
+    /* ── STARFIELD ── */
+    #starfield {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── PROGRESS BAR ── */
     #progress-bar {
       position: fixed;
       top: 0; left: 0;
-      height: 3px;
+      height: 2px;
       width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
       z-index: 100;
-      transition: background-color 1.4s ease, width 0.1s linear;
-      background: #ff2222;
+      transition: width 0.1s linear;
     }
 
-    /* ── Section nav dots ── */
-    #section-nav {
+    /* ── NAV DOTS ── */
+    #nav-dots {
       position: fixed;
-      right: 24px;
+      right: 1.5rem;
       top: 50%;
       transform: translateY(-50%);
+      z-index: 90;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      z-index: 100;
+      gap: 0.6rem;
     }
+
     .nav-dot {
-      width: 8px; height: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      border: 2px solid currentColor;
+      background: var(--muted);
       cursor: pointer;
-      opacity: 0.5;
-      transition: opacity 0.3s, transform 0.3s, border-color 1.4s ease;
-    }
-    .nav-dot.active { opacity: 1; transform: scale(1.5); }
-    
-    .footer-credit {
-      width: 100%;
-      text-align: center;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: #222;
-      text-transform: uppercase;
-      padding-top: 20px;
-      border-top: 1px solid #ffffff06;
+      transition: background 0.3s, transform 0.3s;
     }
 
-    /* ══════════════════════════════════
-       SECTION BASE
-    ══════════════════════════════════ */
+    .nav-dot.active {
+      background: var(--accent);
+      transform: scale(1.6);
+    }
+
+    /* ── LAYOUT ── */
     section {
-      min-height: 100vh;
-      scroll-snap-align: start;
       position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 80px 8vw;
-      overflow: hidden;
-    }
-
-    .section-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      opacity: 0.5;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: clamp(2.8rem, 7vw, 6rem);
-      line-height: 1;
-      margin-bottom: 40px;
-    }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: start;
-      max-width: 1200px;
-    }
-
-    @media (max-width: 768px) {
-      .content-grid { grid-template-columns: 1fr; }
-    }
-
-    .section-text {
-      line-height: 1.75;
-      font-size: 0.95rem;
-      opacity: 0.85;
-    }
-
-    .section-text p + p { margin-top: 1em; }
-
-    .section-image {
-      width: 100%;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* ══════════════════════════════════
-       SECTION 1 — DYSTOPIA
-    ══════════════════════════════════ */
-    #dystopia {
-      background: #080000;
-      color: #ff3333;
-      font-family: 'Share Tech Mono', monospace;
-    }
-
-    #dystopia .section-title {
-      font-family: 'Share Tech Mono', monospace;
-      color: #ff1a1a;
-      text-shadow: 0 0 40px #ff000088, 0 0 80px #ff000044;
-      position: relative;
-    }
-
-    #dystopia .section-title::before,
-    #dystopia .section-title::after {
-      content: attr(data-text);
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-    }
-    #dystopia .section-title::before {
-      color: #00ffff44;
-      animation: glitch-1 3.5s infinite;
-      clip-path: polygon(0 30%, 100% 30%, 100% 55%, 0 55%);
-    }
-    #dystopia .section-title::after {
-      color: #ff005544;
-      animation: glitch-2 3.5s infinite;
-      clip-path: polygon(0 65%, 100% 65%, 100% 80%, 0 80%);
-    }
-
-    @keyframes glitch-1 {
-      0%, 90%, 100% { transform: translateX(0); opacity: 0; }
-      92% { transform: translateX(-4px); opacity: 1; }
-      94% { transform: translateX(4px); opacity: 1; }
-      96% { transform: translateX(0); opacity: 0; }
-    }
-    @keyframes glitch-2 {
-      0%, 88%, 100% { transform: translateX(0); opacity: 0; }
-      90% { transform: translateX(3px); opacity: 1; }
-      93% { transform: translateX(-3px); opacity: 1; }
-      95% { transform: translateX(0); opacity: 0; }
-    }
-
-    #dystopia::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.15) 2px,
-        rgba(0,0,0,0.15) 4px
-      );
-      pointer-events: none;
       z-index: 1;
-    }
-
-    #dystopia::after {
-      content: '';
-      position: absolute;
-      top: -200px; left: -200px;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, #ff000022 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    #dystopia .content-grid,
-    #dystopia .section-label,
-    #dystopia .section-title { position: relative; z-index: 2; }
-
-    #dystopia .section-image {
-      border: 1px solid #ff333333;
-      box-shadow: 0 0 40px #ff000055, inset 0 0 20px #ff000022;
-    }
-
-    .bracket-wrap { position: relative; display: inline-block; width: 100%; }
-    .bracket-wrap::before, .bracket-wrap::after {
-      content: '';
-      position: absolute;
-      width: 16px; height: 16px;
-      border-color: currentColor;
-      border-style: solid;
-      opacity: 0.6;
-    }
-    .bracket-wrap::before { top: -6px; left: -6px; border-width: 2px 0 0 2px; }
-    .bracket-wrap::after  { bottom: -6px; right: -6px; border-width: 0 2px 2px 0; }
-
-    /* ══════════════════════════════════
-       SECTION 2 — UTOPIA
-    ══════════════════════════════════ */
-    #utopia {
-      background: #00060f;
-      color: #a8d8f0;
-      font-family: 'Cormorant Garamond', serif;
-    }
-
-    #utopia .section-label {
-      font-family: 'Rajdhani', sans-serif;
-      letter-spacing: 0.4em;
-      color: #4fc3f7;
-    }
-
-    #utopia .section-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-style: italic;
-      color: #e0f4ff;
-      text-shadow: 0 0 60px #0099ff33, 0 0 120px #0066ff22;
-      letter-spacing: -0.01em;
-      animation: float 6s ease-in-out infinite;
-    }
-
-    #utopia .section-text {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      line-height: 1.85;
-      color: #b8dff5;
-    }
-
-    #utopia::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(1px 1px at 15% 25%, #ffffff55, transparent),
-        radial-gradient(1px 1px at 35% 60%, #ffffff44, transparent),
-        radial-gradient(1.5px 1.5px at 55% 15%, #ffffffaa, transparent),
-        radial-gradient(1px 1px at 75% 80%, #ffffff55, transparent),
-        radial-gradient(1px 1px at 88% 40%, #ffffff66, transparent),
-        radial-gradient(1px 1px at 22% 78%, #ffffff33, transparent),
-        radial-gradient(1px 1px at 62% 45%, #ffffff44, transparent),
-        radial-gradient(2px 2px at 48% 90%, #4fc3f766, transparent),
-        radial-gradient(1px 1px at 8%  55%, #ffffff55, transparent),
-        radial-gradient(1px 1px at 92% 70%, #ffffff44, transparent);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    #utopia::after {
-      content: '';
-      position: absolute;
-      bottom: -100px; left: 50%;
-      transform: translateX(-50%);
-      width: 80%; height: 300px;
-      background: radial-gradient(ellipse, #0066ff18 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    #utopia .content-grid,
-    #utopia .section-label,
-    #utopia .section-title { position: relative; z-index: 2; }
-
-    #utopia .section-image {
-      border: 1px solid #4fc3f733;
-      box-shadow: 0 0 60px #0066ff33, inset 0 0 30px #0044ff11;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-6px); }
-    }
-
-    /* ══════════════════════════════════
-       SECTION 3 — MIDDLE ROAD
-    ══════════════════════════════════ */
-    #middle {
-      background: #0d0d0d;
-      color: #c8a227;
-      font-family: 'Rajdhani', sans-serif;
-      padding-bottom: 120px;
-    }
-
-    #middle .section-label { color: #c8a22788; }
-
-    #middle .section-title {
-      font-family: 'Bebas Neue', cursive;
-      color: #c8a227;
-      letter-spacing: 0.05em;
-    }
-
-    #middle .section-text {
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 300;
-      font-size: 1rem;
-      color: #c8a227aa;
-      line-height: 1.7;
-    }
-
-    .ticker-wrap {
-      position: absolute;
-      bottom: 40px; left: 0; right: 0;
-      overflow: hidden;
-      height: 32px;
-      border-top: 1px solid #c8a22733;
-      border-bottom: 1px solid #c8a22733;
-    }
-    .ticker {
-      display: flex;
-      white-space: nowrap;
-      animation: ticker-scroll 18s linear infinite;
-    }
-    .ticker-item {
-      font-family: 'Bebas Neue', cursive;
-      font-size: 1rem;
-      letter-spacing: 0.3em;
-      padding: 4px 60px;
-      color: #c8a22766;
-    }
-    @keyframes ticker-scroll {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    #middle::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(#c8a22708 1px, transparent 1px),
-        linear-gradient(90deg, #c8a22708 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-    }
-
-    #middle .content-grid,
-    #middle .section-label,
-    #middle .section-title { position: relative; z-index: 2; }
-
-    #middle .section-image {
-      border: 1px solid #c8a22733;
-      box-shadow: 0 0 30px #c8a22722;
-    }
-
-    /* ══════════════════════════════════
-       SECTION 4 — RATIONALE
-    ══════════════════════════════════ */
-    #rationale {
-      background: #080808;
-      color: #888;
-      font-family: 'Rajdhani', sans-serif;
-      min-height: 70vh;
-    }
-
-    #rationale .section-title {
-      font-family: 'Bebas Neue', cursive;
-      font-size: clamp(2rem, 5vw, 4rem);
-      color: #555;
-      letter-spacing: 0.05em;
-    }
-
-    #rationale .section-text {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1rem;
-      line-height: 1.75;
-      max-width: 720px;
-      color: #666;
-    }
-
-    /* ══════════════════════════════════
-       FOOTER
-    ══════════════════════════════════ */
-    footer {
-      background: #050505;
-      padding: 36px 8vw;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid #ffffff0d;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .footer-left {
+      padding: 5rem 6rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-    }
-
-    .footer-name {
-      font-family: 'Bebas Neue', cursive;
-      font-size: 1.3rem;
-      letter-spacing: 0.1em;
-      color: #444;
-    }
-
-    .footer-meta {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.25em;
-      color: #2e2e2e;
-      text-transform: uppercase;
-    }
-
-    .footer-divider {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #ffffff08, transparent);
-      min-width: 40px;
-    }
-
-    .footer-right {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.7rem;
-      color: #2a2a2a;
-      letter-spacing: 0.15em;
-      text-align: right;
-      line-height: 1.8;
-    }
-
-    /* ══════════════════════════════════
-       LIGHTBOX
-    ══════════════════════════════════ */
-    .section-image {
-      cursor: zoom-in;
-    }
-
-    #lightbox {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(0, 0, 0, 0.92);
-      backdrop-filter: blur(6px);
-      align-items: center;
       justify-content: center;
-      cursor: zoom-out;
     }
 
-    #lightbox.open {
-      display: flex;
-      animation: lb-fade-in 0.25s ease;
+    section.hero {
+      max-width: 100%;
+      padding: 0;
+      align-items: center;
+      text-align: center;
+      gap: 0;
     }
 
-    @keyframes lb-fade-in {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+    /* ── SLIDE LABEL ── */
+    .slide-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
-    #lightbox img {
-      max-width: 92vw;
-      max-height: 90vh;
-      object-fit: contain;
-      box-shadow: 0 0 80px rgba(0,0,0,0.8);
-      animation: lb-scale-in 0.25s ease;
+    /* ── HEADINGS ── */
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: #fff;
     }
 
-    @keyframes lb-scale-in {
-      from { transform: scale(0.93); opacity: 0; }
-      to   { transform: scale(1);    opacity: 1; }
-    }
-
-    #lightbox-close {
-      position: absolute;
-      top: 20px; right: 28px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1.4rem;
-      color: #444;
-      cursor: pointer;
-      letter-spacing: 0.1em;
-      transition: color 0.2s;
-      user-select: none;
-    }
-    #lightbox-close:hover { color: #888; }
-
-    /* ── Scroll fade-in ── */
-    .fade-in {
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 1.6rem;
       opacity: 0;
       transform: translateY(24px);
-      transition: opacity 0.9s ease, transform 0.9s ease;
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-    .fade-in.delay-1 { transition-delay: 0.15s; }
-    .fade-in.delay-2 { transition-delay: 0.30s; }
-    .fade-in.delay-3 { transition-delay: 0.45s; }
+
+    h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── BODY TEXT ── */
+    .body-text {
+      font-size: 1.05rem;
+      line-height: 1.78;
+      color: var(--dim);
+      max-width: 640px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease 0.1s, transform 0.7s ease 0.1s;
+    }
+
+    .body-text + .body-text { margin-top: 1rem; }
+
+    /* ── VISIBLE STATE ── */
+    section.visible .slide-label,
+    section.visible h2,
+    section.visible .body-text,
+    section.visible .card-grid,
+    section.visible .timeline,
+    section.visible .field-stat,
+    section.visible .ref-block {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── ACCENT LINE ── */
+    .accent-line {
+      width: 48px;
+      height: 2px;
+      background: var(--accent);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: opacity 0.5s ease 0.05s, transform 0.5s ease 0.05s;
+    }
+
+    section.visible .accent-line {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    /* ── HERO SECTION ── */
+    .hero-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 4rem 2rem;
+      gap: 1.4rem;
+    }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.3s forwards;
+    }
+
+    h1 span.accent-word { color: var(--accent); }
+    h1 span.accent-word2 { color: var(--accent2); }
+
+    h1 {
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.6s forwards;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.9s forwards;
+    }
+
+    .hero-scroll {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1.3s forwards;
+      cursor: pointer;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    .scroll-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      position: relative;
+      z-index: 1;
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--muted) 30%, var(--muted) 70%, transparent);
+      opacity: 0.15;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ── CARD GRID ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(77, 217, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.4rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      border-color: rgba(77, 217, 255, 0.35);
+      box-shadow: 0 0 24px var(--glow);
+    }
+
+    .card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.7rem;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
+    }
+
+    .tl-item {
+      display: grid;
+      grid-template-columns: 120px 1px 1fr;
+      gap: 0 1.5rem;
+      padding-bottom: 2.2rem;
+    }
+
+    .tl-item:last-child { padding-bottom: 0; }
+
+    .tl-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-align: right;
+      padding-top: 3px;
+    }
+
+    .tl-spine {
+      position: relative;
+      background: rgba(77, 217, 255, 0.2);
+    }
+
+    .tl-spine::before {
+      content: '';
+      position: absolute;
+      top: 6px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .tl-content h3 { margin-bottom: 0.4rem; }
+
+    .tl-content p {
+      font-size: 0.95rem;
+      color: var(--dim);
+      line-height: 1.65;
+    }
+
+    /* ── FIELD STAT ── */
+    .field-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-top: 2rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
+    }
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--accent);
+      min-width: 120px;
+      line-height: 1;
+    }
+
+    .stat-desc {
+      font-size: 0.95rem;
+      color: var(--dim);
+      line-height: 1.5;
+    }
+
+    .stat-bar-wrap {
+      margin-top: 0.4rem;
+      height: 3px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .stat-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px;
+      width: 0%;
+      transition: width 1.2s ease 0.4s;
+    }
+
+    section.visible .stat-bar { width: var(--bar-w); }
+
+    /* ── STRENGTHS LIST ── */
+    .strength-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.2rem;
+    }
+
+    .strength-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      border: 1px solid rgba(77, 217, 255, 0.3);
+      border-radius: 4px;
+      padding: 0.3rem 0.7rem;
+      background: rgba(77, 217, 255, 0.05);
+    }
+
+    /* ── INLINE CITATION ── */
+    .citation {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* ── REFERENCE BLOCK ── */
+    .ref-block {
+      margin-top: 1.2rem;
+      background: var(--surface);
+      border-left: 2px solid var(--accent);
+      padding: 1rem 1.4rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem;
+      color: var(--dim);
+      line-height: 1.7;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
+    }
+
+    .ref-block a {
+      color: var(--accent);
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .ref-block a:hover { text-decoration: underline; }
+
+    /* ── HERO ORBIT SVG ── */
+    .hero-orbit {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0.06;
+    }
+
+    /* ── SECTION GRAPHIC ── */
+    .section-graphic {
+      margin-top: 2.4rem;
+      opacity: 0;
+      transform: translateY(24px) scale(0.97);
+      transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+    }
+
+    section.visible .section-graphic {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── SPECULATE GRID ── */
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-top: 2rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
+    }
+
+    section.visible .spec-grid { opacity: 1; transform: none; }
+
+    .spec-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.6rem;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .spec-card.challenges { border-top: 2px solid #e85d5d; }
+    .spec-card.opps { border-top: 2px solid var(--accent2); }
+    .spec-card.future { border-top: 2px solid var(--accent); grid-column: 1 / -1; }
+
+    .spec-card h3 { color: var(--dim); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
+    .spec-card.opps h3 { color: var(--accent2); }
+    .spec-card.future h3 { color: var(--accent); }
+    .spec-card.challenges h3 { color: #e85d5d; }
+
+    .spec-card p { font-size: 0.95rem; color: var(--dim); line-height: 1.65; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* ── UTILITY ── */
+    .spacer { height: 2rem; }
+
+    @media (max-width: 768px) {
+      section { padding: 4rem 2rem; }
+      .spec-grid { grid-template-columns: 1fr; }
+      .spec-card.future { grid-column: 1; }
+      #nav-dots { display: none; }
+    }
   </style>
 </head>
 <body>
 
-  <div id="progress-bar"></div>
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
 
-  <nav id="section-nav" aria-label="Section navigation">
-    <div class="nav-dot active" data-target="dystopia"  title="Dystopia"></div>
-    <div class="nav-dot"        data-target="utopia"    title="Utopia"></div>
-    <div class="nav-dot"        data-target="middle"    title="Middle Road"></div>
-    <div class="nav-dot"        data-target="rationale" title="Rationale"></div>
-  </nav>
+<!-- STARFIELD CANVAS -->
+<canvas id="starfield"></canvas>
 
-  <!-- ════════════════ DYSTOPIA ════════════════ -->
-  <section id="dystopia">
-    <div class="section-label fade-in">Vision I</div>
-    <h1 class="section-title fade-in delay-1" data-text="THE DYSTOPIA">THE DYSTOPIA</h1>
-    <div class="content-grid">
-      <div class="section-text fade-in delay-2">
-        <p>One potential dystopic future we could face is something I like to call the Matrixanator scenario, a cross between the timeless cinematic masterpieces <em>The Matrix</em> and <em>The Terminator</em>, but with a whole lot of mundane reality dumped in to ensure we don&rsquo;t have too much entertainment. This version of a dystopic future is marked by a completely docile population, ruled by a small number of neo-feudal tech-lords with familiar surnames like Vanderbilt, Rothschild, and Rockefeller, who together through absolute control of all networks and infrastructure control all aspects of human existence.</p>
-        <p>The few who are physically healthy or strong enough to possibly have agency over their lives will simply be manipulated, gaslit, or extorted into complicity. All of this is, of course, completely without human input because it's long been automated.</p>
-        <p>An extremely low value will be assigned to proletarian life; entire populations will be marginalized into extinction. Their lives will have so little perceived value that their existence will not be regarded at all by those in power, relegated to ranks deserving less attention than common vermin or bacteria.</p>
-        <p>Once Earth has been thoroughly drained of any resources considered desirable by those in control it will be abandoned, and our solar system will become a testing ground for greater machines capable of even greater destruction, in search of even greater ROI for the shareholders.</p>
-      </div>
-      <div class="fade-in delay-3">
-        <div class="bracket-wrap">
-          <img class="section-image" src="dystopia.png" alt="Wireframe corporate skull looming over tiny human figures — symbolizing the neo-feudal tech-lord dystopia">
-        </div>
-      </div>
+<!-- NAV DOTS -->
+<nav id="nav-dots" aria-label="Section navigation"></nav>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 1: HERO
+══════════════════════════════════════════════ -->
+<section class="hero" id="s0" data-label="Personal Statement">
+  <div class="hero-orbit" aria-hidden="true">
+    <svg width="700" height="700" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="350" cy="350" r="300" stroke="white" stroke-width="0.8"/>
+      <circle cx="350" cy="350" r="200" stroke="white" stroke-width="0.5"/>
+      <circle cx="350" cy="350" r="100" stroke="white" stroke-width="0.4"/>
+      <line x1="50" y1="350" x2="650" y2="350" stroke="white" stroke-width="0.4"/>
+      <line x1="350" y1="50" x2="350" y2="650" stroke="white" stroke-width="0.4"/>
+      <line x1="137" y1="137" x2="563" y2="563" stroke="white" stroke-width="0.3"/>
+      <line x1="563" y1="137" x2="137" y2="563" stroke="white" stroke-width="0.3"/>
+    </svg>
+  </div>
+  <div class="hero-inner">
+    <p class="hero-eyebrow">ISTA 100 — Unit Project #2</p>
+    <h1>Engineered<br/><span class="accent-word">for Tomorrow</span></h1>
+    <p class="hero-sub">Daniel &nbsp;/&nbsp; B.S. Electrical Engineering &nbsp;/&nbsp; University of Arizona</p>
+    <div class="hero-scroll" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">
+      <div class="scroll-line"></div>
+      <span class="scroll-label">Begin</span>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ════════════════ UTOPIA ════════════════ -->
-  <section id="utopia">
-    <div class="section-label fade-in">Vision II</div>
-    <h1 class="section-title fade-in delay-1">The Utopia</h1>
-    <div class="content-grid">
-      <div class="fade-in delay-2">
-        <img class="section-image" src="utopia.png" alt="A vision of the utopian future">
-      </div>
-      <div class="section-text fade-in delay-3">
-        <p>A utopia can be challenging to imagine because it must be a utopia for everyone, and people are sometimes pleased by opposing actions. So a utopic future might be a bit tame compared to the extremes of a dystopic one.</p>
-        <p>Social cohesion is at the forefront of this society; decisions are made based on who they affect and how they affect them, and the general mindset of individuals is to &ldquo;always leave a place better than when you arrived.&rdquo; Information access is universal; there are no classified documents or top-secret research because everything done by humans is done in pursuit of bettering the lives of all earthlings, or possibly all life in the universe.</p>
-        <p>There are no homeless people, though many do choose to live and sleep outside; they do so willingly, safely, and in a way that is congruent with nature and their health. Of course, bad things do still happen, but we are better situated to handle them. Like a little salt on chocolate, the bad only elevates the good.</p>
-        <p>Technology is used for the betterment of all life. Automation replaces undesirable jobs, and nobody is required to perform a duty they do not choose. There are no castes, no beasts of burden, and there is no currency.</p>
-      </div>
-    </div>
-  </section>
+<hr class="section-divider" />
 
-  <!-- ════════════════ MIDDLE ROAD ════════════════ -->
-  <section id="middle">
-    <div class="section-label fade-in">The Probable</div>
-    <h1 class="section-title fade-in delay-1">The Middle Road</h1>
-    <div class="content-grid">
-      <div class="section-text fade-in delay-2">
-        <p>In likelihood we will arrive at some state between these two fictions. The majority of people will continue to avoid living a meaningful life. With their ambitions hijacked by corporate interests, they&rsquo;ll be used as mascots for conduct becoming of a good citizen. The same dutiful mantra that echoes in the airwaves today will be bellowed from seemingly every surface in public: "BUY, DISPOSE, REPEAT". It becomes the circadian rhythm of life: "BUY, DISPOSE, REPEAT". We beg for more: "BUY, DISPOSE, REPEAT".</p>
-        <p>We keep doing this until the world reaches a critical mass of suffering, and the system breaks. This will be very upsetting for the world as a whole, but will ultimately usher in a new era of reform where our interests, ethics, and conduct change drastically in favor of more social behavior. Goods, services, and commodities are priced fairly. The social safety net is expanded. New advances in medical technology temper the effects of aging. Taxes reach 95%.</p>
-        <p>Two generations later, the people have forgotten what they had fought for, the social safety net is removed, and the cycle begins again. Humanity claims a tiny net gain, though no progress is actually made; for to measure progress one needs to have an intended goal. Earth grows ever closer to the volcanic belch that will render it uninhabitable for humanity, and humanity is consumed by the light of its own potential.</p>
-      </div>
-      <div class="fade-in delay-3">
-        <canvas id="sine-canvas" style="width:100%;opacity:0.75;margin-bottom:24px;display:block;" height="90"></canvas>
-        <img class="section-image" src="middle.png" alt="A realistic vision of the middle road future">
-      </div>
-    </div>
+<!-- ══════════════════════════════════════════════
+     SLIDE 2: INTRODUCTION
+══════════════════════════════════════════════ -->
+<section id="s1" data-label="Introduction">
+  <p class="slide-label">01 — Introduction</p>
+  <div class="accent-line"></div>
+  <h2>Who I Am and Where I'm Headed</h2>
+  <p class="body-text">
+    My name is Daniel. I am an electrical engineering student at the University of Arizona, working my way toward a career that sits at the crossroads of mechanical ingenuity, electronics, and creative vision.
+  </p>
+  <p class="body-text" style="transition-delay: 0.2s;">
+    During the day I work in the field of cathodic protection and industrial electrical systems. In the evenings and on weekends, I run a home lab where I build things: a pen plotter I designed from scratch, a 3D printer running custom firmware, a smart home system with computer vision cameras, and a growing catalog of CAD models and animations. These are not just hobbies. They are the proving ground for the kind of engineer and builder I intend to be.
+  </p>
+  <p class="body-text" style="transition-delay: 0.3s;">
+    This presentation maps my goals, my path, and the future I am designing for myself. It covers where I am now, what I want to build over the next decade, and the kind of impact I intend to have on the people who experience my work.
+  </p>
 
-    <div class="ticker-wrap">
-      <div class="ticker">
-        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
-        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
-        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
-        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
-        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
-        <span class="ticker-item">BUY</span><span class="ticker-item">DISPOSE</span><span class="ticker-item">REPEAT</span>
-      </div>
-    </div>
-  </section>
+  <div class="section-graphic" style="display:flex; justify-content:center; margin-top:2.5rem;">
+    <svg viewBox="0 0 500 248" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:460px; width:100%;">
+      <!-- Outer hex ring -->
+      <polygon points="250,36 319,76 319,156 250,196 181,156 181,76"
+               fill="none" stroke="#4dd9ff" stroke-width="0.7" stroke-opacity="0.12"/>
+      <!-- Long cross-diagonals (very faint) -->
+      <line x1="250" y1="36" x2="250" y2="196" stroke="#4dd9ff" stroke-opacity="0.06" stroke-width="0.5" stroke-dasharray="2 6"/>
+      <line x1="319" y1="76" x2="181" y2="156" stroke="#4dd9ff" stroke-opacity="0.06" stroke-width="0.5" stroke-dasharray="2 6"/>
+      <line x1="319" y1="156" x2="181" y2="76" stroke="#4dd9ff" stroke-opacity="0.06" stroke-width="0.5" stroke-dasharray="2 6"/>
+      <!-- Center to node spokes -->
+      <line x1="250" y1="116" x2="250" y2="58" stroke="#4dd9ff" stroke-opacity="0.2" stroke-width="0.8"/>
+      <line x1="250" y1="116" x2="297" y2="93" stroke="#4dd9ff" stroke-opacity="0.2" stroke-width="0.8"/>
+      <line x1="250" y1="116" x2="297" y2="139" stroke="#4dd9ff" stroke-opacity="0.2" stroke-width="0.8"/>
+      <line x1="250" y1="116" x2="250" y2="174" stroke="#4dd9ff" stroke-opacity="0.2" stroke-width="0.8"/>
+      <line x1="250" y1="116" x2="203" y2="139" stroke="#4dd9ff" stroke-opacity="0.2" stroke-width="0.8"/>
+      <line x1="250" y1="116" x2="203" y2="93" stroke="#4dd9ff" stroke-opacity="0.2" stroke-width="0.8"/>
+      <!-- Center node -->
+      <circle cx="250" cy="116" r="28" fill="#0b1628" stroke="#4dd9ff" stroke-width="1.4" stroke-opacity="0.55"/>
+      <circle cx="250" cy="116" r="24" fill="none" stroke="#4dd9ff" stroke-width="0.4" stroke-opacity="0.18" stroke-dasharray="2 4"/>
+      <text x="250" y="113" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#4dd9ff" letter-spacing="0.08em">DANIEL</text>
+      <text x="250" y="124" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#4a6a96">EE / BUILDER</text>
+      <!-- N0: EE STUDIES — top (250, 36) -->
+      <circle cx="250" cy="36" r="22" fill="#0b1628" stroke="#4dd9ff" stroke-width="1" stroke-opacity="0.45"/>
+      <text x="250" y="33" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#4dd9ff">EE</text>
+      <text x="250" y="43" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#5a7aaa">STUDIES</text>
+      <text x="250" y="11" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#3a5578">University of Arizona</text>
+      <!-- N1: CAD & DESIGN — top-right (319, 76) -->
+      <circle cx="319" cy="76" r="22" fill="#0b1628" stroke="#4dd9ff" stroke-width="1" stroke-opacity="0.4"/>
+      <text x="319" y="73" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#4dd9ff">CAD &amp;</text>
+      <text x="319" y="83" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#5a7aaa">DESIGN</text>
+      <text x="346" y="71" text-anchor="start" font-family="DM Sans,sans-serif" font-size="8" fill="#3a5578">Sketch · CAD</text>
+      <text x="346" y="82" text-anchor="start" font-family="DM Sans,sans-serif" font-size="8" fill="#3a5578">3D Modeling</text>
+      <!-- N2: FABRICATION — bottom-right (319, 156) -->
+      <circle cx="319" cy="156" r="22" fill="#0b1628" stroke="#e8b45d" stroke-width="1" stroke-opacity="0.4"/>
+      <text x="319" y="153" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#e8b45d">3D</text>
+      <text x="319" y="163" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#5a7aaa">PRINTING</text>
+      <text x="346" y="151" text-anchor="start" font-family="DM Sans,sans-serif" font-size="8" fill="#3a5578">Klipper / Mainsail</text>
+      <text x="346" y="162" text-anchor="start" font-family="DM Sans,sans-serif" font-size="8" fill="#3a5578">FDM Fabrication</text>
+      <!-- N3: FIELD WORK — bottom (250, 196) -->
+      <circle cx="250" cy="196" r="22" fill="#0b1628" stroke="#4dd9ff" stroke-width="1" stroke-opacity="0.4"/>
+      <text x="250" y="193" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#4dd9ff">FIELD</text>
+      <text x="250" y="203" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#5a7aaa">WORK</text>
+      <text x="250" y="224" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#3a5578">Cathodic Protection</text>
+      <!-- N4: HOME AUTOMATION — bottom-left (181, 156) -->
+      <circle cx="181" cy="156" r="22" fill="#0b1628" stroke="#e8b45d" stroke-width="1" stroke-opacity="0.4"/>
+      <text x="181" y="153" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#e8b45d">HOME</text>
+      <text x="181" y="163" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6" fill="#5a7aaa">AUTO.</text>
+      <text x="154" y="151" text-anchor="end" font-family="DM Sans,sans-serif" font-size="8" fill="#3a5578">Home Assistant</text>
+      <text x="154" y="162" text-anchor="end" font-family="DM Sans,sans-serif" font-size="8" fill="#3a5578">Frigate NVR</text>
+      <!-- N5: PEN PLOTTER — top-left (181, 76) -->
+      <circle cx="181" cy="76" r="22" fill="#0b1628" stroke="#4dd9ff" stroke-width="1" stroke-opacity="0.4"/>
+      <text x="181" y="73" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#4dd9ff">PEN</text>
+      <text x="181" y="83" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6" fill="#5a7aaa">PLOTTER</text>
+      <text x="154" y="71" text-anchor="end" font-family="DM Sans,sans-serif" font-size="8" fill="#3a5578">DIY Build</text>
+      <text x="154" y="82" text-anchor="end" font-family="DM Sans,sans-serif" font-size="8" fill="#3a5578">GRBL / ESP32</text>
+    </svg>
+  </div>
+</section>
 
-  <!-- ════════════════ RATIONALE ════════════════ -->
-  <section id="rationale">
-    <div class="section-label fade-in">The Author&rsquo;s Mind</div>
-    <h1 class="section-title fade-in delay-1">The Rationale</h1>
-    <div class="section-text fade-in delay-2">
-      <p>I think I went in the direction I did for the dystopic future because I have been heavily influenced by literature and cinema. Aldous Huxley, George Orwell, and Ray Bradbury are among some of my favorite authors, and I spent almost a decade working in video rental stores, so my exposure to post-apocalyptic dystopian futurism is substantial. If we continue doing what we&rsquo;re doing now I think we will get there given a long enough timeline. Of course humanity&rsquo;s trajectory is never linear, so we will not arrive at this fearful fiction.</p>
-      <p style="margin-top:1em;">The utopia is essentially an extrapolation of what I find to be positive human traits, like curiosity and empathy. I believe a necessary part of empathy is experiencing hardships, so I wanted to include that humanity handles them gracefully in a utopia. Curiosity without bounds would certainly require a lot of knowhow, so I wanted to make sure that there are no barriers to knowledge.</p>
-      <p style="margin-top:1em;">Finally, I modeled a more realistic future based on my feeling that for as much as things change in the world, everything is still the same, and history feels cyclical. No system can sustain limitless growth, so things necessarily must break from time to time. If we graphed history into the future, it would resemble a sine wave with an ever-increasing amplitude and frequency.</p>
-    </div>
-  </section>
+<hr class="section-divider" />
 
-  <!-- ════════════════ FOOTER ════════════════ -->
-  <footer>
-    <div class="footer-left">
-      <div class="footer-name">Daniel Corron</div>
-      <div class="footer-meta">University of Arizona</div>
-    </div>
-    <div class="footer-divider"></div>
-    <div class="footer-right">
-      ISTA 100 &nbsp;&bull;&nbsp; Assignment 5<br>
-      Spring 2026
-    </div>
-    <div class="footer-credit">All images original works by Daniel Corron</div>
-  </footer>
+<!-- ══════════════════════════════════════════════
+     SLIDE 3: DESIGNING FOR YOUR FUTURE
+══════════════════════════════════════════════ -->
+<section id="s2" data-label="Design Thinking">
+  <p class="slide-label">02 — Designing for Your Own Future</p>
+  <div class="accent-line"></div>
+  <h2>Iteration Is How I Think</h2>
+  <p class="body-text">
+    ISTA 100 introduced design thinking as a formal framework. What it showed me is that I had been doing it instinctively for years. Building a pen plotter means defining the problem (how do I convert an SVG into physical marks on paper?), ideating a solution, prototyping in CAD, testing with real hardware, and iterating when the first approach fails. That cycle never ends. It is just the job.
+  </p>
+  <p class="body-text" style="transition-delay: 0.2s;">
+    The lesson I am taking forward is that the same process applies to designing a life. You identify what you want, you prototype a path toward it, and you revise when reality pushes back. Dreams are not fixed destinations. They are living designs that get better with every iteration.
+  </p>
 
-  <!-- ════════════════ LIGHTBOX ════════════════ -->
-  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
-    <span id="lightbox-close" aria-label="Close">&#x2715; CLOSE</span>
-    <img id="lightbox-img" src="" alt="">
+  <div class="section-graphic">
+    <svg viewBox="0 0 600 140" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:560px; width:100%;">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+          <path d="M0 0 L8 4 L0 8 Z" fill="#4dd9ff" opacity="0.6"/>
+        </marker>
+      </defs>
+      <!-- nodes -->
+      <g>
+        <circle cx="60" cy="70" r="34" fill="#0d1a33" stroke="#4dd9ff" stroke-width="1.2" stroke-opacity="0.5"/>
+        <text x="60" y="66" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#4dd9ff">DEFINE</text>
+        <text x="60" y="79" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#4dd9ff">PROBLEM</text>
+      </g>
+      <g>
+        <circle cx="200" cy="70" r="34" fill="#0d1a33" stroke="#4dd9ff" stroke-width="1.2" stroke-opacity="0.5"/>
+        <text x="200" y="66" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#4dd9ff">IDEATE</text>
+        <text x="200" y="79" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8aa8cc">solutions</text>
+      </g>
+      <g>
+        <circle cx="340" cy="70" r="34" fill="#0d1a33" stroke="#e8b45d" stroke-width="1.2" stroke-opacity="0.6"/>
+        <text x="340" y="66" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#e8b45d">PROTO</text>
+        <text x="340" y="79" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#e8b45d">-TYPE</text>
+      </g>
+      <g>
+        <circle cx="480" cy="70" r="34" fill="#0d1a33" stroke="#e8b45d" stroke-width="1.2" stroke-opacity="0.6"/>
+        <text x="480" y="66" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#e8b45d">TEST &amp;</text>
+        <text x="480" y="79" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#e8b45d">ITERATE</text>
+      </g>
+      <!-- arrows -->
+      <line x1="96" y1="70" x2="162" y2="70" stroke="#4dd9ff" stroke-width="1" stroke-opacity="0.5" marker-end="url(#arr)"/>
+      <line x1="236" y1="70" x2="302" y2="70" stroke="#4dd9ff" stroke-width="1" stroke-opacity="0.5" marker-end="url(#arr)"/>
+      <line x1="376" y1="70" x2="442" y2="70" stroke="#e8b45d" stroke-width="1" stroke-opacity="0.5" marker-end="url(#arr)"/>
+      <!-- feedback arc -->
+      <path d="M 480 36 Q 270 -10 60 36" stroke="#4dd9ff" stroke-width="0.8" stroke-opacity="0.25" stroke-dasharray="4 4" fill="none" marker-end="url(#arr)"/>
+      <text x="270" y="18" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#4dd9ff" opacity="0.4">ITERATE</text>
+    </svg>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 4: CAREER PATH
+══════════════════════════════════════════════ -->
+<section id="s3" data-label="Career Path">
+  <p class="slide-label">03 — Define Your Career Path</p>
+  <div class="accent-line"></div>
+  <h2>Motion Systems. Animatronics. My Studio.</h2>
+  <p class="body-text">
+    My dream is to design and build motion systems and animatronics for entertainment applications. That means elaborate robotic creatures for film and haunted attractions, fully articulated props with embedded electronics, and 6-degree-of-freedom motion platforms for simulation rigs used in sim racing and flight training.
+  </p>
+  <p class="body-text" style="transition-delay: 0.2s;">
+    More importantly, I want to own the full pipeline: from the first rough sketch on paper or a tablet, through engineering and electronics, to a finished machine that moves with presence and character. The end goal is to run my own studio, taking custom commissions and building things that leave people genuinely surprised.
+  </p>
+  <p class="body-text" style="transition-delay: 0.3s;">
+    This is not a vague aspiration. It is the throughline that connects everything I already do in my home lab. Every project I complete is a step toward building the skills, the portfolio, and the credibility to eventually work for myself and nobody else.
+  </p>
+
+  <div class="section-graphic">
+    <svg viewBox="0 0 560 210" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:560px; width:100%;">
+
+      <!-- ── CARD 1: ANIMATRONICS ── -->
+      <rect x="10" y="8" width="162" height="148" rx="10" fill="#0b1628" stroke="#4dd9ff" stroke-width="1" stroke-opacity="0.3"/>
+      <!-- Ambient glow -->
+      <rect x="10" y="8" width="162" height="148" rx="10" fill="url(#glow1)" opacity="0.06"/>
+      <!-- Robot head: outer shell -->
+      <rect x="69" y="18" width="44" height="40" rx="8" fill="#060c1a" stroke="#4dd9ff" stroke-width="1.3" stroke-opacity="0.65"/>
+      <!-- Visor slot -->
+      <rect x="75" y="27" width="32" height="11" rx="3" fill="#4dd9ff" opacity="0.08" stroke="#4dd9ff" stroke-width="0.8" stroke-opacity="0.55"/>
+      <!-- Eye dots -->
+      <circle cx="84" cy="32.5" r="3.2" fill="#4dd9ff" opacity="0.9"/>
+      <circle cx="98" cy="32.5" r="3.2" fill="#4dd9ff" opacity="0.9"/>
+      <!-- Eye inner glow -->
+      <circle cx="84" cy="32.5" r="1.4" fill="white" opacity="0.6"/>
+      <circle cx="98" cy="32.5" r="1.4" fill="white" opacity="0.6"/>
+      <!-- Jaw detail -->
+      <line x1="76" y1="46" x2="106" y2="46" stroke="#4dd9ff" stroke-opacity="0.25" stroke-width="0.8"/>
+      <line x1="82" y1="50" x2="100" y2="50" stroke="#4dd9ff" stroke-opacity="0.18" stroke-width="0.8"/>
+      <!-- Ear actuator nubs -->
+      <rect x="61" y="29" width="8" height="14" rx="2.5" fill="#060c1a" stroke="#4dd9ff" stroke-opacity="0.4" stroke-width="0.8"/>
+      <rect x="113" y="29" width="8" height="14" rx="2.5" fill="#060c1a" stroke="#4dd9ff" stroke-opacity="0.4" stroke-width="0.8"/>
+      <!-- Neck cables -->
+      <line x1="84" y1="58" x2="84" y2="66" stroke="#4dd9ff" stroke-opacity="0.28" stroke-width="1.2"/>
+      <line x1="91" y1="58" x2="91" y2="67" stroke="#4dd9ff" stroke-opacity="0.2" stroke-width="1"/>
+      <line x1="98" y1="58" x2="98" y2="66" stroke="#4dd9ff" stroke-opacity="0.28" stroke-width="1.2"/>
+      <!-- Card labels -->
+      <text x="91" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#4dd9ff" letter-spacing="0.12em">ANIMATRONICS</text>
+      <text x="91" y="107" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="#4a6a96">Film · Haunted Props</text>
+      <text x="91" y="121" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="#4a6a96">Robotic Characters</text>
+
+      <!-- ── CARD 2: MOTION SIMULATORS ── -->
+      <rect x="199" y="8" width="162" height="148" rx="10" fill="#0b1628" stroke="#e8b45d" stroke-width="1" stroke-opacity="0.3"/>
+      <!-- Hexapod top-view icon — center (280, 42) -->
+      <!-- Outer hexagon r=26 -->
+      <polygon points="306,42 293,64.5 267,64.5 254,42 267,19.5 293,19.5" fill="#060c1a" stroke="#e8b45d" stroke-width="1.2" stroke-opacity="0.55"/>
+      <!-- Inner hexagon r=12 -->
+      <polygon points="292,42 286,52.4 274,52.4 268,42 274,31.6 286,31.6" fill="#e8b45d" opacity="0.06" stroke="#e8b45d" stroke-width="0.9" stroke-opacity="0.4"/>
+      <!-- 6 actuator lines from inner to outer -->
+      <line x1="292" y1="42" x2="306" y2="42" stroke="#e8b45d" stroke-width="1" stroke-opacity="0.55"/>
+      <line x1="286" y1="52.4" x2="293" y2="64.5" stroke="#e8b45d" stroke-width="1" stroke-opacity="0.55"/>
+      <line x1="274" y1="52.4" x2="267" y2="64.5" stroke="#e8b45d" stroke-width="1" stroke-opacity="0.55"/>
+      <line x1="268" y1="42" x2="254" y2="42" stroke="#e8b45d" stroke-width="1" stroke-opacity="0.55"/>
+      <line x1="274" y1="31.6" x2="267" y2="19.5" stroke="#e8b45d" stroke-width="1" stroke-opacity="0.55"/>
+      <line x1="286" y1="31.6" x2="293" y2="19.5" stroke="#e8b45d" stroke-width="1" stroke-opacity="0.55"/>
+      <!-- Center hub dot -->
+      <circle cx="280" cy="42" r="3.5" fill="#e8b45d" opacity="0.7"/>
+      <!-- Vertex dots -->
+      <circle cx="306" cy="42" r="2" fill="#e8b45d" opacity="0.5"/>
+      <circle cx="293" cy="64.5" r="2" fill="#e8b45d" opacity="0.5"/>
+      <circle cx="267" cy="64.5" r="2" fill="#e8b45d" opacity="0.5"/>
+      <circle cx="254" cy="42" r="2" fill="#e8b45d" opacity="0.5"/>
+      <circle cx="267" cy="19.5" r="2" fill="#e8b45d" opacity="0.5"/>
+      <circle cx="293" cy="19.5" r="2" fill="#e8b45d" opacity="0.5"/>
+      <!-- Card labels -->
+      <text x="280" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#e8b45d" letter-spacing="0.12em">MOTION RIGS</text>
+      <text x="280" y="107" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="#4a6a96">6-DOF Simulators</text>
+      <text x="280" y="121" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="#4a6a96">Sim Racing · Flight</text>
+
+      <!-- ── CARD 3: THEATRICAL PROPS ── -->
+      <rect x="388" y="8" width="162" height="148" rx="10" fill="#0b1628" stroke="#4dd9ff" stroke-width="1" stroke-opacity="0.22"/>
+      <!-- Film clapperboard icon, centered at (469, 42) -->
+      <!-- Board body -->
+      <rect x="449" y="30" width="40" height="30" rx="3" fill="#060c1a" stroke="#4dd9ff" stroke-width="1.1" stroke-opacity="0.55"/>
+      <!-- Clapper top bar -->
+      <rect x="449" y="20" width="40" height="10" rx="2" fill="#060c1a" stroke="#4dd9ff" stroke-width="1" stroke-opacity="0.45"/>
+      <!-- Clapper stripes -->
+      <line x1="455" y1="20" x2="452" y2="30" stroke="#4dd9ff" stroke-opacity="0.35" stroke-width="1.5"/>
+      <line x1="462" y1="20" x2="459" y2="30" stroke="#4dd9ff" stroke-opacity="0.35" stroke-width="1.5"/>
+      <line x1="469" y1="20" x2="466" y2="30" stroke="#4dd9ff" stroke-opacity="0.35" stroke-width="1.5"/>
+      <line x1="476" y1="20" x2="473" y2="30" stroke="#4dd9ff" stroke-opacity="0.35" stroke-width="1.5"/>
+      <line x1="483" y1="20" x2="480" y2="30" stroke="#4dd9ff" stroke-opacity="0.35" stroke-width="1.5"/>
+      <!-- Board content lines (script/data) -->
+      <line x1="455" y1="39" x2="483" y2="39" stroke="#4dd9ff" stroke-opacity="0.22" stroke-width="0.8"/>
+      <line x1="455" y1="46" x2="478" y2="46" stroke="#4dd9ff" stroke-opacity="0.18" stroke-width="0.8"/>
+      <line x1="455" y1="53" x2="480" y2="53" stroke="#4dd9ff" stroke-opacity="0.14" stroke-width="0.8"/>
+      <!-- Card labels -->
+      <text x="469" y="90" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#4dd9ff" letter-spacing="0.12em" opacity="0.75">PROP BUILDS</text>
+      <text x="469" y="107" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="#4a6a96">Escape Rooms</text>
+      <text x="469" y="121" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="#4a6a96">Interactive Exhibits</text>
+
+      <!-- ── CONVERGENCE LINES to STUDIO ── -->
+      <line x1="91" y1="156" x2="280" y2="196" stroke="#4dd9ff" stroke-opacity="0.18" stroke-width="0.8" stroke-dasharray="3 4"/>
+      <line x1="280" y1="156" x2="280" y2="196" stroke="#e8b45d" stroke-opacity="0.22" stroke-width="0.8" stroke-dasharray="3 4"/>
+      <line x1="469" y1="156" x2="280" y2="196" stroke="#4dd9ff" stroke-opacity="0.18" stroke-width="0.8" stroke-dasharray="3 4"/>
+      <!-- Studio node -->
+      <circle cx="280" cy="196" r="4" fill="none" stroke="#4dd9ff" stroke-width="1" stroke-opacity="0.5"/>
+      <circle cx="280" cy="196" r="1.5" fill="#4dd9ff" opacity="0.6"/>
+      <text x="280" y="208" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#4dd9ff" letter-spacing="0.18em" opacity="0.45">YOUR STUDIO</text>
+
+      <!-- Gradient def for glow -->
+      <defs>
+        <radialGradient id="glow1" cx="50%" cy="30%" r="60%">
+          <stop offset="0%" stop-color="#4dd9ff"/>
+          <stop offset="100%" stop-color="#4dd9ff" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+    </svg>
   </div>
 
-  <script>
-    // ── Animated sine wave ──
-    (function () {
-      const canvas = document.getElementById('sine-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let phase = 0;
+  <!-- STYLIZED RENDER: 6-DOF Stewart Platform -->
+  <p class="slide-label" style="margin-top:3rem; opacity:1; transform:none;">Stylized Render — 6-DOF Stewart Platform</p>
+  <div class="section-graphic" style="margin-top:0.8rem;">
+    <svg viewBox="0 0 560 210" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:540px; width:100%;">
+      <defs>
+        <radialGradient id="topGlow" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="#4dd9ff" stop-opacity="0.08"/>
+          <stop offset="100%" stop-color="#4dd9ff" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
 
-      function resize() {
-        canvas.width  = canvas.offsetWidth;
-        canvas.height = 90;
+      <!-- BASE PLATFORM polygon -->
+      <polygon points="336,173 259,184 203,152 224,108 301,96 357,128"
+               fill="#07101f" stroke="#e8b45d" stroke-width="1.3" stroke-opacity="0.5"/>
+      <!-- Base surface grid lines for depth -->
+      <line x1="280" y1="140" x2="336" y2="173" stroke="#e8b45d" stroke-opacity="0.08" stroke-width="0.6"/>
+      <line x1="280" y1="140" x2="259" y2="184" stroke="#e8b45d" stroke-opacity="0.08" stroke-width="0.6"/>
+      <line x1="280" y1="140" x2="203" y2="152" stroke="#e8b45d" stroke-opacity="0.08" stroke-width="0.6"/>
+      <line x1="280" y1="140" x2="224" y2="108" stroke="#e8b45d" stroke-opacity="0.08" stroke-width="0.6"/>
+      <line x1="280" y1="140" x2="301" y2="96"  stroke="#e8b45d" stroke-opacity="0.08" stroke-width="0.6"/>
+      <line x1="280" y1="140" x2="357" y2="128" stroke="#e8b45d" stroke-opacity="0.08" stroke-width="0.6"/>
+      <!-- Base vertex dots -->
+      <circle cx="336" cy="173" r="3.5" fill="#e8b45d" opacity="0.75"/>
+      <circle cx="259" cy="184" r="3.5" fill="#e8b45d" opacity="0.75"/>
+      <circle cx="203" cy="152" r="3.5" fill="#e8b45d" opacity="0.6"/>
+      <circle cx="224" cy="108" r="3.5" fill="#e8b45d" opacity="0.6"/>
+      <circle cx="301" cy="96"  r="3.5" fill="#e8b45d" opacity="0.6"/>
+      <circle cx="357" cy="128" r="3.5" fill="#e8b45d" opacity="0.7"/>
+
+      <!-- ACTUATOR LEGS (6) — drawn base-to-top, back legs slightly dimmer -->
+      <!-- L3: P3(224,108) → T3(267,63) — far left -->
+      <line x1="224" y1="108" x2="267" y2="63"  stroke="#4dd9ff" stroke-width="1.6" stroke-opacity="0.38"/>
+      <!-- L4: P4(301,96)  → T4(315,70) — far right-back -->
+      <line x1="301" y1="96"  x2="315" y2="70"  stroke="#4dd9ff" stroke-width="1.6" stroke-opacity="0.38"/>
+      <!-- L2: P2(203,152) → T2(233,83) — left mid -->
+      <line x1="203" y1="152" x2="233" y2="83"  stroke="#4dd9ff" stroke-width="1.8" stroke-opacity="0.5"/>
+      <!-- L5: P5(357,128) → T5(327,97) — right mid -->
+      <line x1="357" y1="128" x2="327" y2="97"  stroke="#4dd9ff" stroke-width="1.8" stroke-opacity="0.5"/>
+      <!-- L1: P1(259,184) → T1(245,110) — front left -->
+      <line x1="259" y1="184" x2="245" y2="110" stroke="#4dd9ff" stroke-width="2"   stroke-opacity="0.65"/>
+      <!-- L0: P0(336,173) → T0(293,117) — front right -->
+      <line x1="336" y1="173" x2="293" y2="117" stroke="#4dd9ff" stroke-width="2"   stroke-opacity="0.65"/>
+
+      <!-- Actuator midpoint joints (telescoping marker) -->
+      <circle cx="315" cy="145" r="2.8" fill="#4dd9ff" opacity="0.45"/>
+      <circle cx="252" cy="147" r="2.8" fill="#4dd9ff" opacity="0.45"/>
+      <circle cx="218" cy="118" r="2.5" fill="#4dd9ff" opacity="0.35"/>
+      <circle cx="246" cy="87"  r="2.5" fill="#4dd9ff" opacity="0.35"/>
+      <circle cx="308" cy="83"  r="2.5" fill="#4dd9ff" opacity="0.35"/>
+      <circle cx="342" cy="113" r="2.8" fill="#4dd9ff" opacity="0.45"/>
+
+      <!-- TOP PLATFORM polygon -->
+      <polygon points="293,117 245,110 233,83 267,63 315,70 327,97"
+               fill="url(#topGlow)" stroke="#4dd9ff" stroke-width="1.5" stroke-opacity="0.75"/>
+      <!-- Top platform surface hint -->
+      <polygon points="293,117 245,110 233,83 267,63 315,70 327,97"
+               fill="#4dd9ff" fill-opacity="0.025"/>
+      <!-- Top vertex dots -->
+      <circle cx="293" cy="117" r="3" fill="#4dd9ff" opacity="0.85"/>
+      <circle cx="245" cy="110" r="3" fill="#4dd9ff" opacity="0.85"/>
+      <circle cx="233" cy="83"  r="3" fill="#4dd9ff" opacity="0.7"/>
+      <circle cx="267" cy="63"  r="3" fill="#4dd9ff" opacity="0.7"/>
+      <circle cx="315" cy="70"  r="3" fill="#4dd9ff" opacity="0.7"/>
+      <circle cx="327" cy="97"  r="3" fill="#4dd9ff" opacity="0.8"/>
+      <!-- Top center dot -->
+      <circle cx="280" cy="90"  r="2.5" fill="#4dd9ff" opacity="0.5"/>
+
+      <!-- ANNOTATION LEADERS -->
+      <!-- Top platform -->
+      <line x1="267" y1="63" x2="160" y2="48" stroke="#4dd9ff" stroke-width="0.7" stroke-opacity="0.28" stroke-dasharray="2 4"/>
+      <text x="155" y="46" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="8" fill="#4dd9ff" opacity="0.55">TOP PLATFORM</text>
+      <!-- Actuator -->
+      <line x1="315" y1="145" x2="420" y2="130" stroke="#4dd9ff" stroke-width="0.7" stroke-opacity="0.28" stroke-dasharray="2 4"/>
+      <text x="424" y="128" text-anchor="start" font-family="JetBrains Mono,monospace" font-size="8" fill="#4dd9ff" opacity="0.55">ACTUATOR ×6</text>
+      <!-- Base frame -->
+      <line x1="259" y1="184" x2="160" y2="196" stroke="#e8b45d" stroke-width="0.7" stroke-opacity="0.28" stroke-dasharray="2 4"/>
+      <text x="155" y="194" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="8" fill="#e8b45d" opacity="0.55">BASE FRAME</text>
+      <!-- DOF label -->
+      <text x="280" y="200" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#4a6a96" letter-spacing="0.18em">6 DEGREES OF FREEDOM</text>
+    </svg>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 5: EVALUATE YOUR DEGREE
+══════════════════════════════════════════════ -->
+<section id="s4" data-label="Evaluate Degree">
+  <p class="slide-label">04 — Evaluate Your Degree</p>
+  <div class="accent-line"></div>
+  <h2>Why Electrical Engineering Gets Me There</h2>
+  <p class="body-text">
+    Every major concentration in the EE curriculum at UArizona maps directly onto what motion systems and animatronics require.
+  </p>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <h3>Control Systems</h3>
+      <p style="font-size:0.9rem;color:var(--dim);line-height:1.6;">The mathematical backbone of any motion platform. PID loops, state-space modeling, and feedback control are the tools that make a 6-DOF rig move smoothly rather than violently.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔌</div>
+      <h3>Embedded Systems</h3>
+      <p style="font-size:0.9rem;color:var(--dim);line-height:1.6;">Real-world experience with microcontrollers (ESP32, Klipper firmware, GRBL) gives me a head start. The coursework formalizes what I have already built in practice.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>Power Electronics</h3>
+      <p style="font-size:0.9rem;color:var(--dim);line-height:1.6;">Driving brushless motors and servo actuators efficiently requires a solid understanding of power conversion, motor drivers, and thermal management.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏗️</div>
+      <h3>Field Experience</h3>
+      <p style="font-size:0.9rem;color:var(--dim);line-height:1.6;">My current work in cathodic protection and industrial electrical systems builds real-world instincts about how electrical systems behave outside of a textbook.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 6: EVALUATE YOUR FIELD
+══════════════════════════════════════════════ -->
+<section id="s5" data-label="Evaluate Field">
+  <p class="slide-label">05 — Evaluate Your Field</p>
+  <div class="accent-line"></div>
+  <h2>The Robotics Industry Is Accelerating</h2>
+  <p class="body-text">
+    The global robotics industry is on a steep upward trajectory. According to GlobalData, the market is projected to grow from $90.2 billion in 2024 to $205.5 billion by 2030, a compound annual growth rate of 15% (Francis, 2025). Entertainment robotics, which includes animatronics and specialty motion systems, is a smaller niche within this, but one that benefits directly from falling component costs, better open-source tooling, and growing demand from theme parks, independent film, and immersive entertainment venues.
+  </p>
+
+  <div class="field-stat">
+    <div class="stat-row">
+      <div>
+        <div class="stat-num">$205B</div>
+        <div style="font-family:JetBrains Mono,monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;margin-top:2px;">projected by 2030</div>
+      </div>
+      <div style="flex:1;">
+        <div class="stat-desc">Global robotics market value, growing at 15% CAGR from $90.2B in 2024.</div>
+        <div class="stat-bar-wrap"><div class="stat-bar" style="--bar-w: 82%;"></div></div>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div>
+        <div class="stat-num">2.5×</div>
+        <div style="font-family:JetBrains Mono,monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;margin-top:2px;">market growth</div>
+      </div>
+      <div style="flex:1;">
+        <div class="stat-desc">Robotics installations more than doubled over the past decade. Momentum is accelerating.</div>
+        <div class="stat-bar-wrap"><div class="stat-bar" style="--bar-w: 65%;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+  <h3 style="color:var(--accent2);margin-bottom:0.6rem;">My Competitive Strengths</h3>
+  <div class="strength-list">
+    <span class="strength-tag">Fusion 360 / CAD</span>
+    <span class="strength-tag">Embedded C / Firmware</span>
+    <span class="strength-tag">3D Printing / Fabrication</span>
+    <span class="strength-tag">Blender / Animation</span>
+    <span class="strength-tag">Linux / Docker</span>
+    <span class="strength-tag">Electrical Systems</span>
+    <span class="strength-tag">Iterative Prototyping</span>
+    <span class="strength-tag">Self-Directed Learning</span>
+  </div>
+  <div class="spacer"></div>
+  <p class="body-text citation" style="transition-delay:0.4s;">
+    Francis, S. (2025, October 30). Global robotics market forecast to reach $205.5 billion by 2030, says GlobalData. <em>Robotics &amp; Automation News.</em>
+  </p>
+</section>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════════════
+     SLIDES 7–9: GOALS TIMELINE
+══════════════════════════════════════════════ -->
+<section id="s6" data-label="Goals">
+  <p class="slide-label">06 — Short, Interim &amp; Long Term Goals</p>
+  <div class="accent-line"></div>
+  <h2>Three Horizons</h2>
+  <p class="body-text">Every goal connects back to the same destination: a studio where I design and build things that move.</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-label">SHORT TERM<br/>0 – 5 yrs</div>
+      <div class="tl-spine"></div>
+      <div class="tl-content">
+        <h3>Complete the Degree. Build the Portfolio.</h3>
+        <p>Finish my B.S. in Electrical Engineering at UArizona with a focus on control systems and embedded electronics. Complete at least one substantial motion system build, a small 2-DOF motion platform with custom firmware and closed-loop actuator control. Document every project in a public portfolio. Graduate with demonstrated hardware experience that no resume bullet point can fake.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-label">INTERIM<br/>5 – 10 yrs</div>
+      <div class="tl-spine"></div>
+      <div class="tl-content">
+        <h3>Enter the Industry. Start the Side Work.</h3>
+        <p>Secure a role in robotics, automation, or aerospace engineering at a company focused on positive technological impact. Use that position to learn how large-scale motion systems are designed, validated, and manufactured. In parallel, begin taking on freelance commissions for animatronics, haunted attraction props, or simulator rigs. Build the client relationships and industry knowledge that will eventually support a fully independent studio.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-label">LONG TERM<br/>10+ yrs</div>
+      <div class="tl-spine"></div>
+      <div class="tl-content">
+        <h3>Launch the Studio. Own the Work.</h3>
+        <p>Open a small design-and-build studio specializing in custom animatronics and motion simulation systems. Take on projects for independent filmmakers, haunted attractions, escape room designers, and simulator builders. Expand into interactive museum installations and theatrical productions where motion and character come together. Build a reputation on quality, creativity, and the kind of work that makes people stop and ask, "how did they do that?"</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 10: SPECULATE
+══════════════════════════════════════════════ -->
+<section id="s7" data-label="Future Speculation">
+  <p class="slide-label">07 — Speculate on the Future</p>
+  <div class="accent-line"></div>
+  <h2>Challenges, Opportunities, and Jobs That Do Not Exist Yet</h2>
+  <p class="body-text">
+    No plan survives contact with reality unchanged. I am building toward something unconventional, and I am clear-eyed about what that means.
+  </p>
+
+  <div class="spec-grid">
+    <div class="spec-card challenges">
+      <h3>Challenges to Overcome</h3>
+      <p>Running a solo design-and-build operation requires skills across engineering, fabrication, business development, and client communication. Finding clients in a niche market is harder than finding a job at an established firm. The financial risk of self-employment, especially early on, is real. I expect to spend several years in industry building capital, skills, and connections before the studio is viable on its own.</p>
+    </div>
+    <div class="spec-card opps">
+      <h3>Opportunities Emerging Now</h3>
+      <p>Affordable brushless servo systems, open-source motion control firmware, and low-cost 3D printing have dramatically lowered the barrier to building sophisticated animatronics. The immersive entertainment market, including escape rooms, haunted attractions, and location-based VR, is growing fast and hungry for creative hardware talent.</p>
+    </div>
+    <div class="spec-card future">
+      <h3>A Job That Does Not Exist Yet: AI-Augmented Animatronics Designer</h3>
+      <p>Within the next decade, machine learning will likely handle real-time motion refinement and behavioral responsiveness in animatronic systems. A new kind of role will emerge: someone who designs the physical form and mechanical architecture, while AI handles the fine-grained motion adaptation that makes a character feel truly alive. That is a role I want to help define. The engineering foundation I am building now is exactly the right starting point for it.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 11: CONCLUSION
+══════════════════════════════════════════════ -->
+<section id="s8" data-label="Conclusion">
+  <p class="slide-label">08 — Conclusion</p>
+  <div class="accent-line"></div>
+  <h2>Engineering Is How I Say Things</h2>
+  <p class="body-text">
+    The future I am designing toward is one where I make my living creating things that move, inspire, and surprise. That goal is not separate from who I already am. It is the logical endpoint of a decade of building, tinkering, and iterating in my home lab and in the field.
+  </p>
+  <p class="body-text" style="transition-delay:0.2s;">
+    ISTA 100 gave me a framework to think more deliberately about design as a process rather than a result. The habits it reinforced, understanding the user, iterating on problems, communicating ideas visually, are ones I will carry into every project and every job I take.
+  </p>
+  <p class="body-text" style="transition-delay:0.3s;">
+    Dreams are designs. They get better with every iteration. This one is just getting started.
+  </p>
+
+  <div class="section-graphic" style="margin-top:3rem; display:flex; justify-content:center;">
+    <svg viewBox="0 0 500 140" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:480px; width:100%;">
+      <defs>
+        <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#4dd9ff" stop-opacity="0.55"/>
+          <stop offset="40%"  stop-color="#4dd9ff" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="#4dd9ff" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Trajectory arcs — all converge to focal point (435, 70) -->
+      <!-- T1 — top path -->
+      <path d="M 20,14 C 180,14 330,50 435,70" stroke="#4dd9ff" stroke-width="0.9" stroke-opacity="0.28" stroke-dasharray="3 5" fill="none"/>
+      <!-- T2 -->
+      <path d="M 20,34 C 180,34 330,58 435,70" stroke="#4dd9ff" stroke-width="1"   stroke-opacity="0.35" stroke-dasharray="3 5" fill="none"/>
+      <!-- T3 — center, solid -->
+      <path d="M 20,70 L 435,70"                stroke="#4dd9ff" stroke-width="1.2" stroke-opacity="0.45" fill="none"/>
+      <!-- T4 -->
+      <path d="M 20,106 C 180,106 330,82 435,70" stroke="#4dd9ff" stroke-width="1"   stroke-opacity="0.35" stroke-dasharray="3 5" fill="none"/>
+      <!-- T5 — bottom path -->
+      <path d="M 20,126 C 180,126 330,90 435,70" stroke="#4dd9ff" stroke-width="0.9" stroke-opacity="0.28" stroke-dasharray="3 5" fill="none"/>
+
+      <!-- Origin dots -->
+      <circle cx="20" cy="14"  r="2.5" fill="#4dd9ff" opacity="0.3"/>
+      <circle cx="20" cy="34"  r="2.5" fill="#4dd9ff" opacity="0.35"/>
+      <circle cx="20" cy="70"  r="3"   fill="#4dd9ff" opacity="0.45"/>
+      <circle cx="20" cy="106" r="2.5" fill="#4dd9ff" opacity="0.35"/>
+      <circle cx="20" cy="126" r="2.5" fill="#4dd9ff" opacity="0.3"/>
+
+      <!-- Path labels (left side) -->
+      <text x="28" y="11"  font-family="JetBrains Mono,monospace" font-size="7.5" fill="#4a6a96">SKILL BUILDING</text>
+      <text x="28" y="31"  font-family="JetBrains Mono,monospace" font-size="7.5" fill="#4a6a96">PORTFOLIO WORK</text>
+      <text x="28" y="67"  font-family="JetBrains Mono,monospace" font-size="7.5" fill="#4dd9ff" opacity="0.55">NOW</text>
+      <text x="28" y="103" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#4a6a96">INDUSTRY EXP.</text>
+      <text x="28" y="123" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#4a6a96">CLIENT BUILDING</text>
+
+      <!-- Focal glow halo -->
+      <circle cx="435" cy="70" r="38" fill="url(#starGlow)"/>
+      <circle cx="435" cy="70" r="22" fill="none" stroke="#4dd9ff" stroke-width="0.6" stroke-opacity="0.2"/>
+      <circle cx="435" cy="70" r="12" fill="none" stroke="#4dd9ff" stroke-width="0.7" stroke-opacity="0.3"/>
+      <circle cx="435" cy="70" r="5"  fill="none" stroke="#4dd9ff" stroke-width="1"   stroke-opacity="0.5"/>
+      <!-- Star point -->
+      <circle cx="435" cy="70" r="2.5" fill="#4dd9ff" opacity="0.95"/>
+      <!-- Star cross sparkle -->
+      <line x1="435" y1="62" x2="435" y2="78" stroke="#4dd9ff" stroke-width="0.8" stroke-opacity="0.5"/>
+      <line x1="427" y1="70" x2="443" y2="70" stroke="#4dd9ff" stroke-width="0.8" stroke-opacity="0.5"/>
+      <line x1="429" y1="64" x2="441" y2="76" stroke="#4dd9ff" stroke-width="0.5" stroke-opacity="0.3"/>
+      <line x1="441" y1="64" x2="429" y2="76" stroke="#4dd9ff" stroke-width="0.5" stroke-opacity="0.3"/>
+      <!-- Focal label -->
+      <text x="435" y="118" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#4dd9ff" letter-spacing="0.15em" opacity="0.5">STUDIO LAUNCH</text>
+    </svg>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 12: REFERENCES
+══════════════════════════════════════════════ -->
+<section id="s9" data-label="References" style="min-height: auto; padding-bottom: 6rem;">
+  <p class="slide-label">09 — References</p>
+  <div class="accent-line"></div>
+  <h2>References</h2>
+  <div class="ref-block">
+    Francis, S. (2025, October 30). Global robotics market forecast to reach $205.5 billion by 2030, says GlobalData. <em>Robotics &amp; Automation News.</em>
+    <br/>
+    <a href="https://roboticsandautomationnews.com/2025/10/30/global-robotics-market-set-to-more-than-double-to-205-5-billion-by-2030/96038/" target="_blank" rel="noopener">https://roboticsandautomationnews.com/2025/10/30/global-robotics-market-set-to-more-than-double-to-205-5-billion-by-2030/96038/</a>
+  </div>
+  <div class="ref-block" style="transition-delay:0.15s;">
+    jie. (2021). Writing about the future in a graduate personal statement. <em>EssayEdge.</em>
+    <br/>
+    <a href="https://www.essayedge.com/blog/writing-about-the-future" target="_blank" rel="noopener">https://www.essayedge.com/blog/writing-about-the-future</a>
+  </div>
+</section>
+
+<footer>DANIEL &nbsp;·&nbsp; ISTA 100 &nbsp;·&nbsp; UNIVERSITY OF ARIZONA &nbsp;·&nbsp; 2025</footer>
+
+<script>
+  /* ── STARFIELD ── */
+  (function() {
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function initStars() {
+      stars = [];
+      const count = Math.floor((canvas.width * canvas.height) / 5000);
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.2 + 0.2,
+          alpha: Math.random() * 0.7 + 0.1,
+          speed: Math.random() * 0.4 + 0.05,
+          twinkleOffset: Math.random() * Math.PI * 2,
+          twinkleSpeed: Math.random() * 0.02 + 0.005,
+        });
       }
-      resize();
-      window.addEventListener('resize', resize);
+    }
 
-      function draw(ts) {
-        const W = canvas.width, H = canvas.height;
-        const mid = H / 2;
-        ctx.clearRect(0, 0, W, H);
-        phase = ts * 0.0012;
+    let frame = 0;
 
-        // Gradient stroke: dim on left, bright in centre, dim on right
-        const grad = ctx.createLinearGradient(0, 0, W, 0);
-        grad.addColorStop(0,    'rgba(200,162,39,0.15)');
-        grad.addColorStop(0.5,  'rgba(200,162,39,0.85)');
-        grad.addColorStop(1,    'rgba(200,162,39,0.15)');
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Gradient sky
+      const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grad.addColorStop(0, '#02060f');
+      grad.addColorStop(0.5, '#060c1a');
+      grad.addColorStop(1, '#03080f');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      frame++;
+      for (const s of stars) {
+        const twinkle = 0.5 + 0.5 * Math.sin(s.twinkleOffset + frame * s.twinkleSpeed);
         ctx.beginPath();
-        ctx.strokeStyle = grad;
-        ctx.lineWidth   = 2;
-        ctx.lineJoin    = 'round';
-
-        for (let x = 0; x <= W; x++) {
-          const t         = x / W;                     // 0→1 left to right
-          const freq      = 1 + t * 10;                 // frequency grows: slow past, fast now
-          const amplitude = t * (mid * 0.85);          // amplitude grows left→right
-          const y = mid + Math.sin(t * freq * Math.PI * 2 - phase) * amplitude;
-          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-
-        // PAST / NOW labels
-        ctx.font         = '9px "Bebas Neue", cursive';
-        ctx.letterSpacing = '2px';
-        ctx.fillStyle    = 'rgba(200,162,39,0.25)';
-        ctx.fillText('PAST', 2,  H - 4);
-        ctx.fillText('PRESENT',  W / 2 - 16, H - 4);
-        ctx.fillText('FUTURE',  W - 32, H - 4);
-
-        requestAnimationFrame(draw);
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(180, 210, 255, ${s.alpha * twinkle})`;
+        ctx.fill();
       }
       requestAnimationFrame(draw);
-    })();
-
-
-    const lightbox    = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    const lbClose     = document.getElementById('lightbox-close');
-
-    document.querySelectorAll('.section-image').forEach(img => {
-      img.addEventListener('click', () => {
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-        lightbox.classList.add('open');
-        document.body.style.overflow = 'hidden';
-      });
-    });
-
-    function closeLightbox() {
-      lightbox.classList.remove('open');
-      document.body.style.overflow = '';
     }
 
-    lightbox.addEventListener('click', closeLightbox);
-    lbClose.addEventListener('click', closeLightbox);
+    resize();
+    initStars();
+    draw();
+    window.addEventListener('resize', () => { resize(); initStars(); });
+  })();
 
-    // Also close on Escape key
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeLightbox();
+  /* ── SECTION REVEAL ── */
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
     });
+  }, { threshold: 0.12 });
 
-    // Prevent click on image itself from closing
-    lightboxImg.addEventListener('click', e => e.stopPropagation());
+  sections.forEach(s => observer.observe(s));
 
-    const progressBar = document.getElementById('progress-bar');
-    window.addEventListener('scroll', () => {
-      const scrolled = window.scrollY;
-      const total = document.body.scrollHeight - window.innerHeight;
-      progressBar.style.width = (scrolled / total * 100) + '%';
-    }, { passive: true });
+  /* ── PROGRESS BAR ── */
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (window.scrollY / h * 100) + '%';
+  });
 
-    const sectionThemes = {
-      dystopia:  { bg: '#080000', progressColor: '#ff2222' },
-      utopia:    { bg: '#00060f', progressColor: '#4fc3f7' },
-      middle:    { bg: '#0d0d0d', progressColor: '#c8a227' },
-      rationale: { bg: '#080808', progressColor: '#555555' }
-    };
+  /* ── NAV DOTS ── */
+  const navContainer = document.getElementById('nav-dots');
+  const navSections = Array.from(document.querySelectorAll('section[id]'));
 
-    const dots = document.querySelectorAll('.nav-dot');
+  navSections.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot';
+    dot.setAttribute('aria-label', s.dataset.label || `Section ${i+1}`);
+    dot.title = s.dataset.label || `Section ${i+1}`;
+    dot.addEventListener('click', () => s.scrollIntoView({ behavior: 'smooth' }));
+    navContainer.appendChild(dot);
+  });
 
-    function applyTheme(id) {
-      const t = sectionThemes[id];
-      if (!t) return;
-      document.body.style.backgroundColor = t.bg;
-      progressBar.style.backgroundColor = t.progressColor;
-    }
+  const dots = navContainer.querySelectorAll('.nav-dot');
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0.45) {
-          const id = entry.target.id;
-          applyTheme(id);
-          dots.forEach(d => d.classList.toggle('active', d.dataset.target === id));
-        }
-      });
-    }, { threshold: 0.45 });
-
-    document.querySelectorAll('section').forEach(s => observer.observe(s));
-
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => {
-        document.getElementById(dot.dataset.target).scrollIntoView({ behavior: 'smooth' });
-      });
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = navSections.indexOf(entry.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
     });
+  }, { threshold: 0.4 });
 
-    const fadeObserver = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          fadeObserver.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
-  </script>
+  navSections.forEach(s => navObserver.observe(s));
+</script>
 </body>
 </html>
